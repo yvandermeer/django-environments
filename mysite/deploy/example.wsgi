@@ -1,7 +1,7 @@
 # Copy this file to <environment>.wsgi to automatically use settings.env.<environment>
 # Example Apache configuration:
 # WSGIPythonHome /var/virtualenvs/development # Optional
-# WSGIScriptAlias / /Users/foobar/repos/django-environments/mysite/deploy/local.wsgi
+# WSGIScriptAlias / /Users/spanky/repos/django-environments/mysite/deploy/local.wsgi
 
 import os, site, sys
 import django.core.handlers.wsgi

@@ -43,8 +43,8 @@ Should you wish to use the local settings in settings/env/local.py,
 simply copy the mysite/deploy/example.wsgi to mysite/deploy/local.wsgi,
 and add something like this to your httpd.conf::
 
-    WSGIPythonHome /Users/.virtualenvs/django-environments # Optional
-    WSGIScriptAlias / /Users/foobar/repos/django-environments/mysite/deploy/local.wsgi
+    WSGIPythonHome /Users/spanky/.virtualenvs/django-environments # Optional
+    WSGIScriptAlias / /Users/spanky/repos/django-environments/mysite/deploy/local.wsgi
 
 The 'local' in local.wsgi will automatically make sure settings.env.local
 is used. Create other .wsgi files for other environment settings.
