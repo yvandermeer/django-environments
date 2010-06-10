@@ -30,14 +30,26 @@ If everything works okay, the following shell aliases are created:
  * cdjango - go to django project root (one lower than project root).
  * runserver - perform manage.py runserver with the correct settings.
 
+Using Apache mod_wsgi
+=====================
+
+Copy the mysite/deploy/example.wsgi to mysite/deploy/local.wsgi,
+and add something like this to your httpd.conf:
+
+WSGIPythonHome /Users/.virtualenvs/django-environments # Optional
+WSGIScriptAlias / /Users/foobar/repos/django-environments/mysite/deploy/local.wsgi
+
+The 'local' in local.wsgi will automatically make sure settings.env.local
+is used. Create other .wsgi files for other environment settings.
+
 Directories
 ===========
 
  * The mysite/settings directory replaces settings.py and contains
    the default settings in generic.py, which is imported in __init__.py.
  * The mysite/settings/env directory contains the different settings
-   files for every environment
- * All .wsgi files in the mysite/apache folder are equal; their
+   files for every environment.
+ * All .wsgi files in the mysite/deploy folder are equal; their
    respective filenames are used to determine which settings to import.
  * As discussed above, the scripts directory contains the shell
    scripts intended to be sourced with the ``source`` command.
@@ -45,5 +57,5 @@ Directories
 Remarks
 =======
 
- * manage.py is just there to make this a complete django project.
  * urls.py is just there to demonstrate the ``SERVE_MEDIA`` setting.
+ * manage.py is just there to make this a complete django project.
