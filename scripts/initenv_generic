@@ -1,8 +1,6 @@
-# Set the following variables in your bin/postacivate, then source
-# this file
+# Set the following variables in your bin/postactivate, then source this file
 
-# The root of the project, i.e. the directory containing your Django
-# project
+# The root of the project, i.e. the directory containing your Django project
 #PROJECT_ROOT=/Users/joe/projects/myproject
 
 # Set this to the name of the Django project in PROJECT_ROOT

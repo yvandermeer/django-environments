@@ -1,0 +1,49 @@
+django-environments
+===================
+
+Manage different settings for different locations (machines), or
+Fabric's 'roles', like local (your machine), development (shared
+development system), test, staging/acceptance and production.
+
+Compatibility with virtualenv
+==============================
+
+Please note django-environments can be nicely used together with
+virtualenv, especially virtualenvwrapper's bin/postactivate script.
+
+Getting Started
+===============
+
+This is a fully working Django project. You can copy files from it
+as needed to your own projects.
+
+ 1. Copy scripts/initenv_example to scripts/initenv.
+ 2. Edit initenv and set ``PROJECT_ROOT``, ``DJANGO_PROJECT`` (always a
+    subdirectory of ``PROJECT_ROOT``) and ``PROJECT_SETTINGS``.
+ 3. Activate the environment using ``source scripts/initenv``.
+ 4. When using virtualenv with virtualenvwrapper, you can do 
+    ``source <path-to-project>/scripts/initenv`` from bin/postactivate.
+
+If everything works okay, the following shell aliases are created:
+
+ * cdroot - go to project root.
+ * cdjango - go to django project root (one lower than project root).
+ * runserver - perform manage.py runserver with the correct settings.
+
+Directories
+===========
+
+ * The mysite/settings directory replaces settings.py and contains
+   the default settings in generic.py, which is imported in __init__.py.
+ * The mysite/settings/env directory contains the different settings
+   files for every environment
+ * All .wsgi files in the mysite/apache folder are equal; their
+   respective filenames are used to determine which settings to import.
+ * As discussed above, the scripts directory contains the shell
+   scripts intended to be sourced with the ``source`` command.
+
+Remarks
+=======
+
+ * manage.py is just there to make this a complete django project.
+ * urls.py is just there to demonstrate the ``SERVE_MEDIA`` setting.
