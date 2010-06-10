@@ -1,9 +1,13 @@
 django-environments
 ===================
 
-Manage different settings for different locations (machines), or
-Fabric's 'roles', like local (your machine), development (shared
-development system), test, staging/acceptance and production.
+Manage different settings for different locations (systems), like
+local (your machine), development (shared development system), test,
+staging/acceptance and production.
+
+Or, more generically: be able to refactor your settings as you like,
+by simply "inheriting" from more generic settings using 'from ...
+import'.
 
 Compatibility with virtualenv
 ==============================
@@ -14,15 +18,17 @@ virtualenv, especially virtualenvwrapper's ``bin/postactivate`` script.
 Getting Started
 ===============
 
-This is a fully working Django project. You can copy files from it
-as needed to your own projects.
+This is a fully working Django project; you can copy files from it
+as needed to your own projects. To get django-environments working
+by itself, do the following:
 
  1. Copy scripts/initenv_example to scripts/initenv.
  2. Edit initenv and set ``PROJECT_ROOT``, ``DJANGO_PROJECT`` (always a
     subdirectory of ``PROJECT_ROOT``) and ``PROJECT_SETTINGS``.
  3. Activate the environment using ``source scripts/initenv``.
- 4. When using virtualenv with virtualenvwrapper, you can do 
-    ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``.
+ 4. When using virtualenv with virtualenvwrapper, you can do either
+    ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``,
+    or simply use your initenv's contents inside postactivate.
 
 If everything works okay, the following shell aliases are created:
 
@@ -33,7 +39,8 @@ If everything works okay, the following shell aliases are created:
 Using Apache mod_wsgi
 =====================
 
-Copy the mysite/deploy/example.wsgi to mysite/deploy/local.wsgi,
+Should you wish to use the local settings in settings/env/local.py,
+simply copy the mysite/deploy/example.wsgi to mysite/deploy/local.wsgi,
 and add something like this to your httpd.conf::
 
     WSGIPythonHome /Users/.virtualenvs/django-environments # Optional
@@ -46,11 +53,13 @@ Directories
 ===========
 
  * The ``mysite/settings`` directory replaces ``settings.py`` and contains
-   the default settings in ``generic.py``, which is imported in ``__init__.py``.
+   the default settings in ``generic.py``, whose contents are
+   imported in ``__init__.py``.
  * The ``mysite/settings/env`` directory contains the different settings
    files for every environment.
- * All .wsgi files in the ``mysite/deploy`` folder are equal; their
-   respective filenames are used to determine which settings to import.
+ * All .wsgi files in the ``mysite/deploy`` folder are normally
+   equal; their respective filenames are used to determine which
+   settings to import.
  * As discussed above, the scripts directory contains the shell
    scripts intended to be sourced with the ``source`` command.
 

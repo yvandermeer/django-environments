@@ -1,4 +1,5 @@
-# Set the following variables in your bin/postactivate, then source this file
+# It's best to set the following variables in your own initenv or
+# bin/postactivate, and then source this file
 
 # The root of the project, i.e. the directory containing your Django project
 #PROJECT_ROOT=/Users/joe/projects/myproject
