@@ -1,0 +1,57 @@
+# Set the following variables in your bin/postacivate, then source
+# this file
+
+# The root of the project, i.e. the directory containing your Django
+# project
+#PROJECT_ROOT=/Users/joe/projects/myproject
+
+# Set this to the name of the Django project in PROJECT_ROOT
+#DJANGO_PROJECT=mysite
+
+# Set this to something that can be imported within DJANGO_PROJECT, like 'settings'
+#PROJECT_SETTINGS=settings
+
+# The root of the project should exist, of course
+[ -z "$PROJECT_ROOT" ] && echo "Variable PROJECT_ROOT not set or empty" 2>&1 && return 1
+[ ! -d "$PROJECT_ROOT" ] && echo "Variable PROJECT_ROOT does not point to a readable directory" 2>&1  && return 1
+
+# Check Django project as well
+[ -z "$DJANGO_PROJECT" ] && echo "Variable DJANGO_PROJECT not set or empty" 2>&1 && return 1
+[ ! -d "$PROJECT_ROOT/$DJANGO_PROJECT" ] && echo "Variable DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 2>&1  && return 1
+
+# If no particular settings are defined, just use the "base" settings
+if [ -n "$PROJECT_SETTINGS" ]; then
+    DJANGO_SETTINGS_MODULE=$DJANGO_PROJECT.$PROJECT_SETTINGS
+else
+    DJANGO_SETTINGS_MODULE=$DJANGO_PROJECT.settings
+fi
+
+# Set the PYTHONPATH to include PROJECT_ROOT
+PYTHONPATH=$PROJECT_ROOT:$PYTHONPATH
+
+export PYTHONPATH DJANGO_SETTINGS_MODULE
+
+# Test settings import
+python -c "import $DJANGO_SETTINGS_MODULE" > /dev/null 2>&1
+[ ! "$?" -eq 0 ] && echo "Error importing settings $DJANGO_SETTINGS_MODULE (PYTHONPATH: $PYTHONPATH)" 2>&1 && return 1
+
+# Some useful aliases
+alias runserver="python $PROJECT_ROOT/$DJANGO_PROJECT/manage.py runserver --settings $DJANGO_SETTINGS_MODULE"
+alias cdroot="cd $PROJECT_ROOT"
+alias cdjango="cd $PROJECT_ROOT/$DJANGO_PROJECT"
+
+# Change working directory
+cdjango
+
+# Show environment info
+if [ "$SHOW_DJANGO_ENVIRONMENT" = "yes" ]; then
+    echo Welcome to $DJANGO_PROJECT. Environment info:
+    echo PROJECT_ROOT: \'$PROJECT_ROOT\'
+    echo DJANGO_PROJECT: \'$DJANGO_PROJECT\'
+    echo DJANGO_SETTINGS_MODULE: \'$DJANGO_SETTINGS_MODULE\'
+    echo PYTHONPATH: \'$PYTHONPATH\'
+    echo
+    echo Django settings:
+    PAGER=cat python -c "import $DJANGO_SETTINGS_MODULE; help($DJANGO_SETTINGS_MODULE)" | grep -v "^$"
+    echo
+fi

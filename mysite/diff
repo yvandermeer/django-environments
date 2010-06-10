@@ -1,0 +1,72 @@
+1,3c1
+< # Django settings for mysite project.
+< import sys
+< from os.path import join, dirname
+---
+> # Django settings for foo project.
+5,9c3
+< PROJECT_DIR = dirname(dirname(__file__))
+< 
+< gettext = lambda s: s
+< 
+< DEBUG = False
+---
+> DEBUG = True
+25,30d18
+< CACHE_BACKEND = 'dummy://'
+< CACHE_MIDDLEWARE_KEY_PREFIX = 'mysite'
+< CACHE_MIDDLEWARE_SECONDS = 600
+< CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+< 
+< 
+36,37c24
+< 
+< TIME_ZONE = 'Europe/Amsterdam'
+---
+> TIME_ZONE = 'America/Chicago'
+41c28
+< LANGUAGE_CODE = 'en'
+---
+> LANGUAGE_CODE = 'en-us'
+49,51d35
+< # Whether we serve static content via Django (to be overruled in local settings)
+< SERVE_MEDIA = False
+< 
+54c38
+< MEDIA_ROOT = join(PROJECT_DIR, 'static/')
+---
+> MEDIA_ROOT = ''
+59c43
+< MEDIA_URL = '/static/'
+---
+> MEDIA_URL = ''
+64c48
+< ADMIN_MEDIA_PREFIX = '/adminmedia/'
+---
+> ADMIN_MEDIA_PREFIX = '/media/'
+67c51
+< SECRET_KEY = '8se!xv-_5+fq6!##&z0p5cje0o)!rvb^ph50v1#7v)l=c1*vin'
+---
+> SECRET_KEY = '*)@a#s*taa680jpad54su$**sjl8gzn%t3j^43w9q4o48zsf29'
+73,79c57
+< )
+< 
+< TEMPLATE_CONTEXT_PROCESSORS = (
+<         "django.core.context_processors.auth",
+<         "django.core.context_processors.i18n",
+<         "django.core.context_processors.request",
+<         "django.core.context_processors.media",
+---
+> #     'django.template.loaders.eggs.load_template_source',
+86,87c64
+<     'django.middleware.doc.XViewMiddleware',
+<     )
+---
+> )
+89c66
+< ROOT_URLCONF = 'mysite.urls'
+---
+> ROOT_URLCONF = 'foo.urls'
+102,103d78
+<     'django.contrib.admin',
+<     'django.contrib.admindocs',

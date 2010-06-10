@@ -1,0 +1,10 @@
+# Initialize the environment
+# Should be sourced with the 'source' command, e.g. 'source initenv'
+# This can be done from virtualenvwrapper's bin/postactivate
+
+PROJECT_ROOT=/Users/grone/repos/django-environments
+DJANGO_PROJECT=mysite
+PROJECT_SETTINGS=settings.env.local
+SHOW_DJANGO_ENVIRONMENT=yes
+
+source $PROJECT_ROOT/$DJANGO_PROJECT/scripts/initenv_generic
