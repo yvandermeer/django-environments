@@ -10,7 +10,7 @@ by simply "inheriting" from more generic settings using 'from ...
 import'.
 
 Compatibility with virtualenv
-==============================
+=============================
 
 Please note django-environments can be nicely used together with
 virtualenv, especially virtualenvwrapper's ``bin/postactivate`` script.
