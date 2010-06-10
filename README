@@ -9,7 +9,7 @@ Compatibility with virtualenv
 ==============================
 
 Please note django-environments can be nicely used together with
-virtualenv, especially virtualenvwrapper's bin/postactivate script.
+virtualenv, especially virtualenvwrapper's ``bin/postactivate`` script.
 
 Getting Started
 ===============
@@ -22,22 +22,22 @@ as needed to your own projects.
     subdirectory of ``PROJECT_ROOT``) and ``PROJECT_SETTINGS``.
  3. Activate the environment using ``source scripts/initenv``.
  4. When using virtualenv with virtualenvwrapper, you can do 
-    ``source <path-to-project>/scripts/initenv`` from bin/postactivate.
+    ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``.
 
 If everything works okay, the following shell aliases are created:
 
  * cdroot - go to project root.
- * cdjango - go to django project root (one lower than project root).
+ * cdjango - go to Django project root (one lower than project root).
  * runserver - perform manage.py runserver with the correct settings.
 
 Using Apache mod_wsgi
 =====================
 
 Copy the mysite/deploy/example.wsgi to mysite/deploy/local.wsgi,
-and add something like this to your httpd.conf:
+and add something like this to your httpd.conf::
 
-WSGIPythonHome /Users/.virtualenvs/django-environments # Optional
-WSGIScriptAlias / /Users/foobar/repos/django-environments/mysite/deploy/local.wsgi
+    WSGIPythonHome /Users/.virtualenvs/django-environments # Optional
+    WSGIScriptAlias / /Users/foobar/repos/django-environments/mysite/deploy/local.wsgi
 
 The 'local' in local.wsgi will automatically make sure settings.env.local
 is used. Create other .wsgi files for other environment settings.
@@ -45,11 +45,11 @@ is used. Create other .wsgi files for other environment settings.
 Directories
 ===========
 
- * The mysite/settings directory replaces settings.py and contains
-   the default settings in generic.py, which is imported in __init__.py.
- * The mysite/settings/env directory contains the different settings
+ * The ``mysite/settings`` directory replaces ``settings.py`` and contains
+   the default settings in ``generic.py``, which is imported in ``__init__.py``.
+ * The ``mysite/settings/env`` directory contains the different settings
    files for every environment.
- * All .wsgi files in the mysite/deploy folder are equal; their
+ * All .wsgi files in the ``mysite/deploy`` folder are equal; their
    respective filenames are used to determine which settings to import.
  * As discussed above, the scripts directory contains the shell
    scripts intended to be sourced with the ``source`` command.
@@ -57,5 +57,5 @@ Directories
 Remarks
 =======
 
- * urls.py is just there to demonstrate the ``SERVE_MEDIA`` setting.
- * manage.py is just there to make this a complete django project.
+ * ``urls.py`` is just there to demonstrate the ``SERVE_MEDIA`` setting.
+ * ``manage.py`` is just there to make this a complete Django project.
