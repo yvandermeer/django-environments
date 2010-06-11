@@ -1,6 +1,7 @@
 syntax:glob
 
 *.pyc
+*.swp
 .DS_Store
 pip-log.txt
 docs/_build
