@@ -1,0 +1,15 @@
+# Deinitialize the settings environment
+#
+# Should be sourced with the 'source' command, e.g. 'source deinitenv'
+# The source command can be performed within virtualenvwrapper's
+# bin/postdeactivate, but it's easier to just copy the following lines
+# to bin/postdeactivate. Alternatively, you may also symlink
+# bin/postdeactivate to (a custom version of) this file.
+
+if [ -z "$_OLD_DJANGO_SETTINGS_MODULE" ]; then
+    unset DJANGO_SETTINGS_MODULE
+else
+    DJANGO_SETTINGS_MODULE=$_OLD_DJANGO_SETTINGS_MODULE
+fi
+
+unset _OLD_DJANGO_SETTINGS_MODULE DJANGO_PROJECT SHOW_DJANGO_ENVIRONMENT

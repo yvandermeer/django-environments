@@ -18,6 +18,8 @@
 [ -z "$DJANGO_PROJECT" ] && echo "Variable DJANGO_PROJECT not set or empty" 2>&1 && return 1
 [ ! -d "$PROJECT_ROOT/$DJANGO_PROJECT" ] && echo "Variable DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 2>&1  && return 1
 
+# Save current settings
+_OLD_DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
 # If no particular settings are defined, just use the "base" settings
 if [ -n "$PROJECT_SETTINGS" ]; then
     DJANGO_SETTINGS_MODULE=$DJANGO_PROJECT.$PROJECT_SETTINGS
