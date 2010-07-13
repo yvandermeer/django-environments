@@ -1,7 +1,10 @@
-# Initialize the environment
+# Initialize the settings environment
+#
 # Should be sourced with the 'source' command, e.g. 'source initenv'
-# This can be done from virtualenvwrapper's bin/postactivate, but
-# it's easier to just copy the following lines to bin/postactivate:
+# The source command can be performed within virtualenvwrapper's
+# bin/postactivate, but it's often easier to just copy the following
+# lines to bin/postactivate. Alternatively, you may also symlink
+# bin/postactivate to a custom version of this file.
 
 PROJECT_ROOT=/Users/grone/repos/django-environments
 DJANGO_PROJECT=mysite
