@@ -11,15 +11,18 @@
 #PROJECT_SETTINGS=settings
 
 # The root of the project should exist, of course
-[ -z "$PROJECT_ROOT" ] && echo "Variable PROJECT_ROOT not set or empty" 2>&1 && return 1
-[ ! -d "$PROJECT_ROOT" ] && echo "Variable PROJECT_ROOT does not point to a readable directory" 2>&1  && return 1
+[ -z "$PROJECT_ROOT" ] && \
+    echo "Variable PROJECT_ROOT not set or empty" 2>&1 && deactivate && return 1
+[ ! -d "$PROJECT_ROOT" ] && \
+     echo "Variable PROJECT_ROOT does not point to a readable directory" 2>&1 && deactivate && return 1
 
 # Check Django project as well
-[ -z "$DJANGO_PROJECT" ] && echo "Variable DJANGO_PROJECT not set or empty" 2>&1 && return 1
-[ ! -d "$PROJECT_ROOT/$DJANGO_PROJECT" ] && echo "Variable DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 2>&1  && return 1
+[ -z "$DJANGO_PROJECT" ] && \
+    echo "Variable DJANGO_PROJECT not set or empty" 2>&1 && return 1
+[ ! -d "$PROJECT_ROOT/$DJANGO_PROJECT" ] && \
+    echo "Variable DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 2>&1 && \
+    deactivate && return 1
 
-# Save current settings
-_OLD_DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
 # If no particular settings are defined, just use the "base" settings
 if [ -n "$PROJECT_SETTINGS" ]; then
     DJANGO_SETTINGS_MODULE=$DJANGO_PROJECT.$PROJECT_SETTINGS
@@ -30,11 +33,16 @@ fi
 # Set the PYTHONPATH to include PROJECT_ROOT
 PYTHONPATH=$PROJECT_ROOT:$PYTHONPATH
 
-export PYTHONPATH DJANGO_SETTINGS_MODULE
+export PROJECT_ROOT DJANGO_PROJECT PYTHONPATH DJANGO_SETTINGS_MODULE
 
 # Test settings import
 python -c "import $DJANGO_SETTINGS_MODULE" > /dev/null 2>&1
-[ ! "$?" -eq 0 ] && echo "Error importing settings $DJANGO_SETTINGS_MODULE (PYTHONPATH: $PYTHONPATH)" 2>&1 && return 1
+if [ ! "$?" -eq 0 ]; then
+    echo "Error importing settings $DJANGO_SETTINGS_MODULE (PYTHONPATH: $PYTHONPATH)" 2>&1
+    python -c "import $DJANGO_SETTINGS_MODULE"
+    deactivate
+    return 1
+fi
 
 # Some useful aliases
 alias runserver="python $PROJECT_ROOT/$DJANGO_PROJECT/manage.py runserver --settings $DJANGO_SETTINGS_MODULE"
