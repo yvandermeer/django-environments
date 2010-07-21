@@ -11,4 +11,9 @@ DJANGO_PROJECT=mysite
 DJANGO_SETTINGS=settings.env.development
 SHOW_DJANGO_ENVIRONMENT=yes
 
+# Pass additional directories for sys.path as arguments to
+# initenv_generic, e.g.
+# source $PROJECT_ROOT/scripts/initenv_generic $PROJECT_ROOT/apps
 source $PROJECT_ROOT/scripts/initenv_generic
+
+[ ! $? -eq 0 ] && return 1

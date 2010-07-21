@@ -24,7 +24,7 @@ _deactivate() {
 
 # Check Django project as well
 [ -z "$DJANGO_PROJECT" ] && \
-    echo "Variable DJANGO_PROJECT not set or empty" 2>&1 && return 1
+    echo "Variable DJANGO_PROJECT not set or empty" 2>&1 && _deactivate && return 1
 [ ! -d "$PROJECT_ROOT/$DJANGO_PROJECT" ] && \
     echo "Variable DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 2>&1 && \
     _deactivate && return 1
@@ -37,9 +37,9 @@ else
     DJANGO_SETTINGS_MODULE=$DJANGO_PROJECT.settings
 fi
 
-# Set the PYTHONPATH to include PROJECT_ROOT
+# Set the PYTHONPATH to include PROJECT_ROOT; assume first argument are additional directories
 _OLD_PYTHONPATH=$PYTHONPATH
-PYTHONPATH=$PROJECT_ROOT:$PYTHONPATH
+PYTHONPATH=$PROJECT_ROOT:$1:$PYTHONPATH
 
 export PROJECT_ROOT DJANGO_PROJECT PYTHONPATH DJANGO_SETTINGS_MODULE
 

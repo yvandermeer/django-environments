@@ -63,17 +63,18 @@ If everything works okay, the following shell aliases are created:
 Using Apache mod_wsgi
 =====================
 
-Should you wish to use the local settings in for instance
+Should you wish to use the settings in for instance
 ``settings/env/staging.py``, simply copy the example
 ``mysite/deploy/development.wsgi`` to ``mysite/deploy/staging.wsgi``,
-or make staging.wsgi a symlink. Then add something like this to
+or make staging.wsgi a symlink (if your Apache configuration allows
+it, which is normally the case). Next, add something like this to
 your httpd.conf::
 
     WSGIScriptAlias / /Users/spanky/repos/django-environments/mysite/deploy/staging.wsgi
 
-The identifier 'staging' in staging.wsgi will automatically make sure
-settings.env.staging is used. Create other .wsgi files for other environment
-settings.
+And restart Apache. The identifier 'staging' in staging.wsgi will
+automatically make sure settings.env.staging is used. Create other
+.wsgi files for other environment settings.
 
 Refer to the source of the provided WSGI script to see how specific
 directories, like a virtualenv site-packages directory, can be
@@ -82,7 +83,8 @@ prepended to sys.path, overruling standard Python environment settings.
 Automatic generation of local wsgi links and settings file
 ==========================================================
 
-Alternatively, activate an environment - either directly via your
+If you want your WSGI setup done as quickly as possible, do as
+follows. Activate an environment - either directly via your
 ``scripts/initenv`` or through virtualenv - and execute
 ``scripts/setup_local_wsgi.sh <environment>``, e.g.::
 
@@ -106,7 +108,7 @@ Directories
  * All .wsgi files in the ``mysite/deploy`` folder are normally
    equal, except for the sys.path configuration. Their respective
    filenames are used to determine which settings to import. If
-   your apache configuration allows it, you could use symlinks
+   your Apache configuration allows it, you could use symlinks
    instead of copies.
  * The scripts directory contains the shell scripts intended to be
    sourced with the ``source`` command, unless they have a '.sh'
