@@ -1,13 +1,26 @@
 django-environments
 ===================
 
-Manage different settings for different locations (systems), like
-local (your machine), development (shared development system), test,
-staging/acceptance and production, with "maximum DRY".
+Manage different Django settings within a project, and easily switch
+between them. Different settings can be helpful either on a single
+computer, but django-environments is mostly intended for use on
+different system environments, like development, test, staging/acceptance
+and production, all with "maximum DRY™".
 
-Or, more generically: be able to refactor your settings as you like,
-by simply "inheriting" from more generic settings using 'from ...
-import'.
+On the command line, you specify your project and settings using
+environment variables. When you run your application via WSGI, a
+naming convention determines which settings to use based on the name
+of the WSGI file. All this helps to minimize the number of code
+changes and other file updates when working across different
+environments.
+
+Django-environments moves the settings.py to a settings package,
+and suggests a settings inheritance model, which you can adhere to
+as much as you like. Simply "inherit" from more generic settings
+using 'from ... import *', and overrule - see the provided examples.
+If you'd rather use a "composition" model (import settings not just
+from base settings "above", but also "from the side"), that's also
+fine.
 
 Compatibility with Python < 2.6
 ===============================
@@ -32,12 +45,13 @@ by itself, do the following:
 
  1. Copy scripts/initenv_example to scripts/initenv.
  2. Edit initenv and set ``PROJECT_ROOT``, ``DJANGO_PROJECT`` (always a
-    subdirectory of ``PROJECT_ROOT``) and ``DJANGO_SETTINGS``.
+    subdirectory of ``PROJECT_ROOT``) and ``DJANGO_SETTINGS`` (simply
+    changing ``PROJECT_ROOT`` should be enough for fresh checkouts, btw).
  3. Activate the environment using ``source scripts/initenv``.
  4. When using virtualenv with virtualenvwrapper, you can do either
     ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``,
     or simply use your initenv's contents inside postactivate. 
-    Alternatively, you may also symlink ``bin/postactivate`` to the
+    Alternatively, you may also symlink ``bin/postactivate`` to your
     initenv script.
 
 If everything works okay, the following shell aliases are created:
@@ -50,9 +64,10 @@ Using Apache mod_wsgi
 =====================
 
 Should you wish to use the local settings in for instance
-``settings/env/staging.py``, simply copy the ``mysite/deploy/example.wsgi``
-to ``mysite/deploy/staging.wsgi``, or make staging.wsgi a symlink. Then add
-something like this to your httpd.conf::
+``settings/env/staging.py``, simply copy the example
+``mysite/deploy/development.wsgi`` to ``mysite/deploy/staging.wsgi``,
+or make staging.wsgi a symlink. Then add something like this to
+your httpd.conf::
 
     WSGIScriptAlias / /Users/spanky/repos/django-environments/mysite/deploy/staging.wsgi
 
@@ -60,14 +75,16 @@ The identifier 'staging' in staging.wsgi will automatically make sure
 settings.env.staging is used. Create other .wsgi files for other environment
 settings.
 
-You can add specific site packages to 
+Refer to the source of the provided WSGI script to see how specific
+directories, like a virtualenv site-packages directory, can be
+prepended to sys.path, overruling standard Python environment settings.
 
 Automatic generation of local wsgi links and settings file
 ==========================================================
 
 Alternatively, activate an environment - either directly via your
 ``scripts/initenv`` or through virtualenv - and execute
-``scripts/setup_local_wsgi.sh <environment>``, e.g.
+``scripts/setup_local_wsgi.sh <environment>``, e.g.::
 
     ``scripts/setup_local_wsgi.sh staging``
 
@@ -75,8 +92,7 @@ This will create a symbolic link deploy/local.wsgi to staging.wsgi and
 will create a settings/env/local.py with default contents for a given
 environment. Now, you only need to update settings.env.local with those
 settings you want to keep absolutely local, like those containing
-user ids and passwords. The local.py file will be pyc-compiled
-automatically. Keep in mind the script will overwrite exiting
+user ids and passwords. Keep in mind the script will overwrite exiting
 local.py settings files!
 
 Directories
@@ -88,11 +104,12 @@ Directories
  * The ``mysite/settings/env`` directory contains the different settings
    files for every environment.
  * All .wsgi files in the ``mysite/deploy`` folder are normally
-   equal; their respective filenames are used to determine which
-   settings to import. If your apache configuration allows it, you could
-   use symlinks instead of copies.
+   equal, except for the sys.path configuration. Their respective
+   filenames are used to determine which settings to import. If
+   your apache configuration allows it, you could use symlinks
+   instead of copies.
  * The scripts directory contains the shell scripts intended to be
-   sourced with the ``source`` command, unless they have an '.sh'
+   sourced with the ``source`` command, unless they have a '.sh'
    extension.
 
 Remarks

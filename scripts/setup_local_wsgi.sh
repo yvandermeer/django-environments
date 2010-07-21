@@ -50,5 +50,3 @@ from $env import *
 # DATABASES['default']['PASSWORD'] = 'secret'
 EOF
 echo $settings_local created. 2>&1
-
-python -c "import compileall; compileall.compile_dir('$settings_dir')"
