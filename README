@@ -28,7 +28,9 @@ by itself, do the following:
  3. Activate the environment using ``source scripts/initenv``.
  4. When using virtualenv with virtualenvwrapper, you can do either
     ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``,
-    or simply use your initenv's contents inside postactivate.
+    or simply use your initenv's contents inside postactivate. 
+    Alternatively, you may also symlink ``bin/postactivate`` to a custom
+    version of this file.
 
 If everything works okay, the following shell aliases are created:
 
@@ -39,15 +41,31 @@ If everything works okay, the following shell aliases are created:
 Using Apache mod_wsgi
 =====================
 
-Should you wish to use the local settings in settings/env/local.py,
-simply copy the mysite/deploy/example.wsgi to mysite/deploy/local.wsgi,
-and add something like this to your httpd.conf::
+Should you wish to use the local settings in for instance
+``settings/env/staging.py``, simply copy the ``mysite/deploy/example.wsgi``
+to ``mysite/deploy/staging.wsgi``, or make staging.wsgi a symlink. Then add
+something like this to your httpd.conf::
 
-    WSGIPythonHome /Users/spanky/.virtualenvs/django-environments # Optional
-    WSGIScriptAlias / /Users/spanky/repos/django-environments/mysite/deploy/local.wsgi
+    WSGIScriptAlias / /Users/spanky/repos/django-environments/mysite/deploy/staging.wsgi
 
-The 'local' in local.wsgi will automatically make sure settings.env.local
-is used. Create other .wsgi files for other environment settings.
+The identifier 'staging' in staging.wsgi will automatically make sure
+settings.env.staging is used. Create other .wsgi files for other environment
+settings.
+
+Automatic generation of local wsgi links and settings file
+==========================================================
+
+Alternatively, activate an environment - either directly via your
+``scripts/initenv`` or through virtualenv - and execute
+``scripts/setup_local_wsgi.sh <environment>``, e.g.
+
+    ``scripts/setup_local_wsgi.sh staging``
+
+This will create a symbolic link deploy/local.wsgi to staging.wsgi and
+will create a settings/env/local.py with default contents for a given
+environment. Now, you only need to update settings.env.local with those
+settings you want to keep local, like user ids and passwords. Keep in
+mind the script will overwrite exiting local.py settings files!
 
 Directories
 ===========
@@ -59,9 +77,11 @@ Directories
    files for every environment.
  * All .wsgi files in the ``mysite/deploy`` folder are normally
    equal; their respective filenames are used to determine which
-   settings to import.
- * As discussed above, the scripts directory contains the shell
-   scripts intended to be sourced with the ``source`` command.
+   settings to import. If your apache configuration allows it, you could
+   use symlinks instead of copies.
+ * The scripts directory contains the shell scripts intended to be
+   sourced with the ``source`` command, unless they have an '.sh'
+   extension.
 
 Remarks
 =======
