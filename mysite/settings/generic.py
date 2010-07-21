@@ -1,8 +1,7 @@
-# Django settings for mysite project.
-import sys
-from os.path import join, dirname
+# Django generic settings for settings package
+from os import path
 
-PROJECT_DIR = dirname(dirname(__file__))
+PROJECT_ROOT = path.dirname(path.dirname(__file__))
 
 gettext = lambda s: s
 
@@ -51,7 +50,7 @@ SERVE_MEDIA = False
 
 # Absolute path to the directory that holds media.
 # Example: "/home/media/media.lawrence.com/"
-MEDIA_ROOT = join(PROJECT_DIR, 'static/')
+MEDIA_ROOT = path.join(PROJECT_ROOT, 'static/')
 
 # URL that handles the media served from MEDIA_ROOT. Make sure to use a
 # trailing slash if there is a path component (optional in other cases).
