@@ -1,16 +1,6 @@
 from .. import *
-from os.path import basename
+from os import path
 
-
-try:
-    CACHE_MIDDLEWARE_KEY_PREFIX += '.' + basename(__file__).split('.')[0]
-except NameError:
-    from os import environ
-    CACHE_MIDDLEWARE_KEY_PREFIX = environ['DJANGO_PROJECT'] + '.' + \
-                                  basename(__file__).split('.')[0]
-CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
-CACHE_MIDDLEWARE_SECONDS = 86400
-CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 
 DATABASE_ENGINE = 'postgresql'
 DATABASE_HOST = ''
@@ -29,3 +19,21 @@ SEND_BROKEN_LINK_EMAILS = True
 ROSETTA_WSGI_AUTO_RELOAD = False
 
 GOOGLE_ANALYTICS_CODE = 'UA-XXX'
+
+CACHE_BACKEND = 'memcached://127.0.0.1:11211/'
+CACHE_MIDDLEWARE_SECONDS = 86400
+CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
+
+try:
+    CACHE_MIDDLEWARE_KEY_PREFIX += '.' + path.basename(__file__).split('.')[0]
+except NameError:
+    from os import environ
+
+    # Find out where this settings file is
+    split_path = __file__.split(path.sep)
+    # Calculate the path based on the location of this settings file
+    django_project = split_path[-4]
+    project_root = split_path[-5]
+
+    CACHE_MIDDLEWARE_KEY_PREFIX = project_root + '.' +  django_project + '.' + \
+                                  split_path[-1].split('.')[0]

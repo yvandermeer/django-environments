@@ -3,11 +3,19 @@ django-environments
 
 Manage different settings for different locations (systems), like
 local (your machine), development (shared development system), test,
-staging/acceptance and production.
+staging/acceptance and production, with "maximum DRY".
 
 Or, more generically: be able to refactor your settings as you like,
 by simply "inheriting" from more generic settings using 'from ...
 import'.
+
+Compatibility with Python < 2.6
+===============================
+In the example settings files, 'from .. import *' is used. You will
+need to change this to ``from <project>.settings import *`` for older
+versions of Python. The downside is that you will have to include
+the project name in your settings, which is a violation of the DRY
+principle that django-environments tries to live by.
 
 Compatibility with virtualenv
 =============================
@@ -24,13 +32,13 @@ by itself, do the following:
 
  1. Copy scripts/initenv_example to scripts/initenv.
  2. Edit initenv and set ``PROJECT_ROOT``, ``DJANGO_PROJECT`` (always a
-    subdirectory of ``PROJECT_ROOT``) and ``PROJECT_SETTINGS``.
+    subdirectory of ``PROJECT_ROOT``) and ``DJANGO_SETTINGS``.
  3. Activate the environment using ``source scripts/initenv``.
  4. When using virtualenv with virtualenvwrapper, you can do either
     ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``,
     or simply use your initenv's contents inside postactivate. 
-    Alternatively, you may also symlink ``bin/postactivate`` to a custom
-    version of this file.
+    Alternatively, you may also symlink ``bin/postactivate`` to the
+    initenv script.
 
 If everything works okay, the following shell aliases are created:
 
@@ -52,6 +60,8 @@ The identifier 'staging' in staging.wsgi will automatically make sure
 settings.env.staging is used. Create other .wsgi files for other environment
 settings.
 
+You can add specific site packages to 
+
 Automatic generation of local wsgi links and settings file
 ==========================================================
 
@@ -64,8 +74,10 @@ Alternatively, activate an environment - either directly via your
 This will create a symbolic link deploy/local.wsgi to staging.wsgi and
 will create a settings/env/local.py with default contents for a given
 environment. Now, you only need to update settings.env.local with those
-settings you want to keep local, like user ids and passwords. Keep in
-mind the script will overwrite exiting local.py settings files!
+settings you want to keep absolutely local, like those containing
+user ids and passwords. The local.py file will be pyc-compiled
+automatically. Keep in mind the script will overwrite exiting
+local.py settings files!
 
 Directories
 ===========

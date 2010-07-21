@@ -8,7 +8,7 @@
 
 PROJECT_ROOT=/Users/grone/repos/django-environments
 DJANGO_PROJECT=mysite
-PROJECT_SETTINGS=settings.env.local
+DJANGO_SETTINGS=settings.env.development
 SHOW_DJANGO_ENVIRONMENT=yes
 
 source $PROJECT_ROOT/scripts/initenv_generic

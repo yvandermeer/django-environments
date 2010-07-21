@@ -1,16 +1,8 @@
 from .. import *
-from os.path import basename
+from os import path
 
 
-try:
-    CACHE_MIDDLEWARE_KEY_PREFIX += '.' + basename(__file__).split('.')[0]
-except NameError:
-    from os import environ
-    CACHE_MIDDLEWARE_KEY_PREFIX = environ['DJANGO_PROJECT'] + '.' + \
-                                  basename(__file__).split('.')[0]
-
-
-DATABASE_ENGINE = 'postgresql'
+DATABASE_ENGINE = 'sqlite3'
 DATABASE_HOST = ''
 DATABASE_NAME = ''
 DATABASE_USER = ''

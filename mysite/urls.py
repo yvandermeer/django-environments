@@ -11,7 +11,7 @@ urlpatterns = patterns('',
     #(r'^', include('main.urls')),
 
     #$(r'^admin/doc/', include('django.contrib.admindocs.urls')),
-    (r'^admin/', include(admin.site.urls)),
+    #(r'^admin/', include(admin.site.urls)),
 
     #$(r'^admin/filebrowser/', include('filebrowser.urls')),
     #$(r'^admin/rosetta/', include('rosetta.urls')),
