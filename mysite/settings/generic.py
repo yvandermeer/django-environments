@@ -5,17 +5,19 @@ import logging
 DJANGO_PROJECT = path.dirname(path.dirname(__file__))
 PROJECT_ROOT = path.dirname(DJANGO_PROJECT)
 
-LOGGING_FILENAME = path.join(PROJECT_ROOT, 'logs/icecat.log')
+LOGGING_FILENAME = path.join(PROJECT_ROOT, 'logs/mysite.log')
 
 logging.basicConfig(
     level=logging.DEBUG,
     format='%(asctime)s - %(name)s - %(levelname)s: %(message)s',
     # format='%(name)s: %(message)s',
-    filename=LOGGING_FILENAME,
+    #filename=LOGGING_FILENAME,
 )
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
+
+LOCAL_SERVER_PORT = 7000
 
 ADMINS = (
     # ('Your Name', 'your_email@domain.com'),
