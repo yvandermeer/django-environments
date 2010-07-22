@@ -6,6 +6,7 @@
 # lines to bin/postactivate. Alternatively, you may also symlink
 # bin/postactivate to a custom version of this file.
 
+#DOMAIN=local.mysite.org # Domain for virtual host configuration - optional
 PROJECT_ROOT=/Users/grone/repos/django-environments
 DJANGO_PROJECT=mysite
 DJANGO_SETTINGS=settings.env.development

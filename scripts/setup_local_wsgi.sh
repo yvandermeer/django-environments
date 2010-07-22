@@ -1,6 +1,6 @@
 #!/bin/sh
 #
-# Generates deploy/local.wsgi settings/env/local.py for a given environment.
+# Generates deploy/local.wsgi settings/env/local.py for a given environment
 #
 # To be run in an activated django-environment environment, i.e.
 # $PROJECT_ROOT and $DJANGO_PROJECT must be set correctly.

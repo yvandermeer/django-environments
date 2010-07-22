@@ -55,7 +55,7 @@ fi
 # Some useful aliases
 alias cdroot="cd $PROJECT_ROOT"
 alias cdjango="cd $PROJECT_ROOT/$DJANGO_PROJECT"
-alias runserver="django-admin.py runserver `$PROJECT_ROOT/scripts/get_local_server_port.py`"
+alias runserver="django-admin.py runserver \`$PROJECT_ROOT/scripts/get_local_server_port.py\`"
 alias syncdb="django-admin.py syncdb"
 
 # Change working directory

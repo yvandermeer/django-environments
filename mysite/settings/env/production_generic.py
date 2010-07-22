@@ -27,8 +27,6 @@ CACHE_MIDDLEWARE_ANONYMOUS_ONLY = True
 try:
     CACHE_MIDDLEWARE_KEY_PREFIX += '.' + path.basename(__file__).split('.')[0]
 except NameError:
-    from os import environ
-
     # Find out where this settings file is
     split_path = __file__.split(path.sep)
     # Calculate the path based on the location of this settings file
