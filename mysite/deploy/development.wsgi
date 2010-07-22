@@ -12,6 +12,8 @@ DJANGO_PROJECT_DIR = path.dirname(wsgi_dir)
 PROJECT_ROOT = path.dirname(DJANGO_PROJECT_DIR)
 
 paths = (
+    #DJANGO_PROJECT_DIR,
+    path.join(PROJECT_ROOT, 'apps'),
     PROJECT_ROOT,
     '/var/virtualenvs/mysite/lib/python2.6/site-packages',
 )
