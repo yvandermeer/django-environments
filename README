@@ -4,7 +4,7 @@ django-environments
 Manage different Django settings within a project, and easily switch
 between them. Different settings can be helpful either on a single
 computer, but django-environments is mostly intended for use on
-different system environments, like development, test, staging/acceptance
+different system environments, such as development, test, staging/acceptance
 and production, all with "maximum DRY™".
 
 On the command line, you specify your project and settings using
@@ -14,54 +14,55 @@ of the WSGI file. All this helps to minimize the number of code
 changes and other file updates when working across different
 environments.
 
-Django-environments moves the settings.py to a settings package,
+Django-environments moves the ``settings.py`` to a settings package,
 and suggests a settings inheritance model, which you can adhere to
 as much as you like. Simply "inherit" from more generic settings
-using 'from ... import *', and overrule - see the provided examples.
+using ``from ... import *``, and overrule - see the provided examples.
 If you'd rather use a "composition" model (import settings not just
 from base settings "above", but also "from the side"), that's also
 fine.
 
 Compatibility with Python < 2.6
-===============================
-In the example settings files, 'from .. import *' is used. You will
+-------------------------------
+
+In the example settings files, ``from .. import *`` is used. You will
 need to change this to ``from <project>.settings import *`` for older
 versions of Python. The downside is that you will have to include
 the project name in your settings, which is a violation of the DRY
 principle that django-environments tries to live by.
 
 Compatibility with virtualenv
-=============================
+-----------------------------
 
 Please note django-environments can be nicely used together with
 virtualenv, especially virtualenvwrapper's ``bin/postactivate`` script.
 
 Getting Started
-===============
+---------------
 
 This is a fully working Django project; you can copy files from it
 as needed to your own projects. To get django-environments working
 by itself, do the following:
 
- 1. Copy scripts/initenv_example to scripts/initenv.
- 2. Edit initenv and set ``PROJECT_ROOT``, ``DJANGO_PROJECT`` (always a
-    subdirectory of ``PROJECT_ROOT``) and ``DJANGO_SETTINGS`` (simply
-    changing ``PROJECT_ROOT`` should be enough for fresh checkouts, btw).
- 3. Activate the environment using ``source scripts/initenv``.
- 4. When using virtualenv with virtualenvwrapper, you can do either
-    ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``,
-    or simply use your initenv's contents inside postactivate. 
-    Alternatively, you may also symlink ``bin/postactivate`` to your
-    initenv script.
+1. Copy scripts/initenv_example to scripts/initenv.
+2. Edit initenv and set ``PROJECT_ROOT``, ``DJANGO_PROJECT`` (always a
+   subdirectory of ``PROJECT_ROOT``) and ``DJANGO_SETTINGS`` (simply
+   changing ``PROJECT_ROOT`` should be enough for fresh checkouts, btw).
+3. Activate the environment using ``source scripts/initenv``.
+4. When using virtualenv with virtualenvwrapper, you can do either
+   ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``,
+   or simply use your initenv's contents inside postactivate. 
+   Alternatively, you may also symlink ``bin/postactivate`` to your
+   initenv script.
 
 If everything works okay, the following shell aliases are created:
 
- * cdroot - go to project root.
- * cdjango - go to Django project root (one lower than project root).
- * runserver - perform manage.py runserver with the correct settings.
+* ``cdroot`` - go to project root.
+* ``cdjango`` - go to Django project root (one lower than project root).
+* ``runserver`` - perform manage.py runserver with the correct settings.
 
 Using Apache mod_wsgi
-=====================
+---------------------
 
 Should you wish to use the settings in for instance
 ``settings/env/staging.py``, simply copy the example
@@ -80,25 +81,24 @@ Refer to the source of the provided WSGI script to see how specific
 directories, like a virtualenv site-packages directory, can be
 prepended to sys.path, overruling standard Python environment settings.
 
-Automatic generation of local wsgi links and settings file
-==========================================================
+Automatic generation of local WSGI links and settings file
+----------------------------------------------------------
 
-If you want your WSGI setup done as quickly as possible, do as
-follows. Activate an environment - either directly via your
-``scripts/initenv`` or through virtualenv - and execute
-``scripts/setup_local_wsgi.sh <environment>``, e.g.::
+If you want your WSGI setup done as quickly as possible, activate an
+environment - either directly via your ``scripts/initenv`` or through
+virtualenv - and execute ``scripts/setup_local_wsgi.sh <environment>``, e.g.::
 
-    ``scripts/setup_local_wsgi.sh staging``
+    $ scripts/setup_local_wsgi.sh staging
 
-This will create a symbolic link deploy/local.wsgi to staging.wsgi and
-will create a settings/env/local.py with default contents for a given
+This will create a ``deploy/local.wsgi`` symbolic link to staging.wsgi and
+will create a ``settings/env/local.py`` with default contents for a given
 environment. Now, you only need to update settings.env.local with those
 settings you want to keep absolutely local, like those containing
 user ids and passwords. Keep in mind the script will overwrite exiting
 local.py settings files!
 
 Directories
-===========
+-----------
 
  * The ``mysite/settings`` directory replaces ``settings.py`` and contains
    the default settings in ``generic.py``, whose contents are
@@ -106,7 +106,7 @@ Directories
  * The ``mysite/settings/env`` directory contains the different settings
    files for every environment.
  * All .wsgi files in the ``mysite/deploy`` folder are normally
-   equal, except for the sys.path configuration. Their respective
+   equal, except for the ``sys.path`` configuration. Their respective
    filenames are used to determine which settings to import. If
    your Apache configuration allows it, you could use symlinks
    instead of copies.
@@ -115,7 +115,7 @@ Directories
    extension.
 
 Remarks
-=======
+-------
 
  * ``urls.py`` is just there to demonstrate the ``SERVE_MEDIA`` setting.
  * ``manage.py`` is just there to make this a complete Django project.
