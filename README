@@ -57,10 +57,10 @@ by itself, do the following:
 
 If everything works okay, the following shell aliases are created:
 
- * ``cdroot`` - go to project root.
- * ``cdjango`` - go to Django project root (one lower than project root).
- * ``runserver`` - perform ``django-admin.py runserver``.
- * ``syncdb`` - perform ``django-admin.py syncdb``.
+* ``cdroot`` - go to project root.
+* ``cdjango`` - go to Django project root (one lower than project root).
+* ``runserver`` - perform ``django-admin.py runserver``.
+* ``syncdb`` - perform ``django-admin.py syncdb``.
 
 Using Apache mod_wsgi
 ---------------------
@@ -68,19 +68,19 @@ Using Apache mod_wsgi
 Should you wish to use the settings in for instance
 ``settings/env/staging.py``, simply copy the example
 ``mysite/deploy/development.wsgi`` to ``mysite/deploy/staging.wsgi``,
-or make staging.wsgi a symlink (if your Apache configuration allows
+or make ``staging.wsgi`` a symlink (if your Apache configuration allows
 it, which is normally the case). Next, add something like this to
-your httpd.conf::
+your ``httpd.conf``::
 
     WSGIScriptAlias / /Users/spanky/repos/django-environments/mysite/deploy/staging.wsgi
 
-And restart Apache. The identifier 'staging' in staging.wsgi will
-automatically make sure settings.env.staging is used. Create other
+And restart Apache. The identifier 'staging' in ``staging.wsgi`` will
+automatically make sure ``settings.env.staging`` is used. Create other
 .wsgi files for other environment settings.
 
 Refer to the source of the provided WSGI script to see how specific
 directories, like a virtualenv site-packages directory, can be
-prepended to sys.path, overruling standard Python environment settings.
+prepended to ``sys.path``, overruling standard Python environment settings.
 
 Automatic generation of local WSGI links and settings file
 ----------------------------------------------------------
@@ -93,31 +93,31 @@ virtualenv - and execute ``scripts/setup_local_wsgi.sh <environment>``, e.g.::
 
 This will create a ``deploy/local.wsgi`` symbolic link to staging.wsgi and
 will create a ``settings/env/local.py`` with default contents for a given
-environment. Now, you only need to update settings.env.local with those
+environment. Now, you only need to update ``settings.env.local`` with those
 settings you want to keep absolutely local, like those containing
 user ids and passwords. Keep in mind the script will overwrite exiting
-local.py settings files!
+``local.py`` settings files!
 
 Directories
 -----------
 
- * The ``mysite/settings`` directory replaces ``settings.py`` and contains
-   the default settings in ``generic.py``, whose contents are
-   imported in ``__init__.py``.
- * The ``mysite/settings/env`` directory contains the different settings
-   files for every environment.
- * All .wsgi files in the ``mysite/deploy`` folder are normally
-   equal, except for the ``sys.path`` configuration. Their respective
-   filenames are used to determine which settings to import. If
-   your Apache configuration allows it, you could use symlinks
-   instead of copies.
- * The scripts directory contains the shell scripts intended to be
-   sourced with the ``source`` command, unless they have a '.sh'
-   extension.
+* The ``mysite/settings`` directory replaces ``settings.py`` and contains
+  the default settings in ``generic.py``, whose contents are
+  imported in ``__init__.py``.
+* The ``mysite/settings/env`` directory contains the different settings
+  files for every environment.
+* All .wsgi files in the ``mysite/deploy`` folder are normally
+  equal, except for the ``sys.path`` configuration. Their respective
+  filenames are used to determine which settings to import. If
+  your Apache configuration allows it, you could use symlinks
+  instead of copies.
+* The scripts directory contains the shell scripts intended to be
+  sourced with the ``source`` command, unless they have a '.sh'
+  extension.
 
 Remarks
 -------
 
- * ``urls.py`` is just there to demonstrate the ``SERVE_MEDIA`` setting.
- * ``manage.py`` is removed as the generated default ignores
-   $DJANGO_SETTINGS_MODULE, simply importing 'settings' instead.
+* ``urls.py`` is just there to demonstrate the ``SERVE_MEDIA`` setting.
+* ``manage.py`` is removed as the generated default ignores
+  ``$DJANGO_SETTINGS_MODULE``, simply importing 'settings' instead.
