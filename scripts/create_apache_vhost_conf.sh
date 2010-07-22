@@ -20,7 +20,7 @@ domain=local
 cd `dirname $0`
 
 for django_project_dir in $PROJECT_ROOT/*; do
-    if [ -f $django_project_dir/settings.py -o -d $django_project_dir/settings ]; then
+    if [ -f "$django_project_dir/settings.py" -o -d "$django_project_dir/settings" ]; then
         django_project=`basename $django_project_dir`
         export PYTHONPATH=$django_project_dir
         export DJANGO_SETTINGS_MODULE=settings
