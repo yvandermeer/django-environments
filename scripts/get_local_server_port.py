@@ -1,10 +1,10 @@
 #!/usr/bin/env python
 from os import environ
-
-print __import__(environ['DJANGO_SETTINGS_MODULE'])
-print __import__(environ['DJANGO_SETTINGS_MODULE']).settings
+from sys import modules
 
 try:
-    print __import__(environ['DJANGO_SETTINGS_MODULE']).settings.LOCAL_SERVER_PORT
+    settings = environ['DJANGO_SETTINGS_MODULE']
+    __import__(settings)
+    print modules[settings].LOCAL_SERVER_PORT
 except (ImportError, AttributeError):
     print 8000
