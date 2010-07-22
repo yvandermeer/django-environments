@@ -58,7 +58,8 @@ If everything works okay, the following shell aliases are created:
 
  * cdroot - go to project root.
  * cdjango - go to Django project root (one lower than project root).
- * runserver - perform manage.py runserver with the correct settings.
+ * runserver - perform ``django-admin.py runserver``.
+ * syncdb - perform ``django-admin.py syncdb``.
 
 Using Apache mod_wsgi
 =====================
@@ -118,4 +119,5 @@ Remarks
 =======
 
  * ``urls.py`` is just there to demonstrate the ``SERVE_MEDIA`` setting.
- * ``manage.py`` is just there to make this a complete Django project.
+ * ``manage.py`` is removed as the generated default ignores
+   $DJANGO_SETTINGS_MODULE, simply importing 'settings' instead.
