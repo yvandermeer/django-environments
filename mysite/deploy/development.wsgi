@@ -2,43 +2,42 @@
 # Example Apache configuration:
 # WSGIScriptAlias / /Users/spanky/repos/django-environments/mysite/deploy/local.wsgi
 
-# These will be prepended to the front of sys.path, so great for
-# virtual environments:
-site_packages = (
-    #'/var/virtualenvs/mysite/lib/python2.6/site-packages',
-)
-
-import os, site, sys
-import site
-
-# Remember original sys.path
-prev_sys_path = list(sys.path) 
-
-# Add each new site-packages directory
-for directory in site_packages:
-  site.addsitedir(directory)
-
-# Reorder sys.path so new directories are at the front
-new_sys_path = [] 
-for item in list(sys.path): 
-    if item not in prev_sys_path: 
-        new_sys_path.append(item) 
-        sys.path.remove(item) 
-sys.path[:0] = new_sys_path 
-
-# Now we can import from django
-import django.core.handlers.wsgi
+from os import path, environ
+import site, sys
 
 # Find out where this WSGI script is
-wsgi_dir = os.path.dirname(__file__)
+wsgi_dir = path.dirname(__file__)
 # Calculate the path based on the location of the WSGI script
-django_project = os.path.dirname(wsgi_dir)
-project_root = os.path.dirname(django_project)
+DJANGO_PROJECT_DIR = path.dirname(wsgi_dir)
+PROJECT_ROOT = path.dirname(DJANGO_PROJECT_DIR)
 
-# Add paths
-sys.path.insert(0, project_root)
-sys.path.insert(0, django_project)
+paths = (
+    #DJANGO_PROJECT_DIR,
+    path.join(PROJECT_ROOT, 'apps'),
+    PROJECT_ROOT,
+    '/var/virtualenvs/mysite/lib/python2.6/site-packages',
+)
 
-os.environ['DJANGO_SETTINGS_MODULE'] = 'settings.env.' + \
-    os.path.basename(__file__).split('.')[0]
+# Remember original sys.path
+prev_sys_path = list(sys.path)
+
+# Add each new directory
+for directory in paths:
+   site.addsitedir(directory)
+
+# Reorder sys.path so new directories at the front
+new_sys_path = []
+for item in list(sys.path):
+    if item not in prev_sys_path:
+        new_sys_path.append(item)
+        sys.path.remove(item)
+sys.path[:0] = new_sys_path
+
+# Now we can import from the environment
+import django.core.handlers.wsgi
+
+# Determine settings from filename
+environ['DJANGO_SETTINGS_MODULE'] = path.basename(DJANGO_PROJECT_DIR) + \
+    '.settings.env.' + path.basename(__file__).split('.')[0]
 application = django.core.handlers.wsgi.WSGIHandler()
+
