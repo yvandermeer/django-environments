@@ -55,6 +55,8 @@ fi
 # Some useful aliases
 alias cdroot="cd $PROJECT_ROOT"
 alias cdjango="cd $PROJECT_ROOT/$DJANGO_PROJECT"
+alias pipup-dev="pip -q install -r $PROJECT_ROOT/requirements/libs-development.txt"
+alias pipup-prod="pip -q install -r $PROJECT_ROOT/requirements/libs-production.txt"
 alias runserver="django-admin.py runserver \`$PROJECT_ROOT/scripts/get_local_server_port.py\`"
 alias syncdb="django-admin.py syncdb"
 

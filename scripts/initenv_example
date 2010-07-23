@@ -12,9 +12,12 @@ DJANGO_PROJECT=mysite
 DJANGO_SETTINGS=settings.env.development
 SHOW_DJANGO_ENVIRONMENT=yes
 
+# These two lines help greatly when using pip with virtualenv, see
+# http://pip.openplans.org/
+export PIP_REQUIRE_VIRTUALENV=true PIP_RESPECT_VIRTUALENV=true
+
 # Pass additional directories for sys.path as arguments to
 # initenv_generic, e.g.
 # source $PROJECT_ROOT/scripts/initenv_generic $PROJECT_ROOT/apps
 source $PROJECT_ROOT/scripts/initenv_generic
-
 [ ! $? -eq 0 ] && return 1

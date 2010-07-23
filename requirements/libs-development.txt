@@ -1,0 +1,9 @@
+# Example requirements for development
+Django
+PyYAML
+docutils
+Sphinx
+pyflakes
+Pygments
+pysmell
+django-debug-toolbar
