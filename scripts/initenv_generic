@@ -54,10 +54,10 @@ fi
 
 # Some useful functions
 function cdroot() {
-    cd $PROJECT_ROOT
+    cd $PROJECT_ROOT/$1
 }
 function cdjango () {
-    cd $PROJECT_ROOT/$DJANGO_PROJECT
+    cd $PROJECT_ROOT/$DJANGO_PROJECT/$1
 }
 function djadmin() {
     django-admin.py $* # Forget manage.py :)
