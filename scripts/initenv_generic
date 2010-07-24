@@ -52,13 +52,25 @@ if [ ! "$?" -eq 0 ]; then
     return 1
 fi
 
-# Some useful aliases
-alias cdroot="cd $PROJECT_ROOT"
-alias cdjango="cd $PROJECT_ROOT/$DJANGO_PROJECT"
-alias pipup-dev="pip install --requirement=$PROJECT_ROOT/requirements/libs-development.txt"
-alias pipup-prod="pip install --requirement=$PROJECT_ROOT/requirements/libs-production.txt"
-alias runserver="django-admin.py runserver \`$PROJECT_ROOT/scripts/get_local_server_port.py\`"
-alias syncdb="django-admin.py syncdb"
+# Some useful functions
+function cdroot() {
+    cd $PROJECT_ROOT
+}
+function cdjango () {
+    cd $PROJECT_ROOT/$DJANGO_PROJECT
+}
+function djadmin() {
+    django-admin.py $* # Forget manage.py :)
+}
+function pipup-dev() {
+    pip install --requirement=$PROJECT_ROOT/requirements/libs-development.txt
+}
+function pipup-prod() {
+    pip install --requirement=$PROJECT_ROOT/requirements/libs-production.txt
+}
+function runserver() {
+    django-admin.py runserver `$PROJECT_ROOT/scripts/get_local_server_port.py`
+}
 
 # Change working directory
 cdjango
