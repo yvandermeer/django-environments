@@ -62,11 +62,13 @@ function cdjango () {
 function djadmin() {
     django-admin.py $* # Forget manage.py :)
 }
-function pipup-dev() {
-    pip install --requirement=$PROJECT_ROOT/requirements/libs-development.txt
-}
-function pipup-prod() {
-    pip install --requirement=$PROJECT_ROOT/requirements/libs-production.txt
+function pipup() {
+    if [ -z "$1" ]; then
+        echo Usage: pipup '<requirements-identifier>'
+        return 1
+    else
+        pip install --requirement=$PROJECT_ROOT/requirements/libs-$1.txt
+    fi
 }
 function runserver() {
     django-admin.py runserver `$PROJECT_ROOT/scripts/get_local_server_port.py`
