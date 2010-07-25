@@ -2,8 +2,9 @@ from os import path
 import logging
 
 
-DJANGO_PROJECT = path.dirname(path.dirname(__file__))
-PROJECT_ROOT = path.dirname(DJANGO_PROJECT)
+DJANGO_PROJECT_DIR = path.dirname(path.dirname(__file__))
+DJANGO_PROJECT = path.basename(DJANGO_PROJECT_DIR)
+PROJECT_ROOT = path.dirname(DJANGO_PROJECT_DIR)
 
 LOGGING_FILENAME = path.join(PROJECT_ROOT, 'logs/mysite.log')
 
