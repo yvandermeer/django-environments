@@ -1,4 +1,4 @@
-# 
+#removeorphanpycs 
 # django-environments environment initialization script
 #
 # It's best to set the following variables in your own initenv
@@ -65,7 +65,7 @@ fi
 # 
 # Returns nothing if setting cannot be found
 function get_django_setting() {
-    [ -z "$1" ] && echo "Supply setting name" 1>&2 && return 1
+    [ -z "$1" ] && echo "Usage: get_django_setting '<setting-name>'" 1>&2 && return 1
 
     python << EOF
 import $DJANGO_SETTINGS_MODULE as settings
@@ -136,12 +136,9 @@ function cdjango () {
 # with the dependencies should be in the requirements directory and
 # should have the format 'libs-<environment>.txt'
 function pipup() {
-    if [ -z "$1" ]; then
-        echo Usage: pipup '<requirements-identifier>'
-        return 1
-    else
-        pip install --requirement=$PROJECT_ROOT/requirements/libs-$1.txt
-    fi
+    [ -z "$1" ] && echo "Usage: pipup '<requirements-identifier>'" 1>&2 && return 1
+
+    pip install --requirement=$PROJECT_ROOT/requirements/libs-$1.txt
 }
 
 # Use compileall to compile all .py files - handy for web server
@@ -149,6 +146,7 @@ function pipup() {
 # .pyc files / directories
 function pycompile() {
     python -c "import compileall; compileall.compile_dir('$PROJECT_ROOT')"
+
     removeorphanpycs
 }
 
