@@ -106,5 +106,53 @@ function runserver() {
     django-admin.py runserver `$PROJECT_ROOT/scripts/get_local_server_port.py`
 }
 
+# Import django settings into the shell environment
+# Experimental.
+#
+# When using, set $IFS to empty (this is needed because we eval
+# the output of the python-generated shell script code):
+# IFS=''
+#
+# Then use the function as follows:
+# eval `import_django_settings` # all settings
+# or
+# eval `import_django_settings ADMIN` # all settings starting with 'ADMIN'
+#
+# Tuples and lists items are separated with newlines, so set $IFS
+# to newline to get to those:
+# IFS='
+# '
+# Note that all variables are prefixed with value of $prefix, 'DJANGO_'.
+function import_django_settings() {
+    prefix=DJANGO_
+    python << EOF
+import $DJANGO_SETTINGS_MODULE as settings
+from types import TupleType, ListType, DictType
+
+def escape(value):
+    return str(value).replace('"', '\\\\"')
+
+settings = settings.__dict__.items()
+settings.sort()
+for name, value in settings:
+    if name.find('__') == -1 and name.find('$1') == 0:
+        if type(value) in (TupleType, ListType):
+            print '$prefix%s="' % name
+            for item in value:
+                print escape(item)
+            print '"'
+        elif type(value) == DictType:
+            print '$prefix%s="' % name
+            for name, value in value.items():
+                print '%s:%s' % (name, escape(value))
+            print '"'
+        else:
+            print '$prefix%s="%s"' % (name, escape(value))
+EOF
+}
+
+# Export functions that are not solely intended for interactive use
+export -f import_django_settings
+
 # Change working directory - time to party
 cdjango
