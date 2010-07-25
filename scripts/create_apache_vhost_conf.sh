@@ -13,9 +13,9 @@ domain=local
 
 # The root of the project should exist, of course
 [ -z "$PROJECT_ROOT" ] && \
-    echo "Variable PROJECT_ROOT not set or empty" 2>&1 && exit 1
+    echo "Variable PROJECT_ROOT not set or empty" 1>&2 && exit 1
 [ ! -d "$PROJECT_ROOT" ] && \
-     echo "Variable PROJECT_ROOT does not point to a readable directory" 2>&1 && exit 1
+     echo "Variable PROJECT_ROOT does not point to a readable directory" 1>&2 && exit 1
 
 cd `dirname $0`
 
@@ -25,7 +25,7 @@ for django_project_dir in $PROJECT_ROOT/*; do
         django_project=`basename $django_project_dir`
         export PYTHONPATH=$django_project_dir
         export DJANGO_SETTINGS_MODULE=settings
-        port=`./get_local_server_port.py`
+        port=`get_django_setting LOCAL_SERVER_PORT`
 
 cat << EOF
 <VirtualHost 127.0.0.1:*>
