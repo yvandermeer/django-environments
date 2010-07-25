@@ -199,7 +199,7 @@ for dirs in TEMPLATE_DIRS FIXTURE_DIRS; do
     eval `import_django_settings $dirs`
     envname=DJANGO_$dirs
     for dir in ${!envname}; do
-        [ ! -d $dir ] && echo "Warning: \"$dir\" in settings.$dirs does not exist"
+        [ ! -d $dir ] && echo "Warning: \"$dir\" in settings.$dirs is not a valid directory"
     done
 done
 
