@@ -1,12 +1,15 @@
-# It's best to set the following variables in your own initenv or
-# bin/postactivate, and then source this file
-
+# 
+# django-environments environment initialization script
+#
+# It's best to set the following variables in your own initenv
+# script or virtualenv bin/postactivate, and then source this file.
+#
 # The root of the project, i.e. the directory containing your Django project
 #PROJECT_ROOT=/Users/joe/projects/myproject
-
+#
 # Set this to the name of the Django project in PROJECT_ROOT
 #DJANGO_PROJECT=mysite
-
+#
 # Set this to something that can be imported within DJANGO_PROJECT, like 'settings'
 #DJANGO_SETTINGS=settings
 
@@ -141,6 +144,14 @@ function pipup() {
     fi
 }
 
+# Use compileall to compile all .py files - handy for web server
+# environments where the server user often has no write access to the
+# .pyc files / directories
+function pycompile() {
+    python -c "import compileall; compileall.compile_dir('$PROJECT_ROOT')"
+    removeorphanpycs
+}
+
 # Remove .pyc files without a corresponding .py
 function removeorphanpycs() {
     for pyc in `find . -name \*.pyc`; do
@@ -162,7 +173,7 @@ function runserver() {
 export -f get_django_setting import_django_settings
 
 # Test if the definitions in the settings match ours
-[ "$PROJECT_ROOT" != `get_django_setting PROJECT_ROOT` ] && \
+[ "$PROJECT_ROOT" != "`get_django_setting PROJECT_ROOT`" ] && \
     echo "\$PROJECT_ROOT in Django settings is different from shell" 1>&2 && \
     _deactivate && return 1
 [ "$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT`" ] && \
@@ -184,6 +195,15 @@ if [ "$SHOW_DJANGO_ENVIRONMENT" = "yes" ]; then
     PAGER=cat python -c "import $DJANGO_SETTINGS_MODULE; help($DJANGO_SETTINGS_MODULE)" | grep -v "^$"
     echo
 fi
+
+# Check settings
+for dirs in TEMPLATE_DIRS FIXTURE_DIRS; do
+    eval `import_django_settings $dirs`
+    envname=DJANGO_$dirs
+    for dir in ${!envname}; do
+        [ ! -d $dir ] && echo "Warning: \"$dir\" in settings.$dirs does not exist"
+    done
+done
 
 # Change working directory - time to party
 cdjango

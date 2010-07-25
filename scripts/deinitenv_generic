@@ -6,8 +6,6 @@
 # to bin/postdeactivate. Alternatively, you may also symlink
 # bin/postdeactivate to (a custom version of) this file.
 
-echo "Cleaning up" 1>&2
-
 if [ ! -z "$_OLD_DJANGO_SETTINGS_MODULE" ]; then
     DJANGO_SETTINGS_MODULE=$_OLD_DJANGO_SETTINGS_MODULE
 else

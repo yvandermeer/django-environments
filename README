@@ -4,8 +4,8 @@ django-environments
 Manage different Django settings within a project, and easily switch
 between them. Different settings can be helpful either on a single
 computer, but django-environments is mostly intended for use on
-different system environments, such as development, test, staging/acceptance
-and production, all with "maximum DRY™".
+different system environments, such as development, test,
+staging/acceptance and production, all with "maximum DRY™".
 
 On the command line, you specify your project and settings using
 environment variables. When you run your application via WSGI, a
@@ -55,12 +55,24 @@ by itself, do the following:
    Alternatively, you may also symlink ``bin/postactivate`` to your
    initenv script.
 
-If everything works okay, the following shell aliases are created:
+If everything works okay, the following shell functions are created:
 
 * ``cdroot`` - go to project root.
 * ``cdjango`` - go to Django project root (one lower than project root).
-* ``runserver`` - perform ``django-admin.py runserver``.
-* ``syncdb`` - perform ``django-admin.py syncdb``.
+* ``djadmin`` - shorthand for django-admin.py, which you should use
+                instead of manage.py (unless you want to tweak things).
+* ``runserver`` - perform ``django-admin.py runserver``, using
+                  settings.LOCAL_SERVER_PORT if defined.
+* ``pipup`` - Call ``pip install`` with the appropriate file listing
+              the project's requirements.
+* ``removeorphanpycs`` - Remove .pyc files without a corresponding .py.
+* ``pycompile`` - Compile all .py files - handy for web server
+                  environments, calls removeorphanpycs afterwards.
+* ``get_django_setting`` - get a value from the current settings
+			               module, useful for your own scripts (also
+			               see the experimental import_django_settings).
+
+See ``scripts/initenv_generic`` for the more information.
 
 Using Apache mod_wsgi
 ---------------------
@@ -118,6 +130,7 @@ Directories
 Remarks
 -------
 
-* ``urls.py`` is just there to demonstrate the ``SERVE_MEDIA`` setting.
+* ``urls.py`` is just there to demonstrate the ``SERVE_MEDIA``
+   setting, which is not essential anyway.
 * ``manage.py`` is removed as the generated default ignores
   ``$DJANGO_SETTINGS_MODULE``, simply importing 'settings' instead.

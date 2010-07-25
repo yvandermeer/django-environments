@@ -1,4 +1,4 @@
-
+#
 # Initialize the settings environment
 #
 # Should be sourced with the 'source' command, e.g. 'source initenv'
