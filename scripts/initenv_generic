@@ -65,7 +65,7 @@ fi
 # 
 # Returns nothing if setting cannot be found
 function get_django_setting() {
-    [ -z "$1" ] && echo "Usage: get_django_setting '<setting-name>'" 1>&2 && return 1
+    [ -z "$1" ] && echo "Usage: get_django_setting <setting-name>" 1>&2 && return 1
 
     python << EOF
 import $DJANGO_SETTINGS_MODULE as settings
@@ -136,7 +136,7 @@ function cdjango () {
 # with the dependencies should be in the requirements directory and
 # should have the format 'libs-<environment>.txt'
 function pipup() {
-    [ -z "$1" ] && echo "Usage: pipup '<requirements-identifier>'" 1>&2 && return 1
+    [ -z "$1" ] && echo "Usage: pipup <requirements-identifier>" 1>&2 && return 1
 
     pip install --requirement=$PROJECT_ROOT/requirements/libs-$1.txt
 }

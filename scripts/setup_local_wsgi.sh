@@ -9,7 +9,7 @@ env=$1
 local=local # Identifier for local configuration
 
 # Check arguments
-[ -z "$env" ] && echo Usage: $0 '<environment>' 1>&2 && exit 1
+[ -z "$env" ] && echo "Usage: $0 <environment>" 1>&2 && exit 1
 
 # The root of the project should exist, of course
 [ -z "$PROJECT_ROOT" ] && \
@@ -29,19 +29,19 @@ local=local # Identifier for local configuration
 deploy_dir=$PROJECT_ROOT/$DJANGO_PROJECT/deploy
 wsgi_target=$deploy_dir/$env.wsgi
 wsgi_local=$deploy_dir/$local.wsgi
-[ ! -f "$wsgi_target" ] && echo $wsgi_target not found - exiting 1>&2 && exit 1
+[ ! -f "$wsgi_target" ] && echo "$wsgi_target not found - exiting" 1>&2 && exit 1
 
 rm -f $wsgi_local
 ln -s $env.wsgi $wsgi_local
-[ ! $? -eq 0 ] && echo Error creating symlink $wsgi_local 1>&2 && exit 1
-echo Link $local.wsgi to $wsgi_target created. 1>&2
+[ ! $? -eq 0 ] && echo "Error creating symlink $wsgi_local" 1>&2 && exit 1
+echo "Link $local.wsgi to $wsgi_target created" 1>&2
 
 # Settings python file
 
 settings_dir=$PROJECT_ROOT/$DJANGO_PROJECT/settings/env
 settings_target=$settings_dir/$env.py
 settings_local=$PROJECT_ROOT/$DJANGO_PROJECT/settings/env/$local.py
-[ ! -f "$settings_target" ] && echo $settings_target not found - exiting 1>&2 && exit 1
+[ ! -f "$settings_target" ] && echo "$settings_target not found - exiting" 1>&2 && exit 1
 
 cat > $settings_local << EOF
 from $env import *
@@ -49,4 +49,4 @@ from $env import *
 # You can set stuff you don't wish to store anywhere else here, like:
 # DATABASES['default']['PASSWORD'] = 'secret'
 EOF
-echo $settings_local created. 1>&2
+echo "$settings_local created" 1>&2
