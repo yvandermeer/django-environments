@@ -1,4 +1,4 @@
-#removeorphanpycs 
+#
 # django-environments environment initialization script
 #
 # It's best to set the following variables in your own initenv
