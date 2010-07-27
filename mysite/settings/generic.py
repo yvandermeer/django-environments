@@ -2,7 +2,7 @@ from os import path
 import logging
 
 
-DJANGO_PROJECT_DIR = path.dirname(path.dirname(__file__))
+DJANGO_PROJECT_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 DJANGO_PROJECT = path.basename(DJANGO_PROJECT_DIR)
 PROJECT_ROOT = path.dirname(DJANGO_PROJECT_DIR)
 
@@ -109,11 +109,11 @@ TEMPLATE_DIRS = (
     # Put strings here, like "/home/html/django_templates" or "C:/www/django/templates".
     # Always use forward slashes, even on Windows.
     # Don't forget to use absolute paths, not relative paths.
-    path.join(DJANGO_PROJECT, 'templates'),
+    #path.join(DJANGO_PROJECT, 'templates'),
 )
 
 FIXTURE_DIRS = (
-    path.join(DJANGO_PROJECT, 'fixtures'),
+    #path.join(DJANGO_PROJECT, 'fixtures'),
 )
 
 INSTALLED_APPS = (

@@ -35,7 +35,7 @@ fi
 
 # Set environment
 [ -f $VIRTUAL_ENV/bin/activate ] && source $VIRTUAL_ENV/bin/activate
-source $PROJECT_ROOT/scripts/initenv_generic
+source $PROJECT_ROOT/scripts/djenvlib
 djenv $DJANGO_PROJECT $DJANGO_SETTINGS
 
 # Execute command

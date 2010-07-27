@@ -1,44 +1,37 @@
 #
 # django-environments environment initialization script
 #
-# It's best to set the following variables in your own initenv
-# script or virtualenv bin/postactivate, and then source this file.
+# Instead of editing the file, it's better to set the following
+# variable in your own initenv script or virtualenv bin/postactivate,
+# and source this file (order does not matter).
 #
-# The root of the project, i.e. the directory containing your Django project
-#PROJECT_ROOT=/Users/joe/projects/myproject
+# PROJECT_ROOT is the path to the root of the entire project, i.e.
+# the directory containing the one or more 'Django projects'.
 #
-# Set this to the name of the Django project in PROJECT_ROOT
-#DJANGO_PROJECT=mysite
-#
-# Set this to something that can be imported within DJANGO_PROJECT, like 'settings'
-#DJANGO_SETTINGS=settings
+# PROJECT_ROOT=/Users/joe/projects/myproject
 
-_deactivate() {
-    [ "$DEACTIVATE_VIRTUAL_ENV_ON_ERROR" = "yes" -a ! -z "$VIRTUAL_ENV" ] && deactivate
-    return 0
-}
-
+# Not to be called directly, see djenv below
 function initenv() {
     DJANGO_PROJECT=$1
     DJANGO_SETTINGS=$2
 
     # The root of the project should exist, of course
     [ -z "$PROJECT_ROOT" ] && \
-        echo "Variable \$PROJECT_ROOT not set or empty" 1>&2 && _deactivate && return 1
+        echo "Variable \$PROJECT_ROOT not set or empty" 1>&2 && return 1
     [ ! -d "$PROJECT_ROOT" ] && \
-         echo "Variable \$PROJECT_ROOT does not point to a readable directory" 1>&2 && _deactivate && return 1
+         echo "Variable \$PROJECT_ROOT does not point to a readable directory" 1>&2 && return 1
 
     # Check Django project as well
     [ -z "$DJANGO_PROJECT" ] && \
-        echo "Variable \$DJANGO_PROJECT not set or empty" 1>&2 && _deactivate && return 1
+        echo "Argument \$DJANGO_PROJECT not set or empty" 1>&2 && return 1
     [ ! -d "$PROJECT_ROOT/$DJANGO_PROJECT" ] && \
-        echo "Variable \$DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 1>&2 && \
-        _deactivate && return 1
+        echo "Argument \$DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 1>&2 && \
+        return 1
 
     # If no particular settings are defined, just use the "base" settings
     [ ! -z "$_OLD_DJANGO_SETTINGS_MODULE" ] && DJANGO_SETTINGS_MODULE=$_OLD_DJANGO_SETTINGS_MODULE
     _OLD_DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
-    if [ -n "$DJANGO_SETTINGS" ]; then
+    if [ ! -z "$DJANGO_SETTINGS" ]; then
         DJANGO_SETTINGS_MODULE=$DJANGO_PROJECT.$DJANGO_SETTINGS
     else
         DJANGO_SETTINGS_MODULE=$DJANGO_PROJECT.settings
@@ -56,25 +49,24 @@ function initenv() {
     if [ ! "$?" -eq 0 ]; then
         echo "Error importing settings $DJANGO_SETTINGS_MODULE (PYTHONPATH: $PYTHONPATH)" 1>&2
         python -c "import $DJANGO_SETTINGS_MODULE"
-        _deactivate
         return 1
     fi
+
+    # Test if the definitions in the settings match ours
+    [ "$PROJECT_ROOT" != "`get_django_setting PROJECT_ROOT`" ] && \
+        echo "\$PROJECT_ROOT in Django settings is different from shell" 1>&2 && \
+        return 1
+    [ "$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT`" ] && \
+        echo "\$DJANGO_PROJECT in Django settings is different from shell" 1>&2 && \
+        return 1
+    [ "$PROJECT_ROOT/$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT_DIR`" ] && \
+        echo "\$DJANGO_PROJECT_DIR in Django settings is different from \$PROJECT_ROOT/\$DJANGO_PROJECT" 1>&2 && 
+        return 1
 
     # We're good - let's set the prompt
     [ ! -z "$_OLD_DJANGO_ENV_PS1" ] && PS1=$_OLD_DJANGO_ENV_PS1
     _OLD_DJANGO_ENV_PS1=$PS1
     PS1=[$DJANGO_PROJECT]$PS1
-
-    # Test if the definitions in the settings match ours
-    [ "$PROJECT_ROOT" != "`get_django_setting PROJECT_ROOT`" ] && \
-        echo "\$PROJECT_ROOT in Django settings is different from shell" 1>&2 && \
-        _deactivate && return 1
-    [ "$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT`" ] && \
-        echo "\$DJANGO_PROJECT in Django settings is different from shell" 1>&2 && \
-        _deactivate && return 1
-    [ "$PROJECT_ROOT/$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT_DIR`" ] && \
-        echo "\$DJANGO_PROJECT_DIR in Django settings is different from \$PROJECT_ROOT/\$DJANGO_PROJECT" 1>&2 && 
-        _deactivate && return 1
 
     # Show environment info
     if [ ! -z "$SHOW_DJANGO_ENVIRONMENT" ]; then
@@ -98,10 +90,17 @@ function initenv() {
             [ ! -d $dir ] && echo "Warning: \"$dir\" in settings.$dirs is not a valid directory"
         done
     done
+
+    return 0
 }
 
-function deinitenv() {
-    [ ! -z "$VIRTUAL_ENV" ] && PS1=$_OLD_DJANGO_ENV_PS1
+# Some useful functions
+
+# Exit current project
+function djexit() {
+    [ -z "$DJANGO_PROJECT" ] && return 1
+
+    PS1=$_OLD_DJANGO_ENV_PS1
 
     if [ ! -z "$_OLD_DJANGO_SETTINGS_MODULE" ]; then
         DJANGO_SETTINGS_MODULE=$_OLD_DJANGO_SETTINGS_MODULE
@@ -115,11 +114,9 @@ function deinitenv() {
         unset PYTHONPATH
     fi
 
-    unset _OLD_DJANGO_SETTINGS_MODULE _OLD_PYTHONPATH PROJECT_ROOT \
-        DJANGO_PROJECT DJANGO_SETTINGS SHOW_DJANGO_ENVIRONMENT
+    unset _OLD_DJANGO_SETTINGS_MODULE _OLD_PYTHONPATH \
+        DJANGO_PROJECT DJANGO_SETTINGS
 }
-
-# Some useful functions
 
 # Change django project
 # Example:
@@ -140,7 +137,7 @@ function djenv() {
 
     # Help
     if [ "$1" = "-h" -o "$1" = "--help" ]; then
-        echo "Usage: djenv [ django-project [django-settings] ]"
+        echo "Usage: djenv [ DJANGO_PROJECT [DJANGO_SETTINGS] ]"
         return
     fi
 
@@ -150,7 +147,14 @@ function djenv() {
         return 1
     fi
 
+    djexit
+
     initenv $*
+    [ $? -eq 1 ] && djexit && return 1
+
+    cdjango
+
+    return 0
 }
 
 # Get a django setting from the current settings module
@@ -158,7 +162,7 @@ function djenv() {
 #
 # Example:
 # LC=`get_django_setting LANGUAGE_CODE` && echo $LC
-# 
+#
 # Returns nothing if setting cannot be found
 function get_django_setting() {
     [ -z "$1" ] && echo "Usage: get_django_setting <setting-name>" 1>&2 && return 1
@@ -220,20 +224,16 @@ EOF
 
 # Change directory to project root
 function cdroot() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     cd $PROJECT_ROOT/$1
-}
-
-# Change directory to django project
-function cdjango () {
-    cd $PROJECT_ROOT/$DJANGO_PROJECT/$1
 }
 
 # Install dependencies for an environment (first argument); the file
 # with the dependencies should be in the requirements directory and
 # should have the format 'libs-<environment>.txt'
 function pipup() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     [ -z "$1" ] && echo "Usage: pipup <requirements-identifier>" 1>&2 && return 1
-
     pip install --requirement=$PROJECT_ROOT/requirements/libs-$1.txt
 }
 
@@ -241,25 +241,37 @@ function pipup() {
 # environments where the server user often has no write access to the
 # .pyc files / directories
 function pycompile() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     python -c "import compileall; compileall.compile_dir('$PROJECT_ROOT')"
-
     removeorphanpycs
 }
 
 # Remove .pyc files without a corresponding .py
 function removeorphanpycs() {
-    for pyc in `find . -name \*.pyc`; do
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    for pyc in `find $PROJECT_ROOT -name \*.pyc`; do
         [ -f  `echo $pyc | sed 's/c$//'` ] || rm -v $pyc
     done
 }
 
+# Change directory to Django project
+function cdjango () {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    cd $PROJECT_ROOT/$DJANGO_PROJECT/$1
+}
+
 # Forget manage.py, django-admin.py respects our settings!
 function djadmin() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
     django-admin.py $*
 }
 
 # Run development server on settings.LOCAL_SERVER_PORT
 function runserver() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
     django-admin.py runserver `get_django_setting LOCAL_SERVER_PORT`
 }
 

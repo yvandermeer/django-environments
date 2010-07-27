@@ -1,18 +1,19 @@
 django-environments
 ===================
 
-Manage different Django settings within a project, and easily switch
-between them. Different settings can be helpful either on a single
-computer, but django-environments is mostly intended for use on
-different system environments, such as development, test,
-staging/acceptance and production, all with "maximum DRY™".
+Manage different Django settings within a Django project, and easily
+select settings from the command line or from WSGI. Different
+settings can be helpful either on a single computer, but
+django-environments is also intended for use on different system
+environments, such as development, test, staging/acceptance and
+production, all with "maximum DRY™".
 
 On the command line, you specify your project and settings using
-environment variables. When you run your application via WSGI, a
-naming convention determines which settings to use based on the name
-of the WSGI file. All this helps to minimize the number of code
-changes and other file updates when working across different
-environments.
+environment variables and (mostly) shell functions. When you run
+your application via WSGI, a simple naming convention determines
+which settings to use based on the name of the WSGI file. All this
+helps to minimize the number of code changes and other file updates
+when working across different environments.
 
 Django-environments moves the ``settings.py`` to a settings package,
 and suggests a settings inheritance model, which you can adhere to
@@ -22,47 +23,38 @@ If you'd rather use a "composition" model (import settings not just
 from base settings "above", but also "from the side"), that's also
 fine.
 
-Compatibility with Python < 2.6
--------------------------------
-
-In the example settings files, ``from .. import *`` is used. You will
-need to change this to ``from <project>.settings import *`` for older
-versions of Python. The downside is that you will have to include
-the project name in your settings, which is a violation of the DRY
-principle that django-environments tries to live by.
-
-Compatibility with virtualenv
------------------------------
-
-Please note django-environments can be nicely used together with
-virtualenv, especially virtualenvwrapper's ``bin/postactivate`` script.
-
 Getting Started
 ---------------
 
-This is a fully working Django project; you can copy files from it
-as needed to your own projects. To get django-environments working
-by itself, do the following:
+This release contains all the relevant shell scripts in the scripts
+directory, and a fully working Django example project in ``mysite``.
+You can copy files from it as needed to your own projects. To get
+the example environment working, do the following:
 
 1. Copy scripts/initenv_example to scripts/initenv.
-2. Edit initenv and set ``PROJECT_ROOT``, ``DJANGO_PROJECT`` (always a
-   subdirectory of ``PROJECT_ROOT``) and ``DJANGO_SETTINGS`` (simply
-   changing ``PROJECT_ROOT`` should be enough for fresh checkouts, btw).
-3. Activate the environment using ``source scripts/initenv``.
-4. When using virtualenv with virtualenvwrapper, you can do either
+2. Edit scripts/initenv, set ``PROJECT_ROOT`` and save the file.
+3. Use ``source scripts/initenv`` to load django-environments into
+   your shell. If you left in the djenv command, you will see the
+   environment settings immediately.
+4. For fun, you could do a ``cp -rpv mysite foo`` from the top
+   directory, followed by ``djenv foo``.
+5. For automatic initialization of django-environments when using
+   virtualenv with virtualenvwrapper, you can either
    ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``,
-   or simply use your initenv's contents inside postactivate. 
+   or simply use your initenv's contents inside postactivate.
    Alternatively, you may also symlink ``bin/postactivate`` to your
    initenv script.
 
 If everything works okay, the following shell functions are created:
 
-* ``cdroot`` - go to project root.
+* ``djenv`` - switch to different settings or another Django project.
+* ``cdroot`` - go to current project root.
 * ``cdjango`` - go to Django project root (one lower than project root).
 * ``djadmin`` - shorthand for django-admin.py, which you should use
                 instead of manage.py (unless you want to tweak things).
-* ``runserver`` - perform ``django-admin.py runserver``, using
-                  settings.LOCAL_SERVER_PORT if defined.
+* ``runserver`` - perform ``django-admin.py runserver <port>``, using
+                  settings.LOCAL_SERVER_PORT if defined (see also
+		          scripts/setup_local_wsgi.sh).
 * ``pipup`` - Call ``pip install`` with the appropriate file listing
               the project's requirements.
 * ``removeorphanpycs`` - Remove .pyc files without a corresponding .py.
@@ -71,8 +63,29 @@ If everything works okay, the following shell functions are created:
 * ``get_django_setting`` - get a value from the current settings
 			               module, useful for your own scripts (also
 			               see the experimental import_django_settings).
+* ``djexit`` - leave the current Django project.
 
-See ``scripts/initenv_generic`` for the more information.
+See ``scripts/djenvlib`` for the more information.
+
+Compatibility with virtualenv
+-----------------------------
+
+Please note django-environments does not in any way depend on
+virtualenv, although it can be used together with virtualenv quite well.
+
+When using django-environments within a single virtualenv environment,
+you can switch between Django projects as often as you like. If
+you use virtualenvwrapper, use ``bin/postactivate`` and
+``bin/predeactivate`` for calling djenv and djexit respectively.
+
+Compatibility with Python < 2.6
+-------------------------------
+
+In the example settings files, ``from .. import *`` is used. You will
+need to change this to ``from <project>.settings import *`` for older
+versions of Python. The downside is that you will have to include
+the project name in your settings, which is a violation of the DRY
+principle that django-environments tries to live by.
 
 Using Apache mod_wsgi
 ---------------------
