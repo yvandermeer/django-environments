@@ -6,17 +6,4 @@
 # to bin/postdeactivate. Alternatively, you may also symlink
 # bin/postdeactivate to (a custom version of) this file.
 
-if [ ! -z "$_OLD_DJANGO_SETTINGS_MODULE" ]; then
-    DJANGO_SETTINGS_MODULE=$_OLD_DJANGO_SETTINGS_MODULE
-else
-    unset DJANGO_SETTINGS_MODULE
-fi
-
-if [ ! -z "$_OLD_PYTHONPATH" ]; then
-    PYTHONPATH=$_OLD_PYTHONPATH
-else
-    unset PYTHONPATH
-fi
-
-unset _OLD_DJANGO_SETTINGS_MODULE _OLD_PYTHONPATH PROJECT_ROOT \
-    DJANGO_PROJECT DJANGO_SETTINGS SHOW_DJANGO_ENVIRONMENT
+deinitenv

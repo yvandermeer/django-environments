@@ -7,18 +7,17 @@
 # lines to bin/postactivate. Alternatively, you may also symlink
 # bin/postactivate to a custom version of this file.
 
-#DOMAIN=local.mysite.org # Domain for virtual host configuration - optional
+#export DOMAIN=local.mysite.org # Domain for virtual host configuration - optional
 PROJECT_ROOT=/Users/grone/repos/django-environments
 DJANGO_PROJECT=mysite
 DJANGO_SETTINGS=settings.env.development
-SHOW_DJANGO_ENVIRONMENT=yes
+SHOW_DJANGO_ENVIRONMENT=yes # 'yes' shows basic info, 'settings' a full settings dump
+
+source $PROJECT_ROOT/scripts/initenv_generic
+[ ! $? -eq 0 ] && return 1
+djenv $DJANGO_PROJECT $DJANGO_SETTINGS
+cdjango
 
 # These two lines help greatly when using pip with virtualenv, see
 # http://pip.openplans.org/
 export PIP_REQUIRE_VIRTUALENV=true PIP_RESPECT_VIRTUALENV=true
-
-# Pass additional directories for sys.path as arguments to
-# initenv_generic, e.g.
-# source $PROJECT_ROOT/scripts/initenv_generic $PROJECT_ROOT/apps
-source $PROJECT_ROOT/scripts/initenv_generic
-[ ! $? -eq 0 ] && return 1

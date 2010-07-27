@@ -1,3 +1,4 @@
+#!/bin/sh
 #
 # Standard environment wrapper for other scripts
 #
@@ -11,6 +12,9 @@ APP_HOME=`dirname $0` # Make sure we can refer back to this location
 
 # Update PATH
 PATH=$APP_HOME:$PATH
+
+# Update PYTHONPATH
+PYTHONPATH=$PROJECT_ROOT/apps:$PYTHONPATH
 
 # Check for help request
 if [ "$1" = "-h" -o "$1" = "--help" ]; then
@@ -31,8 +35,8 @@ fi
 
 # Set environment
 [ -f $VIRTUAL_ENV/bin/activate ] && source $VIRTUAL_ENV/bin/activate
-source $PROJECT_ROOT/scripts/initenv_generic $PROJECT_ROOT/apps
-[ ! $? -eq 0 ] && exit 1
+source $PROJECT_ROOT/scripts/initenv_generic
+djenv $DJANGO_PROJECT $DJANGO_SETTINGS
 
 # Execute command
 $*
