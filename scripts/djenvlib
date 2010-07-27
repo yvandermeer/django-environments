@@ -29,7 +29,6 @@ function initenv() {
         return 1
 
     # If no particular settings are defined, just use the "base" settings
-    [ ! -z "$_OLD_DJANGO_SETTINGS_MODULE" ] && DJANGO_SETTINGS_MODULE=$_OLD_DJANGO_SETTINGS_MODULE
     _OLD_DJANGO_SETTINGS_MODULE=$DJANGO_SETTINGS_MODULE
     if [ ! -z "$DJANGO_SETTINGS" ]; then
         DJANGO_SETTINGS_MODULE=$DJANGO_PROJECT.$DJANGO_SETTINGS
@@ -38,7 +37,6 @@ function initenv() {
     fi
 
     # Set the PYTHONPATH to include PROJECT_ROOT
-    [ ! -z "$_OLD_PYTHONPATH" ] && PYTHONPATH=$_OLD_PYTHONPATH
     _OLD_PYTHONPATH=$PYTHONPATH
     PYTHONPATH=$PROJECT_ROOT:$PYTHONPATH
 
@@ -64,7 +62,6 @@ function initenv() {
         return 1
 
     # We're good - let's set the prompt
-    [ ! -z "$_OLD_DJANGO_ENV_PS1" ] && PS1=$_OLD_DJANGO_ENV_PS1
     _OLD_DJANGO_ENV_PS1=$PS1
     PS1=[$DJANGO_PROJECT]$PS1
 
