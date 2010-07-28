@@ -3,10 +3,10 @@
 # Standard environment wrapper for other scripts
 #
 # To be called from another script that sets the following correctly:
-# - VIRTUAL_ENV (optional)
 # - PROJECT_ROOT
 # - DJANGO_PROJECT
 # - DJANGO_SETTINGS
+# - VIRTUAL_ENV (optional)
 
 APP_HOME=`dirname $0` # Make sure we can refer back to this location
 
@@ -33,10 +33,15 @@ fi
 # Check if command exists as an executable file
 [ ! -x $APP_HOME/$1 ] && echo "`basename $0`: $1 not found!" && exit 1
 
-# Set environment
+# Set python environment
 [ -f $VIRTUAL_ENV/bin/activate ] && source $VIRTUAL_ENV/bin/activate
+
+# Set django environment
 source $PROJECT_ROOT/scripts/djenvlib
-djenv $DJANGO_PROJECT $DJANGO_SETTINGS
+
+# Set DJANGO_PROJECT and DJANGO_SETTINGS to empty so djenv doesn't think
+# we're already in an active environment (which it will try to exit first):
+DJANGO_PROJECT= DJANGO_SETTINGS= djenv $DJANGO_PROJECT $DJANGO_SETTINGS
 
 # Execute command
 $*

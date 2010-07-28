@@ -134,7 +134,7 @@ function djenv() {
 
     # Help
     if [ "$1" = "-h" -o "$1" = "--help" ]; then
-        echo "Usage: djenv [ DJANGO_PROJECT [DJANGO_SETTINGS] ]"
+        echo "Usage: djenv [DJANGO_PROJECT [DJANGO_SETTINGS]]"
         return
     fi
 
