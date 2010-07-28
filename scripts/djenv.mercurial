@@ -1,0 +1,40 @@
+#
+# Mercurial utilities for django-environments
+# 
+
+export hgpidfile=$PROJECT_ROOT/tmp/hgserve.pid
+export hgport=7100
+
+# Start hg server in daemon mode and open in browser
+function hgserve() {
+    kill -0 `cat $hgpidfile 2>&1` > /dev/null 2>&1
+    if [ ! $? -eq 0 ]; then
+        echo starting up
+        cdroot
+        hg serve --port $hgport --daemon \
+            --pid-file $PROJECT_ROOT/tmp/hgserve.pid
+        sleep 0.5
+        cd -
+    fi
+
+    [ ! -z "$1" ] && open http://localhost:$hgport/$1
+}
+
+
+# Shutdown hg server
+function hgkill() {
+    kill -9 `cat $hgpidfile 2>&1` > /dev/null 2>&1
+    if [ ! $? -eq 0 ]; then
+        echo Server not running or other error 2>&1
+    fi
+}
+
+# List all .orig files
+function hgfindorig() {
+    find $PROJECT_ROOT -name \*.orig -l
+}
+
+# List all .orig files
+function hgremoveorig {
+    find $PROJECT_ROOT -name \*.orig -print -delete
+}
