@@ -5,16 +5,16 @@
 export hgpidfile=$PROJECT_ROOT/tmp/hgserve.pid
 export hgport=7100
 
-# Start hg server in daemon mode and open in browser
+# Start hg server in daemon mode and open first argument in browser
 function hgserve() {
     kill -0 `cat $hgpidfile 2>&1` > /dev/null 2>&1
     if [ ! $? -eq 0 ]; then
-        echo starting up
-        cdroot
+        cwd=`pwd`
+        cdjango
         hg serve --port $hgport --daemon \
             --pid-file $PROJECT_ROOT/tmp/hgserve.pid
         sleep 0.5
-        cd -
+        cd $cwd
     fi
 
     [ ! -z "$1" ] && open http://localhost:$hgport/$1
