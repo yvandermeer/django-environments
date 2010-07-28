@@ -43,10 +43,18 @@ function hgexternals {
     for external in $PROJECT_ROOT/externals/*; do
         if [ -d $external/.hg ]; then
             echo `basename $external`:
+            IFS=''
             hg -R $external $*
             echo
         fi
     done
+}
+
+# Pull and update the project and all Mercurial externals
+function hgfetchall() {
+    hg -R $PROJECT_ROOT pull -u
+    echo
+    hgexternals pull -u
 }
 
 # List all .orig files

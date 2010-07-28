@@ -149,7 +149,7 @@ function djenv() {
     initenv $*
     [ $? -eq 1 ] && djexit && return 1
 
-    cdjango
+    cdroot
 
     return 0
 }
