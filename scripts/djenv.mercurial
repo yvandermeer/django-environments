@@ -20,7 +20,6 @@ function hgserve() {
     [ ! -z "$1" ] && open http://localhost:$hgport/$1
 }
 
-
 # Shutdown hg server
 function hgkill() {
     kill -9 `cat $hgpidfile 2>&1` > /dev/null 2>&1
