@@ -37,6 +37,18 @@ function hgkill() {
     fi
 }
 
+# Runs an hg command on all hg repositories in the externals directory,
+# e.g. 'hgexternals pull -u'
+function hgexternals {
+    for external in $PROJECT_ROOT/externals/*; do
+        if [ -d $external/.hg ]; then
+            echo `basename $external`:
+            hg -R $external $*
+            echo
+        fi
+    done
+}
+
 # List all .orig files
 function hgfindorig() {
     find $PROJECT_ROOT -name \*.orig -l
