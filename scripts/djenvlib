@@ -11,7 +11,7 @@
 # PROJECT_ROOT=/Users/joe/projects/myproject
 
 # Not to be called directly, see djenv below
-function initenv() {
+function _djenv_init() {
     DJANGO_PROJECT=$1
     DJANGO_SETTINGS=$2
 
@@ -62,7 +62,7 @@ function initenv() {
         return 1
 
     # We're good - let's set the prompt
-    _OLD_DJANGO_ENV_PS1=$PS1
+    _OLD_DJENV_PS1=$PS1
     PS1=[$DJANGO_PROJECT]$PS1
 
     # Show environment info
@@ -80,6 +80,7 @@ function initenv() {
     fi
 
     # Check settings
+    local dirs dir
     for dirs in TEMPLATE_DIRS FIXTURE_DIRS; do
         eval `import_django_settings $dirs`
         envname=DJANGO_$dirs
@@ -91,13 +92,26 @@ function initenv() {
     return 0
 }
 
+# Register cleanup hook
+function _djenv_register_cleanup() {
+    local func
+    for func in $*; do
+        if [ -z "$DJENV_CLEANUP_FUNCTIONS" ]; then
+            DJENV_CLEANUP_FUNCTIONS=$func
+        else
+            DJENV_CLEANUP_FUNCTIONS=$DJENV_CLEANUP_FUNCTIONS:$func
+        fi
+    done
+}
+
 # Some useful functions
 
 # Exit current project
 function djexit() {
     [ -z "$DJANGO_PROJECT" ] && return 1
 
-    PS1=$_OLD_DJANGO_ENV_PS1
+    # Restore prompt, django settings and python path
+    PS1=$_OLD_DJENV_PS1
 
     if [ ! -z "$_OLD_DJANGO_SETTINGS_MODULE" ]; then
         DJANGO_SETTINGS_MODULE=$_OLD_DJANGO_SETTINGS_MODULE
@@ -111,8 +125,14 @@ function djexit() {
         unset PYTHONPATH
     fi
 
-    unset _OLD_DJANGO_SETTINGS_MODULE _OLD_PYTHONPATH \
-        DJANGO_PROJECT DJANGO_SETTINGS
+    # Call the registerd cleanup functions
+    _IFS=$IFS
+    IFS=:
+    local func
+    for func in $DJENV_CLEANUP_FUNCTIONS; do
+        $func
+    done
+    IFS=$_IFS
 }
 
 # Change django project
@@ -146,7 +166,7 @@ function djenv() {
 
     djexit
 
-    initenv $*
+    _djenv_init $*
     [ $? -eq 1 ] && djexit && return 1
 
     cdroot
@@ -246,6 +266,7 @@ function pycompile() {
 # Remove .pyc files without a corresponding .py
 function removeorphanpycs() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    local pyc
     for pyc in `find $PROJECT_ROOT -name \*.pyc`; do
         [ -f  `echo $pyc | sed 's/c$//'` ] || rm -v $pyc
     done
@@ -274,3 +295,13 @@ function runserver() {
 
 # Export functions that are not solely intended for interactive use
 export -f get_django_setting import_django_settings
+
+# Clean up the environment
+function _djenv_cleanup () {
+    unset DJANGO_PROJECT DJANGO_SETTINGS \
+        _OLD_DJENV_PS1 _OLD_DJANGO_SETTINGS_MODULE _OLD_PYTHONPATH \
+        DJANGO_TEMPLATE_DIRS DJANGO_FIXTURE_DIRS
+}
+
+# Use _djenv_register_cleanup to register your own cleanup functions
+_djenv_register_cleanup _djenv_cleanup

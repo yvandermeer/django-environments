@@ -2,15 +2,22 @@
 # Mercurial utilities for django-environments
 # 
 
-export hgpidfile=$PROJECT_ROOT/tmp/hgserve.pid
-export hgport=7100
+hgbaseport=7100
+hgpidfile=$PROJECT_ROOT/tmp/hgserve.pid
 
 # Start hg server in daemon mode and open first argument in browser
 function hgserve() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+
+    # Determine port number
+    local numhash=`echo $PROJECT_ROOT | md5 | sed 's/[^0-9]//g'`
+    hgport=`expr $hgbaseport + ${numhash:0:2}`
+
+    # See if the server is alive - start it if not
     kill -0 `cat $hgpidfile 2>&1` > /dev/null 2>&1
     if [ ! $? -eq 0 ]; then
         cwd=`pwd`
-        cdjango
+        cdroot
         hg serve --port $hgport --daemon \
             --pid-file $PROJECT_ROOT/tmp/hgserve.pid
         sleep 0.5
@@ -20,7 +27,9 @@ function hgserve() {
     [ ! "$1" = "--no-open" ] && open http://localhost:$hgport/$1
 }
 
+# Browse files in tip
 function hgbrowse() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     hgserve --no-open
 
     path=file/tip`echo \`pwd\` | sed "s#$PROJECT_ROOT##"`
@@ -29,7 +38,7 @@ function hgbrowse() {
     open http://localhost:$hgport/$path
 }
 
-# Shutdown hg server
+# Shut down hg server
 function hgkill() {
     kill -9 `cat $hgpidfile 2>&1` > /dev/null 2>&1
     if [ ! $? -eq 0 ]; then
@@ -39,12 +48,15 @@ function hgkill() {
 
 # Runs an hg command on all hg repositories in the externals directory,
 # e.g. 'hgexternals pull -u'
-function hgexternals {
+function hgexternals() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     for external in $PROJECT_ROOT/externals/*; do
         if [ -d $external/.hg ]; then
             echo `basename $external`:
+            _IFS=$IFS
             IFS='' # magic
             hg -R $external $*
+            IFS=$_IFS
             echo
         fi
     done
@@ -52,6 +64,7 @@ function hgexternals {
 
 # Pull and update the project and all Mercurial externals
 function hgfetchall() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     hg -R $PROJECT_ROOT pull -u
     echo
     hgexternals pull -u
@@ -59,10 +72,22 @@ function hgfetchall() {
 
 # List all .orig files
 function hgfindorig() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     find $PROJECT_ROOT -name \*.orig -l
 }
 
 # List all .orig files
-function hgremoveorig {
+function hgremoveorig() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     find $PROJECT_ROOT -name \*.orig -print -delete
 }
+
+# Clean up
+function _djenv_mercurial_cleanup () {
+    # Stop server
+    hgkill 2>&1 > /dev/null
+    # Clean environment
+    unset hgport
+}
+
+_djenv_register_cleanup _djenv_mercurial_cleanup 
