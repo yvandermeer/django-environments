@@ -17,11 +17,11 @@ function hgserve() {
         cd $cwd
     fi
 
-    [ ! -z "$1" ] && open http://localhost:$hgport/$1
+    [ ! "$1" = "--no-open" ] && open http://localhost:$hgport/$1
 }
 
 function hgbrowse() {
-    hgserve
+    hgserve --no-open
 
     path=file/tip`echo \`pwd\` | sed "s#$PROJECT_ROOT##"`
     [ ! -z "$1" ] && path=$path/$1
@@ -43,7 +43,7 @@ function hgexternals {
     for external in $PROJECT_ROOT/externals/*; do
         if [ -d $external/.hg ]; then
             echo `basename $external`:
-            IFS=''
+            IFS='' # magic
             hg -R $external $*
             echo
         fi
