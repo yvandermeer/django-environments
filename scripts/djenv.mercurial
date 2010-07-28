@@ -20,6 +20,15 @@ function hgserve() {
     [ ! -z "$1" ] && open http://localhost:$hgport/$1
 }
 
+function hgbrowse() {
+    hgserve
+
+    path=file/tip`echo \`pwd\` | sed "s#$PROJECT_ROOT##"`
+    [ ! -z "$1" ] && path=$path/$1
+
+    open http://localhost:$hgport/$path
+}
+
 # Shutdown hg server
 function hgkill() {
     kill -9 `cat $hgpidfile 2>&1` > /dev/null 2>&1
