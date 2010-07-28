@@ -3,11 +3,12 @@
 # 
 
 hgbaseport=7100
-hgpidfile=$PROJECT_ROOT/tmp/hgserve.pid
 
 # Start hg server in daemon mode and open first argument in browser
 function hgserve() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+
+    hgpidfile=$PROJECT_ROOT/tmp/hgserve.pid
 
     # Determine port number
     local numhash=`echo $PROJECT_ROOT | md5 | sed 's/[^0-9]//g'`
@@ -40,7 +41,7 @@ function hgbrowse() {
 
 # Shut down hg server
 function hgkill() {
-    kill -9 `cat $hgpidfile 2>&1` > /dev/null 2>&1
+    kill -9 `cat "$hgpidfile" 2>&1` > /dev/null 2>&1
     if [ ! $? -eq 0 ]; then
         echo Server not running or other error 2>&1
     fi

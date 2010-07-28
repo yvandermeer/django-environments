@@ -79,7 +79,7 @@ function _djenv_init() {
         fi
     fi
 
-    # Check settings
+    # Check non-critical settings
     local dirs dir
     for dirs in TEMPLATE_DIRS FIXTURE_DIRS; do
         eval `import_django_settings $dirs`
@@ -164,11 +164,16 @@ function djenv() {
         return 1
     fi
 
+    # Exit current environment (if any)
     djexit
 
+    # Initialize
     _djenv_init $*
-    [ $? -eq 1 ] && djexit && return 1
 
+    # On error, use djexit for cleanup
+    [ ! $? -eq 0 ] && djexit && return 1
+
+    # Change working directory
     cdroot
 
     return 0
@@ -299,7 +304,7 @@ export -f get_django_setting import_django_settings
 # Clean up the environment
 function _djenv_cleanup () {
     unset DJANGO_PROJECT DJANGO_SETTINGS \
-        _OLD_DJENV_PS1 _OLD_DJANGO_SETTINGS_MODULE _OLD_PYTHONPATH \
+        _OLD_DJANGO_SETTINGS_MODULE _OLD_PYTHONPATH \
         DJANGO_TEMPLATE_DIRS DJANGO_FIXTURE_DIRS
 }
 
