@@ -18,7 +18,7 @@ when working across different environments.
 Django-environments moves the ``settings.py`` to a settings package,
 and suggests a settings inheritance model, which you can adhere to
 as much as you like. Simply "inherit" from more generic settings
-using ``from ... import *``, and overrule - see the provided examples.
+using ``from .. import *``, and overrule - see the provided examples.
 If you'd rather use a "composition" model (import settings not just
 from base settings "above", but also "from the side"), that's also
 fine.
