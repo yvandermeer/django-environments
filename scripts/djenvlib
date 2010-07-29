@@ -181,7 +181,7 @@ function djenv() {
     [ ! $? -eq 0 ] && djexit && return 1
 
     # Change working directory
-    cdroot
+    cdjango
 
     return 0
 }
