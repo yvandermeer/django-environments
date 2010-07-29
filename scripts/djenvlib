@@ -51,15 +51,22 @@ function _djenv_init() {
     fi
 
     # Test if the definitions in the settings match ours
-    [ "$PROJECT_ROOT" != "`get_django_setting PROJECT_ROOT`" ] && \
-        echo "\$PROJECT_ROOT in Django settings is different from shell" 1>&2 && \
-        return 1
-    [ "$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT`" ] && \
-        echo "\$DJANGO_PROJECT in Django settings is different from shell" 1>&2 && \
-        return 1
-    [ "$PROJECT_ROOT/$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT_DIR`" ] && \
-        echo "\$DJANGO_PROJECT_DIR in Django settings is different from \$PROJECT_ROOT/\$DJANGO_PROJECT" 1>&2 && 
-        return 1
+
+    if [ ! -z "`get_django_setting :`" ]; then
+        echo "Current Django settings generate output - debugging print statements maybe?" 1>&2
+    else
+        [ "$PROJECT_ROOT" != "`get_django_setting PROJECT_ROOT`" ] && \
+            echo "\$PROJECT_ROOT in Django settings is different from shell" 1>&2 && \
+            echo "\$PROJECT_ROOT: $PROJECT_ROOT" 1>&2 && \
+            echo "settings.PROJECT_ROOT: `get_django_setting PROJECT_ROOT`" 1>&2 && \
+            return 1
+        [ "$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT`" ] && \
+            echo "\$DJANGO_PROJECT in Django settings is different from shell" 1>&2 && \
+            return 1
+        [ "$PROJECT_ROOT/$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT_DIR`" ] && \
+            echo "\$DJANGO_PROJECT_DIR in Django settings is different from \$PROJECT_ROOT/\$DJANGO_PROJECT" 1>&2 && 
+            return 1
+    fi
 
     # We're good - let's set the prompt
     _OLD_DJENV_PS1=$PS1
@@ -185,7 +192,8 @@ function djenv() {
 # Example:
 # LC=`get_django_setting LANGUAGE_CODE` && echo $LC
 #
-# Returns nothing if setting cannot be found
+# Returns nothing if setting cannot be found. Be aware that the
+# settings should not print anything to stdout for this to work.
 function get_django_setting() {
     [ -z "$1" ] && echo "Usage: get_django_setting <setting-name>" 1>&2 && return 1
 
@@ -250,9 +258,9 @@ function cdroot() {
     cd $PROJECT_ROOT/$1
 }
 
-# Install dependencies for an environment (first argument); the file
-# with the dependencies should be in the requirements directory and
-# should have the format 'libs-<environment>.txt'
+# Install dependencies for a python environment (first argument);
+# the file with the dependencies should be in the requirements
+# directory and should have the format 'libs-<environment>.txt'
 function pipup() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     [ -z "$1" ] && echo "Usage: pipup <requirements-identifier>" 1>&2 && return 1
@@ -310,3 +318,57 @@ function _djenv_cleanup () {
 
 # Use _djenv_register_cleanup to register your own cleanup functions
 _djenv_register_cleanup _djenv_cleanup
+
+#
+# Tab completion
+#
+
+function show_django_projects() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    (cd $PROJECT_ROOT; for f in */settings/__init__.py; do echo $f; done) | \
+        sed 's#/settings/__init__.py##' | sort
+}
+
+function show_django_settings() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    (cd $PROJECT_ROOT/$1; for f in settings/env/*.py; do echo $f; done) | \
+        grep -v '/__init__.py$' | sed 's#settings/env/#settings.env.#' | \
+        sed 's#\.py$##' | sort
+}
+
+_django_projects_complete() {
+    local current="${COMP_WORDS[COMP_CWORD]}"
+    local previous="${COMP_WORDS[COMP_CWORD - 1]}"
+
+    if [ $COMP_CWORD -eq 1 ]; then
+        COMPREPLY=($(compgen -W "`show_django_projects`" -- ${current}))
+    elif [ $COMP_CWORD -eq 2 ]; then
+        COMPREPLY=( $(compgen -W "`show_django_settings $previous`" -- ${current}) )
+    fi
+}
+
+_cdroot_complete() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    COMPREPLY=($(cdroot && compgen -d -- "${2}" ))
+}
+
+_cdjango_complete() {
+    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    COMPREPLY=($(cdjango && compgen -d -- "${2}" ))
+}
+
+function show_pip_environments() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    (cd $PROJECT_ROOT/requirements; for f in libs-*.txt; do echo $f; done) | \
+        sed 's#libs-##' | sed 's#.txt##' | sort
+}
+
+_pipup_complete() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    COMPREPLY=($(compgen -W "`show_pip_environments`" -- "${2}" ))
+}
+
+complete -o nospace -F _cdroot_complete -S/ cdroot
+complete -o nospace -F _cdjango_complete -S/ cdjango
+complete -F _django_projects_complete djenv
+complete -F _pipup_complete pipup
