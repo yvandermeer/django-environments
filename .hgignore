@@ -4,6 +4,10 @@ deploy/vhosts-development.conf
 */deploy/local.wsgi
 */settings/env/local.py
 */bin/local.sh
+tmp/*
+releases/*
+externals/*
+
 *.swp
 *.pyc
 *.tmproj
@@ -12,7 +16,6 @@ deploy/vhosts-development.conf
 db/*.db
 db/*.sqlite
 db/*.sqlite3
-tmp/*
 logs/*.log
 pip-log.txt
 docs/_build
