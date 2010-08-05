@@ -1,5 +1,5 @@
 #
-# django-environments environment initialization script
+# django-environments initialization script
 #
 # Instead of editing the file, it's better to set the following
 # variable in your own initenv script or virtualenv bin/postactivate,
@@ -335,7 +335,6 @@ function show_django_projects() {
 
 function show_django_settings() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
     (cd $PROJECT_ROOT/$1; for f in settings/env/*.py; do echo $f; done) | \
         grep -v '/__init__.py$' | sed 's#settings/env/#settings.env.#' | \
         sed 's#\.py$##' | sort
