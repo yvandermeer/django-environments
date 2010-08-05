@@ -19,7 +19,7 @@ domain=local
 
 cd `dirname $0`
 
-echo '#' Generated virtual host config
+echo '# >>>' Generated django-environments virtual host config start
 echo
 
 for django_project_dir in $PROJECT_ROOT/*; do
@@ -67,3 +67,5 @@ EOF
         echo
     fi
 done
+
+echo '# <<<' Generated django-environments virtual host config end
