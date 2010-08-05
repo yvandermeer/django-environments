@@ -37,7 +37,8 @@ the example environment working, do the following:
    your shell. If you left in the djenv command, you will see the
    environment settings immediately.
 4. For fun, you could do a ``cp -rpv mysite foo`` from the top
-   directory, followed by ``djenv foo``.
+   directory, followed by ``djenv foo``. Be sure to try out the tab
+   completion.
 5. For automatic initialization of django-environments when using
    virtualenv with virtualenvwrapper, you can either
    ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``,
@@ -55,14 +56,14 @@ If everything works okay, the following shell functions are created:
 * ``runserver`` - perform ``django-admin.py runserver <port>``, using
                   settings.LOCAL_SERVER_PORT if defined (see also
 		          scripts/setup_local_wsgi.sh).
-* ``pipup`` - Call ``pip install`` with the appropriate file listing
+* ``pipup`` - call ``pip install`` with the appropriate file listing
               the project's requirements.
-* ``removeorphanpycs`` - Remove .pyc files without a corresponding .py.
-* ``pycompile`` - Compile all .py files - handy for web server
-                  environments, calls removeorphanpycs afterwards.
+* ``removeorphanpycs`` - remove .pyc files without a corresponding .py.
+* ``pycompile`` - compile all .py files - handy for web server
+                  environments, calls ``removeorphanpycs`` afterwards.
 * ``get_django_setting`` - get a value from the current settings
 			               module, useful for your own scripts (also
-			               see the experimental import_django_settings).
+			               see the experimental ``import_django_settings``).
 * ``djexit`` - leave the current Django project.
 
 See ``scripts/djenvlib`` for the more information.
