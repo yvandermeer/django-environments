@@ -147,3 +147,7 @@ Remarks
    setting, which is not essential anyway.
 * ``manage.py`` is removed as the generated default ignores
   ``$DJANGO_SETTINGS_MODULE``, simply importing 'settings' instead.
+* the Django ``startapp`` command will create new apps in
+  ``$DJANGO_PROJECT/settings/env``. Apparently, Django uses the
+  basename of the settings ``__file__`` as a reference point for
+  the new app.
