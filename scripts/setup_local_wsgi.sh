@@ -14,15 +14,15 @@ local=local # Identifier for local configuration
 
 # The root of the project should exist, of course
 [ -z "$PROJECT_ROOT" ] && \
-    echo "Variable PROJECT_ROOT not set or empty" 1>&2 && exit 1
+    echo "Variable \$PROJECT_ROOT not set or empty" 1>&2 && exit 1
 [ ! -d "$PROJECT_ROOT" ] && \
-     echo "Variable PROJECT_ROOT does not point to a readable directory" 1>&2 && exit 1
+     echo "Variable \$PROJECT_ROOT does not point to a readable directory" 1>&2 && exit 1
 
 # Check Django project as well
 [ -z "$DJANGO_PROJECT" ] && \
-    echo "Variable DJANGO_PROJECT not set or empty" 1>&2 && exit 1
+    echo "Variable \$DJANGO_PROJECT not set or empty" 1>&2 && exit 1
 [ ! -d "$PROJECT_ROOT/$DJANGO_PROJECT" ] && \
-    echo "Variable DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 1>&2 && \
+    echo "Variable \$DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 1>&2 && \
     exit 1
 
 # WSGI symlink
