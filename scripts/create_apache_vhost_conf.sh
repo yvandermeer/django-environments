@@ -21,6 +21,8 @@ cd `dirname $0`
 
 echo '# >>>' Generated django-environments virtual host config start
 echo
+echo NameVirtualHost 127.0.0.1:*
+echo
 
 for django_project_dir in $PROJECT_ROOT/*; do
 
