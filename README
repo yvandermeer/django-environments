@@ -55,7 +55,7 @@ If everything works okay, the following shell functions are created:
                 instead of manage.py (unless you want to tweak things).
 * ``runserver`` - perform ``django-admin.py runserver <port>``, using
                   settings.LOCAL_SERVER_PORT if defined (see also
-		          scripts/setup_local_wsgi.sh).
+		          scripts/create_apache_vhost_conf.sh).
 * ``pipup`` - call ``pip install`` with the appropriate file listing
               the project's requirements.
 * ``removeorphanpycs`` - remove .pyc files without a corresponding .py.
