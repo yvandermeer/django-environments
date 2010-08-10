@@ -46,7 +46,7 @@
 #
 # 5. Use 'djenv django_project_id settings_id', followed by 'runserver'
 #    to have a Django server listening at the port you specified in the
-#    setings. Note you will have to use the 'runserver' function as
+#    settings. Note you will have to use the 'runserver' function as
 #    provided by django-environments to have the server actually listen
 #    on settings.LOCAL_SERVER_PORT.
 #
