@@ -77,7 +77,7 @@ function hgfindorig() {
     find $PROJECT_ROOT -name \*.orig
 }
 
-# List all .orig files
+# Remove all .orig files
 function hgremoveorig() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     find $PROJECT_ROOT -name \*.orig -print -delete
