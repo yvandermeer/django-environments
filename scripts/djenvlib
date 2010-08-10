@@ -192,12 +192,13 @@ function djenv() {
 # Example:
 # LC=`get_django_setting LANGUAGE_CODE` && echo $LC
 #
-# Returns nothing if setting cannot be found. Be aware that the
-# settings should not print anything to stdout for this to work.
+# Returns the second argument if setting cannot be found. Be aware
+# that the settings file should not print anything to stdout for
+# this to work!
 function get_django_setting() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
-    [ -z "$1" ] && echo "Usage: get_django_setting <setting-name>" 1>&2 && return 1
+    [ -z "$1" ] && echo "Usage: get_django_setting <setting-name> [default-value]" 1>&2 && return 1
 
     python << EOF
 import $DJANGO_SETTINGS_MODULE as settings
@@ -205,7 +206,7 @@ import $DJANGO_SETTINGS_MODULE as settings
 try:
     print settings.__dict__['$1']
 except KeyError:
-    pass
+    print '$2'
 EOF
 }
 
