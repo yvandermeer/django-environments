@@ -14,7 +14,7 @@
 # Either set settings.LOCAL_SERVER_PORT to the port you want to use
 # for a given Django project (in settings/generic.py), and optionally
 # overrule settings.LOCAL_SERVER_PORT in a specific environment
-# settings file, like settings/env/dev_postgress.py. (It's a good
+# settings file, like settings/env/dev_postgresql.py. (It's a good
 # idea to have a port numbering strategy ready before you start, just
 # like with BASIC line numbers: 7000-7099 project A, 7100-7199 project
 # B and so on.)
