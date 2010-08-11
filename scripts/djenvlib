@@ -197,7 +197,7 @@ function djenv() {
 # this to work!
 function get_django_setting() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    [ -z "$DJANGO_SETTINGS_MODULE" ] && echo "No \$DJANGO_SETTINGS_MODULE" 1>&2 && return 1
     [ -z "$1" ] && echo "Usage: get_django_setting <setting-name> [default-value]" 1>&2 && return 1
 
     python << EOF
@@ -229,7 +229,7 @@ EOF
 # Note that all variables are prefixed with value of $prefix, 'DJANGO_'.
 function import_django_settings() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    [ -z "$DJANGO_SETTINGS_MODULE" ] && echo "No \$DJANGO_SETTINGS_MODULE" 1>&2 && return 1
 
     prefix=DJANGO_
     python << EOF
