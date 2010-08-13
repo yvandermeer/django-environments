@@ -1,3 +1,4 @@
+django-environments
 ===================
 
 Manage different Django settings within a Django project, and easily
