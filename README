@@ -48,23 +48,33 @@ the example environment working, do the following:
 
 If everything works okay, the following shell functions are created:
 
-* ``djenv`` - switch to different settings or another Django project.
-* ``cdroot`` - go to current project root.
-* ``cdjango`` - go to Django project root (one lower than project root).
-* ``djadmin`` - shorthand for django-admin.py, which you should use
+* ``djenv``
+                switch to different settings or another Django project.
+* ``cdroot``
+                go to current project root.
+* ``cdjango``
+                go to Django project root (one lower than project root).
+* ``djadmin``
+                shorthand for django-admin.py, which you should use
                 instead of manage.py (unless you want to tweak things).
-* ``runserver`` - perform ``django-admin.py runserver <port>``, using
-                  settings.LOCAL_SERVER_PORT if defined (see also
-		          scripts/create_apache_vhost_conf.sh).
-* ``pipup`` - call ``pip install`` with the appropriate file listing
-              the project's requirements.
-* ``removeorphanpycs`` - remove .pyc files without a corresponding .py.
-* ``pycompile`` - compile all .py files - handy for web server
-                  environments, calls ``removeorphanpycs`` afterwards.
-* ``get_django_setting`` - get a value from the current settings
-			               module, useful for your own scripts (also
-			               see the experimental ``import_django_settings``).
-* ``djexit`` - leave the current Django project.
+* ``runserver``
+                perform ``django-admin.py runserver <port>``, using
+                settings.LOCAL_SERVER_PORT if defined (see also
+		        scripts/create_apache_vhost_conf.sh).
+* ``pipup``
+                call ``pip install`` with the appropriate file listing
+                the project's requirements.
+* ``removeorphanpycs``
+                remove .pyc files without a corresponding .py.
+* ``pycompile``
+                compile all .py files - handy for web server
+                environments, calls ``removeorphanpycs`` afterwards.
+* ``get_django_setting``
+                get a value from the current settings
+			    module, useful for your own scripts (also
+			    see the experimental ``import_django_settings``).
+* ``djexit``
+                leave the current Django project.
 
 See ``scripts/djenvlib`` for the more information.
 
