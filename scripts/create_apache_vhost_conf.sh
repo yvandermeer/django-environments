@@ -27,7 +27,7 @@
 #
 # Steps to get this working:
 #
-# 1. Run this scripts and save the output to a file, for instance
+# 1. Run this script and save the output to a file, for instance
 #    create_apache_vhost_conf.sh > $PROJECT_ROOT/deploy/vhosts-development.conf
 #    (It's good idea to do this in a VCS hook to always keep it up-to-date.)
 #
@@ -90,10 +90,10 @@ for django_project_dir in $PROJECT_ROOT/*; do
 EOF
 
         # Environment settings
-        for settings in $django_project_dir/settings/env/[a-z]*py; do
+        for settings in $django_project_dir/settings/env/[a-z_]*py; do
             django_project_dir=`echo $settings | sed "s#/settings/env/.*py##"`
             django_project=`basename $django_project_dir`
-            django_settings=`echo $settings | sed "s#$PROJECT_ROOT/##" | sed "s#[a-z]*/settings/env/#settings.env.#" | sed 's#.py$##'`
+            django_settings=`echo $settings | sed "s#$PROJECT_ROOT/##" | sed "s#[a-z_]*/settings/env/#settings.env.#" | sed 's#.py$##'`
             django_settings_id=`echo $django_settings | sed "s#.*\\.##"`
 
             echo '#' $django_project $django_settings
