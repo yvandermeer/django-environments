@@ -91,6 +91,10 @@ EOF
 
         # Environment settings
         for settings in $django_project_dir/settings/env/[a-z_]*py; do
+            if [ `basename $settings` = "__init__.py" -o ! -f "$settings" ]; then
+                continue
+            fi
+
             django_project_dir=`echo $settings | sed "s#/settings/env/.*py##"`
             django_project=`basename $django_project_dir`
             django_settings=`echo $settings | sed "s#$PROJECT_ROOT/##" | sed "s#[a-z_]*/settings/env/#settings.env.#" | sed 's#.py$##'`
