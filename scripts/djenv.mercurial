@@ -11,7 +11,7 @@ function hgserve() {
     hgpidfile=$PROJECT_ROOT/tmp/hgserve.pid
 
     # Determine port number
-    local numhash=`echo $PROJECT_ROOT | md5 | sed 's/[^0-9]//g'`
+    local numhash=`basename $PROJECT_ROOT | md5 | sed 's/[^0-9]//g'`
     hgport=`expr $hgbaseport + ${numhash:0:2}`
 
     # See if the server is alive - start it if not
