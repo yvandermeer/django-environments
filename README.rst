@@ -60,7 +60,7 @@ If everything works okay, the following shell functions are created:
 * ``runserver``
                 perform ``django-admin.py runserver <port>``, using
                 settings.LOCAL_SERVER_PORT if defined (see also
-		        scripts/create_apache_vhost_conf.sh).
+                scripts/create_apache_vhost_conf.sh).
 * ``pipup``
                 call ``pip install`` with the appropriate file listing
                 the project's requirements.
@@ -71,8 +71,8 @@ If everything works okay, the following shell functions are created:
                 environments, calls ``removeorphanpycs`` afterwards.
 * ``get_django_setting``
                 get a value from the current settings
-			    module, useful for your own scripts (also
-			    see the experimental ``import_django_settings``).
+                module, useful for your own scripts (also
+                see the experimental ``import_django_settings``).
 * ``djexit``
                 leave the current Django project.
 
