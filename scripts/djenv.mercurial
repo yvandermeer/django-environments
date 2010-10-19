@@ -8,7 +8,9 @@ hgbaseport=7100
 function hgserve() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
 
-    hgpidfile=$PROJECT_ROOT/tmp/hgserve.pid
+    local tmpdir=$PROJECT_ROOT/tmp
+    [ ! -d $tmpdir ] && mkdir $tmpdir
+    hgpidfile=$tmpdir/hgserve.pid
 
     # Determine port number
     local numhash=`basename $PROJECT_ROOT | md5 | sed 's/[^0-9]//g'`
