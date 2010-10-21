@@ -117,15 +117,20 @@ function _djenv_register_cleanup() {
 function djexit() {
     [ -z "$DJANGO_PROJECT" ] && return 1
 
-    # Restore prompt, django settings and python path
-    PS1=$_OLD_DJENV_PS1
+    # Restore prompt
+    if [ ! -z "$_OLD_DJENV_PS1" ]; then
+        PS1=$_OLD_DJENV_PS1
+        unset _OLD_DJENV_PS1
+    fi
 
+    # Restore django settings
     if [ ! -z "$_OLD_DJANGO_SETTINGS_MODULE" ]; then
         DJANGO_SETTINGS_MODULE=$_OLD_DJANGO_SETTINGS_MODULE
     else
         unset DJANGO_SETTINGS_MODULE
     fi
 
+    # Restore python path
     if [ ! -z "$_OLD_PYTHONPATH" ]; then
         PYTHONPATH=$_OLD_PYTHONPATH
     else
