@@ -76,13 +76,13 @@ function hgfetchall() {
 # List all .orig files
 function hgfindorig() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    find $PROJECT_ROOT -name \*.orig
+    find -H $PROJECT_ROOT -name \*.orig
 }
 
 # Remove all .orig files
 function hgremoveorig() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    find $PROJECT_ROOT -name \*.orig -print -delete
+    find -H $PROJECT_ROOT -name \*.orig -print -delete
 }
 
 # Clean up
