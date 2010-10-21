@@ -191,7 +191,7 @@ function djenv() {
     return 0
 }
 
-# Get a django setting from the current settings module
+# Get a django setting from the current or specified settings module
 # Experimental.
 #
 # Example:
@@ -203,10 +203,15 @@ function djenv() {
 function get_django_setting() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     [ -z "$DJANGO_SETTINGS_MODULE" ] && echo "No \$DJANGO_SETTINGS_MODULE" 1>&2 && return 1
-    [ -z "$1" ] && echo "Usage: get_django_setting <setting-name> [default-value]" 1>&2 && return 1
-
+    [ -z "$1" ] && echo "Usage: get_django_setting <setting-name> [default-value] [settings-module]" 1>&2 && return 1
+    local settings_module
+    if [ ! -z "$3" ]; then
+        settings_module=$3
+    else
+        settings_module=$DJANGO_SETTINGS_MODULE
+    fi
     python << EOF
-import $DJANGO_SETTINGS_MODULE as settings
+import $settings_module as settings
 
 try:
     print settings.__dict__['$1']
@@ -313,7 +318,14 @@ function djadmin() {
 function runserver() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
-    django-admin.py runserver `get_django_setting LOCAL_SERVER_PORT`
+    django-admin.py runserver `get_django_setting LOCAL_SERVER_PORT` $*
+}
+
+# Run test server on settings.LOCAL_SERVER_PORT
+function testserver() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    django-admin.py testserver --addrport=`get_django_setting LOCAL_SERVER_PORT` $*
 }
 
 # Export functions that are not solely intended for interactive use
