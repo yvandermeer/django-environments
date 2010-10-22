@@ -279,8 +279,10 @@ function cdroot() {
 # directory and should have the format 'libs-<environment>.txt'
 function pipup() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$1" ] && echo "Usage: pipup <requirements-identifier>" 1>&2 && return 1
-    pip install --requirement=$PROJECT_ROOT/requirements/libs-$1.txt
+    [ -z "$1" ] && echo "Usage: pipup <requirements-identifier> [pip options]" 1>&2 && return 1
+    local requirements=$1
+    shift
+    pip install --requirement=$PROJECT_ROOT/requirements/libs-$requirements.txt $*
 }
 
 # Use compileall to compile all .py files - handy for web server
