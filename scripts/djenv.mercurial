@@ -43,8 +43,8 @@ function hgbrowse() {
 
 # System-independent open
 function run_open() {
-    if [ -x /usr/bin/gnome-open ]; then gnome-open $@
-    else open $@; fi
+    if which xdg-open; then xdg-open "$@"
+    else open "$@"; fi
 }
 
 # Shut down hg server
