@@ -26,14 +26,14 @@ fine.
 Getting Started
 ---------------
 
-This release contains all the relevant shell scripts in the scripts
+This release contains all the relevant shell scripts in the bin
 directory, and a fully working Django example project in ``mysite``.
 You can copy files from it as needed to your own projects. To get
 the example environment working, do the following:
 
-1. Copy scripts/initenv_example to scripts/initenv.
-2. Edit scripts/initenv, set ``PROJECT_ROOT`` and save the file.
-3. Use ``source scripts/initenv`` to load django-environments into
+1. Copy bin/initenv_example to bin/initenv.
+2. Edit bin/initenv, set ``PROJECT_ROOT`` and save the file.
+3. Use ``source bin/initenv`` to load django-environments into
    your shell. If you left in the djenv command, you will see the
    environment settings immediately.
 4. For fun, you could do a ``cp -rpv mysite foo`` from the top
@@ -41,7 +41,7 @@ the example environment working, do the following:
    completion.
 5. For automatic initialization of django-environments when using
    virtualenv with virtualenvwrapper, you can either
-   ``source <path-to-project>/scripts/initenv`` from ``bin/postactivate``,
+   ``source <path-to-project>/bin/initenv`` from ``bin/postactivate``,
    or simply use your initenv's contents inside postactivate.
    Alternatively, you may also symlink ``bin/postactivate`` to your
    initenv script.
@@ -60,7 +60,7 @@ If everything works okay, the following shell functions are created:
 * ``runserver``
                 perform ``django-admin.py runserver <port>``, using
                 settings.LOCAL_SERVER_PORT if defined (see also
-                scripts/create_apache_vhost_conf.sh).
+                bin/create_apache_vhost_conf.sh).
 * ``pipup``
                 call ``pip install`` with the appropriate file listing
                 the project's requirements.
@@ -76,7 +76,7 @@ If everything works okay, the following shell functions are created:
 * ``djexit``
                 leave the current Django project.
 
-See ``scripts/djenvlib`` for the more information.
+See ``bin/djenvlib`` for the more information.
 
 Compatibility with virtualenv
 -----------------------------
@@ -122,10 +122,10 @@ Automatic generation of local WSGI links and settings file
 ----------------------------------------------------------
 
 If you want your WSGI setup done as quickly as possible, activate an
-environment - either directly via your ``scripts/initenv`` or through
-virtualenv - and execute ``scripts/setup_local_wsgi.sh <environment>``, e.g.::
+environment - either directly via your ``bin/initenv`` or through
+virtualenv - and execute ``bin/setup_local_wsgi.sh <environment>``, e.g.::
 
-    $ scripts/setup_local_wsgi.sh staging
+    $ bin/setup_local_wsgi.sh staging
 
 This will create a ``deploy/local.wsgi`` symbolic link to staging.wsgi and
 will create a ``settings/env/local.py`` with default contents for a given
@@ -147,7 +147,7 @@ Directories
   filenames are used to determine which settings to import. If
   your Apache configuration allows it, you could use symlinks
   instead of copies.
-* The scripts directory contains the shell scripts intended to be
+* The bin directory contains the shell scripts intended to be
   sourced with the ``source`` command, unless they have a '.sh'
   extension.
 
