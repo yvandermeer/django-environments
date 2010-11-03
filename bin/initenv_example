@@ -14,13 +14,13 @@ PROJECT_ROOT=$HOME/repos/django-environments
 # Debugging output: 'yes' shows basic info, 'settings' all settings
 SHOW_DJANGO_ENVIRONMENT=yes
 
-source $PROJECT_ROOT/scripts/djenvlib
+source $PROJECT_ROOT/bin/djenvlib
 
 # Switch environment to Django project mysite, using development settings
 djenv mysite settings.env.development
 
 # Domain for virtual host configuration - optional (see
-# scripts/create_apache_vhost_conf.sh)
+# bin/create_apache_vhost_conf.sh)
 #export DOMAIN=local.mysite.org
 
 # For your convenience: these two lines help greatly when using pip

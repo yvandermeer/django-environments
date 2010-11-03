@@ -37,7 +37,7 @@ fi
 [ -f $VIRTUAL_ENV/bin/activate ] && source $VIRTUAL_ENV/bin/activate
 
 # Set django environment
-source $PROJECT_ROOT/scripts/djenvlib
+source $PROJECT_ROOT/bin/djenvlib
 
 # Set DJANGO_PROJECT and DJANGO_SETTINGS to empty so djenv doesn't think
 # we're already in an active environment (which it will try to exit first):
