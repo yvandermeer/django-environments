@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Standard environment wrapper for other scripts
 #
@@ -29,9 +29,6 @@ fi
 
 # Check if arguments supplied
 [ -z "$1" ] && echo "Usage: `basename $0` <command> [args...]" 1>&2 && exit 1
-
-# Check if command exists as an executable file
-[ ! -x $APP_HOME/$1 ] && echo "`basename $0`: $1 not found!" && exit 1
 
 # Set python environment
 [ -f $VIRTUAL_ENV/bin/activate ] && source $VIRTUAL_ENV/bin/activate
