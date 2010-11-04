@@ -13,8 +13,8 @@ APP_HOME=`dirname $0` # Make sure we can refer back to this location
 # Update PATH
 PATH=$APP_HOME:$PATH
 
-# Update PYTHONPATH
-PYTHONPATH=$PROJECT_ROOT/apps:$PYTHONPATH
+# Update PYTHONPATH, add lib:
+PYTHONPATH=$PROJECT_ROOT/lib:$PYTHONPATH
 
 # Check for help request
 if [ "$1" = "-h" -o "$1" = "--help" ]; then

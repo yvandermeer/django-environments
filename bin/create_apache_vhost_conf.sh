@@ -76,7 +76,7 @@ for django_project_dir in $PROJECT_ROOT/*; do
          -d "$django_project_dir/settings" ]; then
         django_project=`basename $django_project_dir`
 
-        echo '#' $django_project
+        echo "#" $django_project
         export PYTHONPATH=`dirname $django_project_dir`
         export DJANGO_SETTINGS_MODULE=$django_project.settings
         port=`get_django_setting LOCAL_SERVER_PORT 8000`
@@ -95,12 +95,11 @@ EOF
                 continue
             fi
 
-            django_project_dir=`echo $settings | sed "s#/settings/env/.*py##"`
-            django_project=`basename $django_project_dir`
-            django_settings=`echo $settings | sed "s#$PROJECT_ROOT/##" | sed "s#[a-z0-9_]*/settings/env/#settings.env.#" | sed 's#.py$##'`
+            django_settings=`echo $settings | sed "s#$PROJECT_ROOT/##" | \
+                             sed "s#[a-z0-9_]*/settings/env/#settings.env.#" | sed 's#.py$##'`
             django_settings_id=`echo $django_settings | sed "s#.*\\.##"`
 
-            echo '#' $django_project $django_settings
+            echo '#' $django_project $django_settings $django_project_dir
 
             export PYTHONPATH=`dirname $django_project_dir`
             export DJANGO_SETTINGS_MODULE=$django_project.$django_settings
@@ -119,4 +118,4 @@ EOF
     fi
 done
 
-echo '# <<<' Generated django-environments virtual host config end
+echo "# <<<" Generated django-environments virtual host config end
