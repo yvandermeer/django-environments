@@ -12,9 +12,11 @@ DJANGO_PROJECT_DIR = path.dirname(wsgi_dir)
 PROJECT_ROOT = path.dirname(DJANGO_PROJECT_DIR)
 
 paths = (
+    # Optional: add the django project dir to the path
     #DJANGO_PROJECT_DIR,
-    path.join(PROJECT_ROOT, 'apps'),
+    path.join(PROJECT_ROOT, 'lib'),
     PROJECT_ROOT,
+    # Set this to the site-packages dir in the virtualenv (if any)
     '/var/virtualenvs/mysite/lib/python2.6/site-packages',
 )
 
