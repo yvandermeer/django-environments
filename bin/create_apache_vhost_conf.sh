@@ -76,10 +76,8 @@ for django_project_dir in $PROJECT_ROOT/*; do
          -d "$django_project_dir/settings" ]; then
         django_project=`basename $django_project_dir`
 
-        echo "#" $django_project
-        export PYTHONPATH=`dirname $django_project_dir`
-        export DJANGO_SETTINGS_MODULE=$django_project.settings
-        port=`get_django_setting LOCAL_SERVER_PORT 8000`
+        echo "#" $django_project \($django_project_dir\)
+        port=`get_django_setting LOCAL_SERVER_PORT 8000 $django_project.settings`
 
         cat << EOF
 <VirtualHost 127.0.0.1:*>
@@ -89,8 +87,10 @@ for django_project_dir in $PROJECT_ROOT/*; do
 </VirtualHost>
 EOF
 
-        # Environment settings
+        # Per-environment settings
         for settings in $django_project_dir/settings/env/*.py; do
+
+            # Skip __init__.py and non-file directory entries
             if [ `basename $settings` = "__init__.py" -o ! -f "$settings" ]; then
                 continue
             fi
@@ -99,11 +99,8 @@ EOF
                              sed "s#[^/]*/settings/env/#settings.env.#" | sed 's#.py$##'`
             django_settings_id=`echo $django_settings | sed "s#.*\\.##"`
 
-            echo '#' $django_project $django_settings $django_project_dir
-
-            export PYTHONPATH=`dirname $django_project_dir`
-            export DJANGO_SETTINGS_MODULE=$django_project.$django_settings
-            port=`get_django_setting LOCAL_SERVER_PORT 8000`
+            echo "#" $django_project.$django_settings \($django_project_dir\)
+            port=`get_django_setting LOCAL_SERVER_PORT 8000 $django_project.$django_settings`
 
             cat << EOF
 <VirtualHost 127.0.0.1:*>
