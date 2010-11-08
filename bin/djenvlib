@@ -51,7 +51,6 @@ function _djenv_init() {
     fi
 
     # Test if the definitions in the settings match ours
-
     if [ ! -z "`get_django_setting :`" ]; then
         echo "Current Django settings generate output - debugging print statements maybe?" 1>&2
     else
@@ -211,12 +210,16 @@ function get_django_setting() {
         settings_module=$DJANGO_SETTINGS_MODULE
     fi
     python << EOF
-import $settings_module as settings
-
 try:
-    print settings.__dict__['$1']
-except KeyError:
+    import $settings_module as settings
+except ImportError:
     print '$2'
+    raise
+else:
+    try:
+        print settings.__dict__['$1']
+    except KeyError:
+        print '$2'
 EOF
 }
 
