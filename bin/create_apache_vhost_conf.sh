@@ -90,13 +90,13 @@ for django_project_dir in $PROJECT_ROOT/*; do
 EOF
 
         # Environment settings
-        for settings in $django_project_dir/settings/env/[a-z0-9_]*py; do
+        for settings in $django_project_dir/settings/env/*.py; do
             if [ `basename $settings` = "__init__.py" -o ! -f "$settings" ]; then
                 continue
             fi
 
             django_settings=`echo $settings | sed "s#$PROJECT_ROOT/##" | \
-                             sed "s#[a-z0-9_]*/settings/env/#settings.env.#" | sed 's#.py$##'`
+                             sed "s#[^/]*/settings/env/#settings.env.#" | sed 's#.py$##'`
             django_settings_id=`echo $django_settings | sed "s#.*\\.##"`
 
             echo '#' $django_project $django_settings $django_project_dir
