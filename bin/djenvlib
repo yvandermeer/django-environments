@@ -334,7 +334,8 @@ function testserver() {
 }
 
 # Export functions that are not solely intended for interactive use
-export -f get_django_setting import_django_settings
+export -f get_django_setting import_django_settings cdroot pipup \
+    pycompile removeorphanpycs cdjango djadmin runserver testserver
 
 # Clean up the environment
 function _djenv_cleanup () {
