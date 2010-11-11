@@ -110,6 +110,33 @@ function _djenv_register_cleanup() {
     done
 }
 
+# Verification functions
+
+# Check if $PROJECT_ROOT is set
+function _verify_project_root() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    return 0
+}
+
+# Check if $DJANGO_PROJECT is set
+function _verify_django_project() {
+    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    return 0
+}
+
+# Check if both $PROJECT_ROOT and $DJANGO_PROJECT are set
+function _verify_project_root_and_django_project() {
+    _verify_project_root || return 1
+    _verify_django_project || return 1
+    return 0
+}
+
+# Check if $DJANGO_SETTINGS_MODULE is set
+function _verify_django_settings_module() {
+    [ -z "$DJANGO_SETTINGS_MODULE" ] && echo "No \$DJANGO_SETTINGS_MODULE" 1>&2 && return 1
+    return 0
+}
+
 # Some useful functions
 
 # Exit current project
@@ -200,9 +227,10 @@ function djenv() {
 # that the settings file should not print anything to stdout for
 # this to work!
 function get_django_setting() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_SETTINGS_MODULE" ] && echo "No \$DJANGO_SETTINGS_MODULE" 1>&2 && return 1
+    _verify_project_root || return 1
+    _verify_django_settings_module || return 1
     [ -z "$1" ] && echo "Usage: get_django_setting <setting-name> [default-value] [settings-module]" 1>&2 && return 1
+
     local settings_module
     if [ ! -z "$3" ]; then
         settings_module=$3
@@ -241,8 +269,8 @@ EOF
 # '
 # Note that all variables are prefixed with value of $prefix, 'DJANGO_'.
 function import_django_settings() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_SETTINGS_MODULE" ] && echo "No \$DJANGO_SETTINGS_MODULE" 1>&2 && return 1
+    _verify_project_root || return 1
+    _verify_django_settings_module || return 1
 
     prefix=DJANGO_
     python << EOF
@@ -273,7 +301,8 @@ EOF
 
 # Change directory to project root
 function cdroot() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     cd $PROJECT_ROOT/$1
 }
 
@@ -281,8 +310,9 @@ function cdroot() {
 # the file with the dependencies should be in the requirements
 # directory and should have the format 'libs-<environment>.txt'
 function pipup() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
     [ -z "$1" ] && echo "Usage: pipup <requirements-identifier> [pip options]" 1>&2 && return 1
+
     local requirements=$1
     shift
     pip install --requirement=$PROJECT_ROOT/requirements/libs-$requirements.txt $*
@@ -292,14 +322,16 @@ function pipup() {
 # environments where the server user often has no write access to the
 # .pyc files / directories
 function pycompile() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     python -c "import compileall; compileall.compile_dir('$PROJECT_ROOT')"
     removeorphanpycs
 }
 
 # Remove .pyc files without a corresponding .py the fast way
 function removeorphanpycs() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1;
+    _verify_project_root || return 1
+
     # Pipe through bash because this implementation uses process substitution,
     # and you don't want to export functions using that since /bin/sh will choke
     # on them with a syntax error because process substitution is not available in
@@ -312,8 +344,8 @@ function removeorphanpycs() {
 
 # Change directory to Django project
 function cdjango () {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    _verify_project_root_and_django_project || return 1
+
     cd $PROJECT_ROOT/$DJANGO_PROJECT/$1
 }
 
@@ -325,16 +357,16 @@ function djadmin() {
 
 # Run development server on settings.LOCAL_SERVER_PORT
 function runserver() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
-    django-admin.py runserver `get_django_setting LOCAL_SERVER_PORT` $*
+    _verify_project_root_and_django_project || return 1
+
+    django-admin.py runserver `get_django_setting LOCAL_SERVER_PORT 8000` $*
 }
 
 # Run test server on settings.LOCAL_SERVER_PORT
 function testserver() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
-    django-admin.py testserver --addrport=`get_django_setting LOCAL_SERVER_PORT` $*
+    _verify_project_root_and_django_project || return 1
+
+    django-admin.py testserver --addrport=`get_django_setting LOCAL_SERVER_PORT 8000` $*
 }
 
 # Open an URL in the default browser
@@ -346,8 +378,8 @@ function open_url() {
 # Points the browser to server running the current settings:
 # http://localhost:<settings.LOCAL_SERVER_PORT>/$1
 function djbrowse() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    _verify_project_root_and_django_project || return 1
+
 
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
     open_url http://localhost:$port/$1
@@ -357,8 +389,8 @@ function djbrowse() {
 # settings. Assumes Apache is running as reverse proxy; see
 # create_apache_vhoste_conf.sh for more information.
 function djvirtualbrowse() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
-    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    _verify_project_root_and_django_project || return 1
+
 
     local domain=local
     [ ! -z "$DOMAIN" ] && domain=$DOMAIN
@@ -386,13 +418,15 @@ _djenv_register_cleanup _djenv_cleanup
 #
 
 function show_django_projects() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     (cd $PROJECT_ROOT; for f in */settings/__init__.py; do echo $f; done) | \
         sed 's#/settings/__init__.py##' | sort
 }
 
 function show_django_settings() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     (cd $PROJECT_ROOT/$1; for f in settings/env/*.py; do echo $f; done) | \
         grep -v '/__init__.py$' | sed 's#settings/env/#settings.env.#' | \
         sed 's#\.py$##' | sort
@@ -410,23 +444,27 @@ _django_projects_complete() {
 }
 
 _cdroot_complete() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     COMPREPLY=($(cdroot && compgen -d -- "${2}" ))
 }
 
 _cdjango_complete() {
-    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+    _verify_django_project || return 1
+
     COMPREPLY=($(cdjango && compgen -d -- "${2}" ))
 }
 
 function show_pip_environments() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     (cd $PROJECT_ROOT/requirements; for f in libs-*.txt; do echo $f; done) | \
         sed 's#libs-##' | sed 's#.txt##' | sort
 }
 
 _pipup_complete() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     COMPREPLY=($(compgen -W "`show_pip_environments`" -- "${2}" ))
 }
 
