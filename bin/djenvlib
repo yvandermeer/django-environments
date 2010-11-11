@@ -375,11 +375,10 @@ function open_url() {
     open $1
 }
 
-# Points the browser to server running the current settings:
+# Points the browser to the server running the current settings:
 # http://localhost:<settings.LOCAL_SERVER_PORT>/$1
 function djbrowse() {
     _verify_project_root_and_django_project || return 1
-
 
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
     open_url http://localhost:$port/$1
@@ -390,7 +389,6 @@ function djbrowse() {
 # create_apache_vhoste_conf.sh for more information.
 function djvirtualbrowse() {
     _verify_project_root_and_django_project || return 1
-
 
     local domain=local
     [ ! -z "$DOMAIN" ] && domain=$DOMAIN

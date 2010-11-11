@@ -59,8 +59,14 @@ If everything works okay, the following shell functions are created:
                 instead of manage.py (unless you want to tweak things).
 * ``runserver``
                 perform ``django-admin.py runserver <port>``, using
-                settings.LOCAL_SERVER_PORT if defined (see also
-                bin/create_apache_vhost_conf.sh).
+                settings.LOCAL_SERVER_PORT if defined.
+* ``djbrowse``
+                points the browser to the server listening on
+                settings.LOCAL_SERVER_PORT in the current settings.
+* ``djvirtualbrowse``
+                Points the browser to the named virtual host for the current
+                settings. Assumes Apache is running as reverse proxy; see
+                bin/create_apache_vhoste_conf.sh for more information.
 * ``pipup``
                 call ``pip install`` with the appropriate file listing
                 the project's requirements.
