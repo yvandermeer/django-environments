@@ -333,9 +333,30 @@ function testserver() {
     django-admin.py testserver --addrport=`get_django_setting LOCAL_SERVER_PORT` $*
 }
 
+# Open an URL in the default browser
+function open_url() {
+    # Mac OS only
+    open $1
+}
+
+# Points the browser to the named virtual host for the current
+# settings. Assumes Apache is running as reverse proxy; see
+# create_apache_vhoste_conf.sh for more information.
+function djbrowse() {
+    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
+
+    domain=local
+    [ ! -z "$DOMAIN" ] && domain=$DOMAIN
+    local port=`get_django_setting LOCAL_SERVER_PORT 8000`
+    local django_settings_id=`echo $DJANGO_SETTINGS_MODULE | sed "s#.*\\.##"`
+
+    open_url http://$django_settings_id.$DJANGO_PROJECT.$domain:$port/$1
+}
+
 # Export functions that are not solely intended for interactive use
 export -f get_django_setting import_django_settings cdroot pipup \
-    pycompile removeorphanpycs cdjango djadmin runserver testserver
+    pycompile removeorphanpycs cdjango djadmin runserver testserver djbrowse
 
 # Clean up the environment
 function _djenv_cleanup () {
