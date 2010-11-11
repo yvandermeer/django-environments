@@ -218,7 +218,6 @@ function djenv() {
 }
 
 # Get a django setting from the current or specified settings module
-# Experimental.
 #
 # Example:
 # LC=`get_django_setting LANGUAGE_CODE` && echo $LC
@@ -379,6 +378,7 @@ function open_url() {
 # http://localhost:<settings.LOCAL_SERVER_PORT>/$1
 function djbrowse() {
     _verify_project_root_and_django_project || return 1
+    _verify_django_settings_module || return 1
 
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
     open_url http://localhost:$port/$1
@@ -389,6 +389,7 @@ function djbrowse() {
 # create_apache_vhoste_conf.sh for more information.
 function djvirtualbrowse() {
     _verify_project_root_and_django_project || return 1
+    _verify_django_settings_module || return 1
 
     local domain=local
     [ ! -z "$DOMAIN" ] && domain=$DOMAIN
