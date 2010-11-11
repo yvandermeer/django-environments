@@ -301,8 +301,8 @@ function pycompile() {
 function removeorphanpycs() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1;
     diff --old-line-format= --new-line-format=%l --unchanged-group-format= \
-        <(find -H $PROJECT_ROOT -name \*.py) \
-        <(find -H $PROJECT_ROOT -name \*.pyc | sed 's/c$//') | \
+        <(find -H $PROJECT_ROOT -name \*.py | sort) \
+        <(find -H $PROJECT_ROOT -name \*.pyc | sed 's/c$//' | sort) | \
         sed 's/$/c/' | xargs rm -v
 }
 
