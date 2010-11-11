@@ -8,7 +8,7 @@
 # - DJANGO_SETTINGS
 # - VIRTUAL_ENV (optional)
 
-APP_HOME=`dirname $0` # Make sure we can refer back to this location
+APP_HOME=$(cd `dirname $0`; pwd) # Make sure we can refer back to this location
 
 # Update PATH
 PATH=$APP_HOME:$PATH

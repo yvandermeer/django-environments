@@ -137,7 +137,7 @@ This will create a ``deploy/local.wsgi`` symbolic link to staging.wsgi and
 will create a ``settings/env/local.py`` with default contents for a given
 environment. Now, you only need to update ``settings.env.local`` with those
 settings you want to keep absolutely local, like those containing
-user ids and passwords. Keep in mind the script will overwrite exiting
+user ids and passwords. Keep in mind the script will overwrite existing
 ``local.py`` settings files!
 
 Directories

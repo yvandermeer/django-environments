@@ -228,13 +228,13 @@ function djenv() {
 # this to work!
 function get_django_setting() {
     _verify_project_root || return 1
-    _verify_django_settings_module || return 1
     [ -z "$1" ] && echo "Usage: get_django_setting <setting-name> [default-value] [settings-module]" 1>&2 && return 1
 
     local settings_module
     if [ ! -z "$3" ]; then
         settings_module=$3
     else
+        _verify_django_settings_module || return 1
         settings_module=$DJANGO_SETTINGS_MODULE
     fi
     python << EOF
