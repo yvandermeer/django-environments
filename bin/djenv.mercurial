@@ -13,7 +13,7 @@ function hgserve() {
     hgpidfile=$tmpdir/hgserve.pid
 
     # Determine port number
-    local numhash=`basename $PROJECT_ROOT | md5 | sed 's/[^0-9]//g'`
+    local numhash=`basename $PROJECT_ROOT | openssl md5 | sed 's/[^0-9]//g'`
     hgport=`expr $hgbaseport + ${numhash:0:2}`
 
     # See if the server is alive - start it if not
@@ -39,6 +39,12 @@ function hgbrowse() {
     [ ! -z "$1" ] && path=$path/$1
 
     open_url http://localhost:$hgport/$path
+}
+
+# System-independent open
+function run_open() {
+    if [ -x /usr/bin/gnome-open ]; then gnome-open $@
+    else open $@; fi
 }
 
 # Shut down hg server
