@@ -335,7 +335,7 @@ function removeorphanpycs() {
     # and you don't want to export functions using that since /bin/sh will choke
     # on them with a syntax error because process substitution is not available in
     # POSIX mode
-    echo "diff --old-line-format= --new-line-format=%l --unchanged-group-format= \
+    echo "diff --old-line-format= --new-line-format=%L --unchanged-group-format= \
         <(find -H $PROJECT_ROOT -name \*.py | sort) \
         <(find -H $PROJECT_ROOT -name \*.pyc | sed 's/c$//' | sort) | \
         sed 's/$/c/' | xargs rm -v" | bash
@@ -370,8 +370,13 @@ function testserver() {
 
 # Open an URL in the default browser
 function open_url() {
-    # Mac OS only
-    open $1
+    if which -s xdg-open; then
+        # Linux
+        xdg-open "$@"
+    else
+        # Mac OS
+        open "$@"
+    fi
 }
 
 # Points the browser to the server running the current settings:
