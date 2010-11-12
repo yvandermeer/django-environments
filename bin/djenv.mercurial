@@ -4,16 +4,27 @@
 
 hgbaseport=7100
 
+# Hash function that should run just about anywhere
+function _hash() {
+    if which -s openssl; then
+        openssl md5
+    elif which -s md5; then
+        md5
+    else
+        cksum
+    fi
+}
+
 # Start hg server in daemon mode and open first argument in browser
 function hgserve() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
 
     local tmpdir=$PROJECT_ROOT/tmp
     [ ! -d $tmpdir ] && mkdir $tmpdir
     hgpidfile=$tmpdir/hgserve.pid
 
     # Determine port number
-    local numhash=`basename $PROJECT_ROOT | openssl md5 | sed 's/[^0-9]//g'`
+    local numhash=`basename $PROJECT_ROOT | _hash | sed 's/[^0-9]//g'`
     hgport=`expr $hgbaseport + ${numhash:0:2}`
 
     # See if the server is alive - start it if not
@@ -30,21 +41,17 @@ function hgserve() {
     [ ! "$1" = "--no-open" ] && open_url http://localhost:$hgport/$1
 }
 
-# Browse files in tip
+# Browse files in current branch
 function hgbrowse() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     hgserve --no-open
 
-    path=file/tip`echo \`pwd\` | sed "s#$PROJECT_ROOT##"`
+    branch=`hg sum | grep branch: | cut -f2 -d" "`
+    path=file/$branch`echo \`pwd\` | sed "s#$PROJECT_ROOT##"`
     [ ! -z "$1" ] && path=$path/$1
 
     open_url http://localhost:$hgport/$path
-}
-
-# System-independent open
-function run_open() {
-    if which xdg-open; then xdg-open "$@"
-    else open "$@"; fi
 }
 
 # Shut down hg server
@@ -58,7 +65,8 @@ function hgkill() {
 # Runs an hg command on all hg repositories in the externals directory,
 # e.g. 'hgexternals pull -u'
 function hgexternals() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     for external in $PROJECT_ROOT/externals/*; do
         if [ -d $external/.hg ]; then
             echo `basename $external`:
@@ -73,7 +81,8 @@ function hgexternals() {
 
 # Pull and update the project and all Mercurial externals
 function hgfetchall() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     hg -R $PROJECT_ROOT pull -u
     echo
     hgexternals pull -u
@@ -81,13 +90,15 @@ function hgfetchall() {
 
 # List all .orig files
 function hgfindorig() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     find -H $PROJECT_ROOT -name \*.orig
 }
 
 # Remove all .orig files
 function hgremoveorig() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     find -H $PROJECT_ROOT -name \*.orig -print -delete
 }
 
