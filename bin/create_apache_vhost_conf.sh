@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Generates Apache named virtual host configuration for reverse
 # proxying runserver instances, to be included from your Apache

@@ -1,4 +1,4 @@
-#!/bin/sh
+#!/usr/bin/env bash
 #
 # Generates deploy/local.wsgi and settings/env/local.py for a given
 # environment
