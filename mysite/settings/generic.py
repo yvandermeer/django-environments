@@ -6,7 +6,7 @@ DJANGO_PROJECT_DIR = path.dirname(path.dirname(path.abspath(__file__)))
 DJANGO_PROJECT = path.basename(DJANGO_PROJECT_DIR)
 PROJECT_ROOT = path.dirname(DJANGO_PROJECT_DIR)
 
-LOGGING_FILENAME = path.join(PROJECT_ROOT, 'logs/mysite.log')
+LOGGING_FILENAME = path.join(PROJECT_ROOT, 'log/mysite.log')
 
 logging.basicConfig(
     level=logging.DEBUG,
