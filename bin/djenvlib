@@ -354,18 +354,24 @@ function djadmin() {
     django-admin.py $*
 }
 
-# Run development server on settings.LOCAL_SERVER_PORT
+# Run development server on settings.LOCAL_SERVER_PORT, and restart automatically
 function runserver() {
     _verify_project_root_and_django_project || return 1
 
-    django-admin.py runserver `get_django_setting LOCAL_SERVER_PORT 8000` $*
+    local port=`get_django_setting LOCAL_SERVER_PORT 8000`
+    while true; do
+        django-admin.py runserver $port $*
+        echo "Server exited - restarting" 1>&2
+        sleep 1
+    done
 }
 
-# Run test server on settings.LOCAL_SERVER_PORT
+# Run test server on settings.LOCAL_SERVER_PORT, and restart automatically
 function testserver() {
     _verify_project_root_and_django_project || return 1
 
-    django-admin.py testserver --addrport=`get_django_setting LOCAL_SERVER_PORT 8000` $*
+    local port=`get_django_setting LOCAL_SERVER_PORT 8000`
+    django-admin.py testserver --addrport=$port $*
 }
 
 # Open an URL in the default browser
