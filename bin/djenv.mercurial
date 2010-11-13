@@ -6,9 +6,9 @@ hgbaseport=7100
 
 # Hash function that should run just about anywhere
 function _hash() {
-    if which openssl; then
+    if which openssl > /dev/null; then
         openssl md5
-    elif which md5; then
+    elif which md5 > /dev/null; then
         md5
     else
         cksum
