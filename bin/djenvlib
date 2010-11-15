@@ -331,6 +331,11 @@ function pycompile() {
 function removeorphanpycs() {
     _verify_project_root || return 1
 
+    # Use the GNU extension --no-run-if-empty on Linux, in case no files are found
+    if [ `uname` = Linux ]; then
+        extra_xargs_args=--no-run-if-empty
+    fi
+
     # Pipe through bash because this implementation uses process substitution,
     # and you don't want to export functions using that since /bin/sh will choke
     # on them with a syntax error because process substitution is not available in
@@ -338,7 +343,7 @@ function removeorphanpycs() {
     echo "diff --old-line-format= --new-line-format=%L --unchanged-group-format= \
         <(find -H $PROJECT_ROOT -name \*.py | sort) \
         <(find -H $PROJECT_ROOT -name \*.pyc | sed 's/c$//' | sort) | \
-        sed 's/$/c/' | xargs rm -v" | bash
+        sed 's/$/c/' | xargs $extra_xargs_args rm -v" | bash
 }
 
 # Change directory to Django project
