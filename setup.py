@@ -10,6 +10,7 @@ from setuptools import setup, find_packages
 # exit()
 
 
+# XXX TODO only include executable files here, and try to include the other files with MANIFEST.in
 bin_dirname = 'bin'
 bin_dir = path.join(path.dirname(path.abspath(__file__)), bin_dirname)
 scripts = [path.join(bin_dirname, script) for script in listdir(bin_dir)]
