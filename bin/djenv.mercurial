@@ -47,8 +47,7 @@ function hgbrowse() {
 
     hgserve --no-open
 
-    branch=`hg sum | grep branch: | cut -f2 -d" "`
-    path=file/$branch`echo \`pwd\` | sed "s#$PROJECT_ROOT##"`
+    path=file/`hg branch``echo \`pwd\` | sed "s#$PROJECT_ROOT##"`
     [ ! -z "$1" ] && path=$path/$1
 
     open_url http://localhost:$hgport/$path
