@@ -346,6 +346,14 @@ function removeorphanpycs() {
         sed 's/$/c/' | xargs $extra_xargs_args rm -v" | bash
 }
 
+# Remove empty directories
+function removeemptydirs() {
+    _verify_project_root || return 1
+
+    removeorphanpycs # Make directories as empty as possible
+    find $PROJECT_ROOT -type d -empty -delete
+}
+
 # Change directory to Django project
 function cdjango () {
     _verify_project_root_and_django_project || return 1
@@ -418,7 +426,8 @@ function djvirtualbrowse() {
 export -f _verify_project_root _verify_django_project \
     _verify_project_root_and_django_project _verify_django_settings_module \
     get_django_setting import_django_settings cdroot pipup \
-    pycompile removeorphanpycs cdjango djadmin runserver testserver djbrowse
+    pycompile removeorphanpycs removeemptydirs cdjango \
+    djadmin runserver testserver djbrowse
 
 # Clean up the environment
 function _djenv_cleanup () {
