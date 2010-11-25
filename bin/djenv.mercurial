@@ -70,7 +70,7 @@ function hgexternals() {
         if [ -d $external/.hg ]; then
             echo `basename $external`:
             _IFS=$IFS
-            IFS='' # magic
+            IFS= # magic
             hg -R $external $*
             IFS=$_IFS
             echo
@@ -99,6 +99,19 @@ function hgremoveorig() {
     _verify_project_root || return 1
 
     find -H $PROJECT_ROOT -name \*.orig -print -delete
+}
+
+# Find out who added those XXX / TODO statements (.py files only)
+function hgtodos() {
+    _verify_project_root || return 1
+
+    TODO="TO.{0,1}DO"
+    XXX="XXX"
+    pattern="#.*($TODO|$XXX)\b"
+
+    for file in `egrep -l $pattern \`find $PROJECT_ROOT -name \*.py\``; do
+        hg blame --user --file --changeset --line-number $file | sed "s/^ *//" | egrep $pattern
+    done
 }
 
 # Clean up
