@@ -72,17 +72,9 @@ function _djenv_init() {
     PS1=[$DJANGO_PROJECT]$PS1
 
     # Show environment info
-    if [ ! -z "$SHOW_DJANGO_ENVIRONMENT" ]; then
-        if [ "$SHOW_DJANGO_ENVIRONMENT" = "yes" ]; then
-            echo Welcome to $DJANGO_PROJECT. Environment info:
-            djenv
-            echo
-            if [ "$SHOW_DJANGO_ENVIRONMENT" = "settings" ]; then
-                echo Django settings:
-                PAGER=cat python -c "import $DJANGO_SETTINGS_MODULE; help($DJANGO_SETTINGS_MODULE)" | grep -v "^$"
-                echo
-            fi
-        fi
+    if [ "$SHOW_DJANGO_ENVIRONMENT" = "yes" ]; then
+        echo Welcome to $DJANGO_PROJECT. Environment info:
+        djenv
     fi
 
     # Check non-critical settings
@@ -346,7 +338,7 @@ function removeorphanpycs() {
         sed 's/$/c/' | xargs $extra_xargs_args rm -v" | bash
 }
 
-# Remove empty directories
+# Remove all empty directories in the project
 function removeemptydirs() {
     _verify_project_root || return 1
 

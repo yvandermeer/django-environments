@@ -11,7 +11,7 @@
 # The root of the project, i.e. the directory containing your Django projects
 # PROJECT_ROOT=/Users/joe/projects/myproject
 PROJECT_ROOT=$HOME/repos/django-environments
-# Debugging output: 'yes' shows basic info, 'settings' all settings
+# Show primary settings after chaning project and settings using djenv
 SHOW_DJANGO_ENVIRONMENT=yes
 
 source $PROJECT_ROOT/bin/djenvlib
