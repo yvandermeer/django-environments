@@ -72,6 +72,9 @@ If everything works okay, the following shell functions are created:
                 the project's requirements.
 * ``removeorphanpycs``
                 remove .pyc files without a corresponding .py.
+* ``removeemptydirs``
+                remove all empty directories in the project (calls
+                removeorphanpycs first).
 * ``pycompile``
                 compile all .py files - handy for web server
                 environments, calls ``removeorphanpycs`` afterwards.
