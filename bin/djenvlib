@@ -1,12 +1,12 @@
 #
 # django-environments initialization script
 #
-# Instead of editing the file, it's better to set the following
-# variable in your own initenv script or virtualenv bin/postactivate,
-# and source this file (order does not matter).
+# Instead of editing the file, it's better to set the variable
+# $PROJECT_ROOT in your own initenv script or virtualenv bin/postactivate,
+# and then source this file.
 #
-# PROJECT_ROOT is the path to the root of the entire project, i.e.
-# the directory containing the one or more 'Django projects'.
+# $PROJECT_ROOT is the path to the root of the *entire* project, i.e.
+# the directory containing one or more 'Django projects', for example:
 #
 # PROJECT_ROOT=/Users/spanky/projects/myproject
 
@@ -288,6 +288,18 @@ for name, value in settings:
         else:
             print '$prefix%s="%s"' % (name, escape(value))
 EOF
+}
+
+# Set the project root to either current or specified directory
+setproject() {
+    if [ ! -z "$1" ]; then
+        cd $1
+        [ ! $? -eq 0 ] && return 1
+    fi
+    djexit
+    PROJECT_ROOT=`pwd`
+    echo "Available Django projects (use the djenv command to select):"
+    echo `show_django_projects`
 }
 
 # Change directory to project root
