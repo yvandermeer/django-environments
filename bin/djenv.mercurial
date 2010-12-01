@@ -57,7 +57,9 @@ function hgbrowse() {
 function hgkill() {
     kill -9 `cat "$hgpidfile" 2>&1` > /dev/null 2>&1
     if [ ! $? -eq 0 ]; then
-        echo "Server not running or other error" 1>&2
+        # Message is not sent to stderr, as this proved to be
+	    # undirectable, i.e. "hgkill 2>&1 > /dev/null" did not work
+        echo "Server not running or other error"
     fi
 }
 
