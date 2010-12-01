@@ -83,7 +83,7 @@ function _djenv_init() {
         eval `import_django_settings $dirs`
         envname=DJANGO_$dirs
         for dir in ${!envname}; do
-            [ ! -d $dir ] && echo "Warning: \"$dir\" in settings.$dirs is not a valid directory"
+            [ ! -d $dir ] && echo "Warning: \"$dir\" in settings.$dirs is not a valid directory" 1>&2
         done
     done
 
@@ -298,8 +298,14 @@ setproject() {
     fi
     djexit
     PROJECT_ROOT=`pwd`
-    echo "Available Django projects (use the djenv command to select):"
-    echo `show_django_projects`
+
+    local projects=`show_django_projects`
+    if [ ! -z "$projects" ]; then
+        echo "Available Django projects (use the djenv command to select):" 1>&2
+        echo $projects 1>&2
+    else
+        echo "Warning: no django projects found" 1>&2
+    fi
 }
 
 # Change directory to project root
@@ -450,15 +456,25 @@ _djenv_register_cleanup _djenv_cleanup
 function show_django_projects() {
     _verify_project_root || return 1
 
-    (cd $PROJECT_ROOT; for f in */settings/__init__.py; do echo $f; done) | \
-        sed 's#/settings/__init__.py##' | sort
+    (
+        cd $PROJECT_ROOT
+        shopt -s nullglob
+        for file in */settings/__init__.py; do
+            echo $file
+        done
+    ) | sed 's#/settings/__init__.py##' | sort
 }
 
 function show_django_settings() {
     _verify_project_root || return 1
 
-    (cd $PROJECT_ROOT/$1; for f in settings/env/*.py; do echo $f; done) | \
-        grep -v '/__init__.py$' | sed 's#settings/env/#settings.env.#' | \
+    (
+        cd $PROJECT_ROOT/$1
+        shopt -s nullglob
+        for file in settings/env/*.py; do
+            echo $file
+        done
+    ) | grep -v '/__init__.py$' | sed 's#settings/env/#settings.env.#' | \
         sed 's#\.py$##' | sort
 }
 
@@ -476,20 +492,25 @@ _django_projects_complete() {
 _cdroot_complete() {
     _verify_project_root || return 1
 
-    COMPREPLY=($(cdroot && compgen -d -- "${2}" ))
+    COMPREPLY=($(cdroot && compgen -d -- "${2}"))
 }
 
 _cdjango_complete() {
     _verify_django_project || return 1
 
-    COMPREPLY=($(cdjango && compgen -d -- "${2}" ))
+    COMPREPLY=($(cdjango && compgen -d -- "${2}"))
 }
 
 function show_pip_environments() {
     _verify_project_root || return 1
 
-    (cd $PROJECT_ROOT/requirements; for f in libs-*.txt; do echo $f; done) | \
-        sed 's#libs-##' | sed 's#.txt##' | sort
+    (
+        cd $PROJECT_ROOT/requirements
+        shopt -s nullglob
+        for file in libs-*.txt; do
+             echo $file
+        done
+    ) | sed 's#libs-##' | sed 's#.txt##' | sort
 }
 
 _pipup_complete() {

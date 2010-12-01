@@ -57,7 +57,7 @@ function hgbrowse() {
 function hgkill() {
     kill -9 `cat "$hgpidfile" 2>&1` > /dev/null 2>&1
     if [ ! $? -eq 0 ]; then
-        echo Server not running or other error 2>&1
+        echo "Server not running or other error" 1>&2
     fi
 }
 
