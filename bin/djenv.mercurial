@@ -102,6 +102,7 @@ function hgremoveorig() {
 }
 
 # Find out who added those XXX / TODO statements (.py files only)
+# Experimental.
 function hgtodos() {
     _verify_project_root || return 1
 
@@ -110,7 +111,7 @@ function hgtodos() {
     pattern="#.*($TODO|$XXX)\b"
 
     for file in `egrep -l $pattern \`find $PROJECT_ROOT -name \*.py\``; do
-        hg blame --user --file --changeset --line-number $file | sed "s/^ *//" | egrep $pattern
+        hg blame --user --file --changeset --line-number $file | sed 's/^ *//' | egrep $pattern
     done
 }
 

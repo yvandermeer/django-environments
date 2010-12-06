@@ -343,7 +343,7 @@ function removeorphanpycs() {
 
     # Use the GNU extension --no-run-if-empty on Linux, in case no files are found
     if [ `uname` = Linux ]; then
-        extra_xargs_args=--no-run-if-empty
+        local extra_xargs_args=--no-run-if-empty
     fi
 
     # Pipe through bash because this implementation uses process substitution,
@@ -356,11 +356,35 @@ function removeorphanpycs() {
         sed 's/$/c/' | xargs $extra_xargs_args rm -v" | bash
 }
 
+# Remove all directories in the project that contain the specified file
+# Experimental.
+function cleanupdirs() {
+    [ -z "$1" ] && echo "Usage: cleanupdirs <filename>" 1>&2 && return 1
+
+    local file=$1
+
+    # Use the GNU extension --no-run-if-empty on Linux, in case no files are found
+    if [ `uname` = Linux ]; then
+        local extra_xargs_args=--no-run-if-empty
+    fi
+
+    for dir in `find $PROJECT_ROOT -type f -name $file | \
+                xargs -n 1 $extra_xargs_args dirname`; do
+        if [ `ls -a $dir | grep -v $file | wc -l` = 2 ]; then
+            rm $dir/$file
+            rmdir $dir
+        fi
+    done
+}
+
 # Remove all empty directories in the project
 function removeemptydirs() {
     _verify_project_root || return 1
 
-    removeorphanpycs # Make directories as empty as possible
+    # Make directories as empty as possible
+    removeorphanpycs
+    cleanupdirs .DS_Store
+    # Then remove the totally empty ones
     find $PROJECT_ROOT -type d -empty -delete
 }
 
@@ -373,7 +397,8 @@ function cdjango () {
 
 # Forget manage.py, django-admin.py respects our settings!
 function djadmin() {
-    [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
+    _verify_project_root || return 1
+
     django-admin.py $*
 }
 
@@ -427,7 +452,7 @@ function djvirtualbrowse() {
 
     local domain=local
     [ ! -z "$DOMAIN" ] && domain=$DOMAIN
-    local django_settings_id=`echo $DJANGO_SETTINGS_MODULE | sed "s#.*\\.##"`
+    local django_settings_id=`echo $DJANGO_SETTINGS_MODULE | sed 's#.*\\.##'`
 
     open_url http://$django_settings_id.$DJANGO_PROJECT.$domain/$1
 }
