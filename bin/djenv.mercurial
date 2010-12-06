@@ -57,9 +57,7 @@ function hgbrowse() {
 function hgkill() {
     kill -9 `cat "$hgpidfile" 2>&1` > /dev/null 2>&1
     if [ ! $? -eq 0 ]; then
-        # Message is not sent to stderr, as this proved to be
-	    # undirectable, i.e. "hgkill 2>&1 > /dev/null" did not work
-        echo "Server not running or other error"
+        echo "Server not running or other error" 1>&2
     fi
 }
 
@@ -119,7 +117,7 @@ function hgtodos() {
 # Clean up
 function _djenv_mercurial_cleanup () {
     # Stop server
-    hgkill 2>&1 > /dev/null
+    hgkill > /dev/null 2>&1
     # Clean environment
     unset hgport
 }
