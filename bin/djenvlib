@@ -399,7 +399,7 @@ function testserver() {
 
 # Open an URL in the default browser
 function open_url() {
-    if which -s xdg-open; then
+    if which xdg-open > /dev/null; then
         # Linux
         xdg-open "$@"
     else
