@@ -66,7 +66,7 @@ cd `dirname $0`
 
 echo '# >>>' Generated django-environments virtual host config start
 echo
-echo NameVirtualHost 127.0.0.1:*
+echo NameVirtualHost *:*
 echo
 
 for django_project_dir in $PROJECT_ROOT/*; do
@@ -80,7 +80,7 @@ for django_project_dir in $PROJECT_ROOT/*; do
         port=`get_django_setting LOCAL_SERVER_PORT 8000 $django_project.settings`
 
         cat << EOF
-<VirtualHost 127.0.0.1:*>
+<VirtualHost *:*>
     ServerName $django_project.$domain
     RewriteEngine On
     RewriteRule ^/(.*) http://localhost:$port/\$1 [P]
@@ -103,7 +103,7 @@ EOF
             port=`get_django_setting LOCAL_SERVER_PORT 8000 $django_project.$django_settings`
 
             cat << EOF
-<VirtualHost 127.0.0.1:*>
+<VirtualHost *:*>
     ServerName $django_settings_id.$django_project.$domain
     RewriteEngine On
     RewriteRule ^/(.*) http://localhost:$port/\$1 [P]
