@@ -402,13 +402,30 @@ function djadmin() {
     django-admin.py $*
 }
 
-# Run development server on settings.LOCAL_SERVER_PORT, and restart automatically
+# Get network IP address
+function get_network_ip() {
+    python << EOF
+import socket
+s = socket.socket(socket.AF_INET, socket.SOCK_DGRAM)
+s.connect(('google.com', 80))
+print s.getsockname()[0]
+EOF
+}
+
+# Run development server on settings.LOCAL_SERVER_PORT, and restart
+# automatically. With -p as first argument, the server listens to
+# the network IP address instead of localhost.
 function runserver() {
     _verify_project_root_and_django_project || return 1
 
+    if [ "$1" = -p ]; then
+        local ip=`get_network_ip`:
+        shift
+    fi
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
+
     while true; do
-        django-admin.py runserver $port $*
+        django-admin.py runserver $ip$port $*
         echo "Server exited - restarting" 1>&2
         sleep 1
     done
