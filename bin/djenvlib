@@ -315,6 +315,13 @@ function cdroot() {
     cd $PROJECT_ROOT/$1
 }
 
+# Change directory to project lib directory
+function cdlib() {
+    _verify_project_root || return 1
+
+    cd $PROJECT_ROOT/lib/$1
+}
+
 # Install dependencies for a python environment (first argument);
 # the file with the dependencies should be in the requirements
 # directory and should have the format 'libs-<environment>.txt'
@@ -537,6 +544,12 @@ _cdroot_complete() {
     COMPREPLY=($(cdroot && compgen -d -- "${2}"))
 }
 
+_cdlib_complete() {
+    _verify_project_root || return 1
+
+    COMPREPLY=($(cdlib && compgen -d -- "${2}"))
+}
+
 _cdjango_complete() {
     _verify_django_project || return 1
 
@@ -562,6 +575,7 @@ _pipup_complete() {
 }
 
 complete -o nospace -F _cdroot_complete -S/ cdroot
+complete -o nospace -F _cdlib_complete -S/ cdlib
 complete -o nospace -F _cdjango_complete -S/ cdjango
 complete -F _django_projects_complete djenv
 complete -F _pipup_complete pipup
