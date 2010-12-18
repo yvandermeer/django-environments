@@ -48,26 +48,29 @@ the example environment working, do the following:
 
 If everything works okay, the following shell functions are created:
 
-* ``djenv``
+* ``djenv`` (tab completion)
                 switch to different settings or another Django project.
-* ``cdroot``
+* ``cdroot`` (tab completion)
                 go to current project root.
-* ``cdjango``
+* ``cdlib`` (tab completion)
+                go to subdirectory 'lib' of the current project root.
+* ``cdjango`` (tab completion)
                 go to Django project root (one lower than project root).
-* ``djadmin``
+* ``djadmin`` (install `tab completion <http://docs.djangoproject.com/en/dev/ref/django-admin/#bash-completion>`_ yourself)
                 shorthand for django-admin.py, which you should use
                 instead of manage.py (unless you want to tweak things).
 * ``runserver``
                 perform ``django-admin.py runserver <port>``, using
-                settings.LOCAL_SERVER_PORT if defined.
+                settings.LOCAL_SERVER_PORT if defined. Use option
+                ``-p`` to  bind to your network IP address.
 * ``djbrowse``
                 points the browser to the server listening on
                 settings.LOCAL_SERVER_PORT in the current settings.
 * ``djvirtualbrowse``
                 Points the browser to the named virtual host for the current
                 settings. Assumes Apache is running as reverse proxy; see
-                bin/create_apache_vhoste_conf.sh for more information.
-* ``pipup``
+                ``bin/create_apache_vhoste_conf.sh`` for more information.
+* ``pipup`` (tab completion)
                 call ``pip install`` with the appropriate file listing
                 the project's requirements.
 * ``removeorphanpycs``
