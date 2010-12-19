@@ -31,7 +31,16 @@ fi
 [ -z "$1" ] && echo "Usage: `basename $0` <command> [args...]" 1>&2 && exit 1
 
 # Set python environment
-[ -f $VIRTUAL_ENV/bin/activate ] && source $VIRTUAL_ENV/bin/activate
+if [ ! -z $VIRTUAL_ENV ]; then
+    if [ -f $VIRTUAL_ENV/bin/activate ]; then
+        source $VIRTUAL_ENV/bin/activate
+        if [ ! $? = 0 ]; then
+            echo "Error activating virtualenv $VIRTUAL_ENV" 1>&2 && exit 1
+        fi
+    else
+        echo "$VIRTUAL_ENV is not a valid virtualenv" 1>&2 && exit 1
+    fi
+fi
 
 # Load django-environments
 source $PROJECT_ROOT/bin/djenvlib
