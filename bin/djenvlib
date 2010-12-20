@@ -486,7 +486,7 @@ export -f _verify_project_root _verify_django_project \
     _verify_project_root_and_django_project _verify_django_settings_module \
     get_django_setting import_django_settings cdroot cdlib pipup \
     pycompile removeorphanpycs cleanupdirs removeemptydirs \
-    cdjango djadmin runserver testserver djbrowse
+    cdjango djadmin get_network_ip runserver testserver djbrowse
 
 # Clean up the environment
 function _djenv_cleanup () {

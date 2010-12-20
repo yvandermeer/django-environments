@@ -110,7 +110,7 @@ function hgtodos() {
     XXX="XXX"
     pattern="#.*($TODO|$XXX)\b"
 
-    for file in `egrep -l $pattern \`find $PROJECT_ROOT -name \*.py\``; do
+    for file in `egrep -l $pattern \`find -H $PROJECT_ROOT -name \*.py\``; do
         hg blame --user --file --changeset --line-number $file | sed 's/^ *//' | egrep $pattern
     done
 }
