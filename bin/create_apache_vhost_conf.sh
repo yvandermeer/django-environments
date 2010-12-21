@@ -74,16 +74,16 @@ for django_project_dir in $PROJECT_ROOT/*; do
     # Generic settings
     if [ -f "$django_project_dir/settings.py" -o \
          -d "$django_project_dir/settings" ]; then
-        django_project=`basename $django_project_dir`
+        export DJANGO_PROJECT=`basename $django_project_dir`
 
-        echo "#" $django_project \($django_project_dir\)
-        port=`get_django_setting LOCAL_SERVER_PORT 8000 $django_project.settings`
+        echo "#" $DJANGO_PROJECT \($django_project_dir\)
+        port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.settings`
 
         cat << EOF
 <VirtualHost *:*>
-    ServerName $django_project.$domain
+    ServerName $DJANGO_PROJECT.$domain
     RewriteEngine On
-    RewriteRule ^/(.*) http://localhost:$port/\$1 [P]
+    RewriteRule ^/(.*) http://127.0.0.1:$port/\$1 [P]
 </VirtualHost>
 EOF
 
@@ -99,14 +99,14 @@ EOF
                              sed "s#[^/]*/settings/env/#settings.env.#" | sed 's#.py$##'`
             django_settings_id=`echo $django_settings | sed "s#.*\\.##"`
 
-            echo "#" $django_project.$django_settings \($django_project_dir\)
-            port=`get_django_setting LOCAL_SERVER_PORT 8000 $django_project.$django_settings`
+            echo "#" $DJANGO_PROJECT.$django_settings \($django_project_dir\)
+            port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.$django_settings`
 
             cat << EOF
 <VirtualHost *:*>
-    ServerName $django_settings_id.$django_project.$domain
+    ServerName $django_settings_id.$DJANGO_PROJECT.$domain
     RewriteEngine On
-    RewriteRule ^/(.*) http://localhost:$port/\$1 [P]
+    RewriteRule ^/(.*) http://127.0.0.1:$port/\$1 [P]
 </VirtualHost>
 EOF
         done
