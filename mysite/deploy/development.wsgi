@@ -9,7 +9,8 @@ import site, sys
 wsgi_dir = path.dirname(__file__)
 # Calculate the path based on the location of the WSGI script
 DJANGO_PROJECT_DIR = path.dirname(wsgi_dir)
-PROJECT_ROOT = path.dirname(DJANGO_PROJECT_DIR)
+environ['DJANGO_PROJECT'] = DJANGO_PROJECT = path.basename(DJANGO_PROJECT_DIR)
+environ['PROJECT_ROOT'] = PROJECT_ROOT = path.dirname(DJANGO_PROJECT_DIR)
 
 paths = (
     # Optional: add the django project dir to the path
