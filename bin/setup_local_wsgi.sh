@@ -3,7 +3,7 @@
 # Generates deploy/local.wsgi and settings/env/local.py for a given
 # environment
 #
-# To be run in an activated django-environment environment, i.e.
+# To be run in an activated django-environments setting, i.e.
 # $PROJECT_ROOT and $DJANGO_PROJECT must be set correctly.
 
 env=$1
