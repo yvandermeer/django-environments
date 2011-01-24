@@ -23,7 +23,9 @@
 # 'django_project_id.local' and 'settings_id.django_project_id.local'.
 # By defining environment variable $DOMAIN you can change the domain
 # postfix to anything you like, for instance
-# 'development.myorganization.dom'.
+# 'development.myorganization.dom'. If you need to create additional
+# ServerAlias directives, just add more domains to $DOMAIN, like so:
+# 'development.myorganization.dom demos.myorganization.dom'.
 #
 # Steps to get this working:
 #
@@ -53,8 +55,8 @@
 # 6. Go to the appropriate URL, e.g.
 #    http://settings_id.django_project_id.local/ and admire your work.
 
-domain=local
-[ ! -z "$DOMAIN" ] && domain=$DOMAIN
+domains=local
+[ ! -z "$DOMAIN" ] && domains=$DOMAIN
 
 # The root of the project should exist, of course
 [ -z "$PROJECT_ROOT" ] && \
@@ -64,8 +66,23 @@ domain=local
 
 cd `dirname $0`
 
+function write_vhost() {
+    echo '<VirtualHost *:*>'
+
+    local directive=ServerName
+    for domain in $domains; do
+        echo "    $directive $1.$domain"
+        directive=ServerAlias # The other domains are aliases
+    done
+
+    cat << EOF
+    RewriteEngine On
+    RewriteRule ^/(.*) http://127.0.0.1:$2/\$1 [P]
+</VirtualHost>
+EOF
+}
+
 echo '# >>>' Generated django-environments virtual host config start
-echo
 echo NameVirtualHost *:*
 echo
 
@@ -78,14 +95,7 @@ for django_project_dir in $PROJECT_ROOT/*; do
 
         echo "#" $DJANGO_PROJECT \($django_project_dir\)
         port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.settings`
-
-        cat << EOF
-<VirtualHost *:*>
-    ServerName $DJANGO_PROJECT.$domain
-    RewriteEngine On
-    RewriteRule ^/(.*) http://127.0.0.1:$port/\$1 [P]
-</VirtualHost>
-EOF
+        write_vhost $DJANGO_PROJECT $port
 
         # Per-environment settings
         for settings in $django_project_dir/settings/env/*.py; do
@@ -101,14 +111,7 @@ EOF
 
             echo "#" $DJANGO_PROJECT.$django_settings \($django_project_dir\)
             port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.$django_settings`
-
-            cat << EOF
-<VirtualHost *:*>
-    ServerName $django_settings_id.$DJANGO_PROJECT.$domain
-    RewriteEngine On
-    RewriteRule ^/(.*) http://127.0.0.1:$port/\$1 [P]
-</VirtualHost>
-EOF
+            write_vhost $django_settings_id.$DJANGO_PROJECT $port
         done
 
         echo
