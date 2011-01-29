@@ -297,7 +297,7 @@ setproject() {
         [ ! $? -eq 0 ] && return 1
     fi
     djexit
-    PROJECT_ROOT=`pwd`
+    export PROJECT_ROOT=`pwd`
 
     local projects=`show_django_projects`
     if [ ! -z "$projects" ]; then
