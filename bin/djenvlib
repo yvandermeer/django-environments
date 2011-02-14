@@ -486,10 +486,11 @@ function djvirtualbrowse() {
     _verify_django_settings_module || return 1
 
     local domain=local
-    [ ! -z "$DOMAIN" ] && domain=$DOMAIN
+    [ ! -z "$DOMAIN" ] && domain=`echo $DOMAIN | cut -f1 -d" "`
     local django_settings_id=`echo $DJANGO_SETTINGS_MODULE | sed 's#.*\\.##'`
+    local PROJECT=`basename $PROJECT_ROOT`
 
-    open_url http://$django_settings_id.$DJANGO_PROJECT.$domain/$1
+    open_url http://$django_settings_id.$DJANGO_PROJECT.$PROJECT.$domain/$1
 }
 
 # Export functions so they can be used in shell scripts

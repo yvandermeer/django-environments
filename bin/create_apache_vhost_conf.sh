@@ -64,20 +64,22 @@ domains=local
 [ ! -d "$PROJECT_ROOT" ] && \
      echo "Variable \$PROJECT_ROOT does not point to a readable directory" 1>&2 && exit 1
 
+PROJECT=`basename $PROJECT_ROOT`
+
 cd `dirname $0`
 
 function write_vhost() {
     echo '<VirtualHost *:*>'
 
-    local directive=ServerName
+    local directive=ServerName # First domain is the server name
     for domain in $domains; do
-        echo "    $directive $1.$domain"
+        echo "    $directive $1.$2.$domain"
         directive=ServerAlias # The other domains are aliases
     done
 
     cat << EOF
     RewriteEngine On
-    RewriteRule ^/(.*) http://127.0.0.1:$2/\$1 [P]
+    RewriteRule ^/(.*) http://127.0.0.1:$3/\$1 [P]
 </VirtualHost>
 EOF
 }
@@ -86,16 +88,17 @@ echo '# >>>' Generated django-environments virtual host config start
 echo NameVirtualHost *:*
 echo
 
-for django_project_dir in $PROJECT_ROOT/*; do
+# Skip the etc directory, it only looks like a Django project
+for django_project_dir in `ls -d $PROJECT_ROOT/* | grep -v etc$`; do
 
     # Generic settings
     if [ -f "$django_project_dir/settings.py" -o \
          -d "$django_project_dir/settings" ]; then
         export DJANGO_PROJECT=`basename $django_project_dir`
 
-        echo "#" $DJANGO_PROJECT \($django_project_dir\)
+        echo "#" $PROJECT $DJANGO_PROJECT \($django_project_dir\)
         port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.settings`
-        write_vhost $DJANGO_PROJECT $port
+        write_vhost $DJANGO_PROJECT $PROJECT $port
 
         # Per-environment settings
         for settings in $django_project_dir/settings/env/*.py; do
@@ -109,9 +112,9 @@ for django_project_dir in $PROJECT_ROOT/*; do
                              sed "s#[^/]*/settings/env/#settings.env.#" | sed 's#.py$##'`
             django_settings_id=`echo $django_settings | sed "s#.*\\.##"`
 
-            echo "#" $DJANGO_PROJECT.$django_settings \($django_project_dir\)
+            echo "#" $PROJECT $DJANGO_PROJECT $django_settings_id \($django_project_dir\)
             port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.$django_settings`
-            write_vhost $django_settings_id.$DJANGO_PROJECT $port
+            write_vhost $django_settings_id.$DJANGO_PROJECT $PROJECT $port
         done
 
         echo
