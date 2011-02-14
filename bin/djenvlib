@@ -19,13 +19,15 @@ function _djenv_init() {
     [ -z "$PROJECT_ROOT" ] && \
         echo "Variable \$PROJECT_ROOT not set or empty" 1>&2 && return 1
     [ ! -d "$PROJECT_ROOT" ] && \
-         echo "Variable \$PROJECT_ROOT does not point to a readable directory" 1>&2 && return 1
+         echo "Variable \$PROJECT_ROOT '$PROJECT_ROOT'" \
+            "does not point to a readable directory" 1>&2 && return 1
 
     # Check Django project as well
     [ -z "$DJANGO_PROJECT" ] && \
         echo "Argument \$DJANGO_PROJECT not set or empty" 1>&2 && return 1
     [ ! -d "$PROJECT_ROOT/$DJANGO_PROJECT" ] && \
-        echo "Argument \$DJANGO_PROJECT does not identify a readable directory within $PROJECT_ROOT" 1>&2 && \
+        echo "Argument \$DJANGO_PROJECT '$DJANGO_PROJECT'" \
+            "does not identify a readable directory within $PROJECT_ROOT" 1>&2 && \
         return 1
 
     # If no particular settings are defined, just use the "base" settings
@@ -45,7 +47,8 @@ function _djenv_init() {
     # Test settings import
     python -c "import $DJANGO_SETTINGS_MODULE" > /dev/null 2>&1
     if [ ! "$?" -eq 0 ]; then
-        echo "Error importing settings $DJANGO_SETTINGS_MODULE (PYTHONPATH: $PYTHONPATH)" 1>&2
+        echo "Error importing settings $DJANGO_SETTINGS_MODULE" \
+            "(PYTHONPATH: $PYTHONPATH)" 1>&2
         python -c "import $DJANGO_SETTINGS_MODULE"
         return 1
     fi
@@ -63,7 +66,8 @@ function _djenv_init() {
             echo "\$DJANGO_PROJECT in Django settings is different from shell" 1>&2 && \
             return 1
         [ "$PROJECT_ROOT/$DJANGO_PROJECT" != "`get_django_setting DJANGO_PROJECT_DIR`" ] && \
-            echo "\$DJANGO_PROJECT_DIR in Django settings is different from \$PROJECT_ROOT/\$DJANGO_PROJECT" 1>&2 && 
+            echo "\$DJANGO_PROJECT_DIR in Django settings is different from" \
+                "\$PROJECT_ROOT/\$DJANGO_PROJECT" 1>&2 && \
             return 1
     fi
 
@@ -83,7 +87,8 @@ function _djenv_init() {
         eval `import_django_settings $dirs`
         envname=DJANGO_$dirs
         for dir in ${!envname}; do
-            [ ! -d $dir ] && echo "Warning: \"$dir\" in settings.$dirs is not a valid directory" 1>&2
+            [ ! -d $dir ] && \
+                echo "Warning: \"$dir\" in settings.$dirs is not a valid directory" 1>&2
         done
     done
 
@@ -125,7 +130,8 @@ function _verify_project_root_and_django_project() {
 
 # Check if $DJANGO_SETTINGS_MODULE is set
 function _verify_django_settings_module() {
-    [ -z "$DJANGO_SETTINGS_MODULE" ] && echo "No \$DJANGO_SETTINGS_MODULE" 1>&2 && return 1
+    [ -z "$DJANGO_SETTINGS_MODULE" ] && \
+        echo "No \$DJANGO_SETTINGS_MODULE" 1>&2 && return 1
     return 0
 }
 
@@ -219,7 +225,10 @@ function djenv() {
 # this to work!
 function get_django_setting() {
     _verify_project_root || return 1
-    [ -z "$1" ] && echo "Usage: get_django_setting <setting-name> [default-value] [settings-module]" 1>&2 && return 1
+    [ -z "$1" ] && \
+        echo "Usage: get_django_setting <setting-name>" \
+            "[default-value] [settings-module]" 1>&2 && \
+        return 1
 
     local settings_module
     if [ ! -z "$3" ]; then
@@ -327,7 +336,9 @@ function cdlib() {
 # directory and should have the format 'libs-<environment>.txt'
 function pipup() {
     _verify_project_root || return 1
-    [ -z "$1" ] && echo "Usage: pipup <requirements-identifier> [pip options]" 1>&2 && return 1
+    [ -z "$1" ] && \
+        echo "Usage: pipup <requirements-identifier> [pip options]" 1>&2 && \
+        return 1
 
     local requirements=$1
     shift
