@@ -5,8 +5,7 @@ from django.contrib import databrowse
 from django.conf import settings
 
 
-__all__ = ('handler404', 'handler500', 'patterns', 'default_patterns', 'databrowse')
-
+__all__ = ('default_patterns', 'patterns', 'include', 'url', 'handler404', 'handler500')
 
 admin.autodiscover()
 
