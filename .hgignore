@@ -19,7 +19,7 @@ deploy/vhosts-development.conf
 dist
 distribute-*.tar.gz
 docs/_build
-externals/*
+externals/wiki
 log/*.log
 pip-log.txt
 PYSMELLTAGS
