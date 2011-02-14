@@ -1,16 +1,16 @@
 from .. import *
-from os import path
 
-
-DATABASE_ENGINE = 'sqlite3'
-DATABASE_HOST = ''
-DATABASE_NAME = ''
-DATABASE_USER = ''
-DATABASE_PASSWORD = ''
 
 DEBUG = True
 
 SERVE_MEDIA = True
+
+INSTALLED_APPS += (
+    'django.contrib.databrowse',
+    #'debug_toolbar',
+    #'devserver',
+    #'django_extensions',
+)
 
 COMPRESS = False
 

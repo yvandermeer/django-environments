@@ -20,7 +20,7 @@ dist
 distribute-*.tar.gz
 docs/_build
 externals/*
-logs/*.log
+log/*.log
 pip-log.txt
 PYSMELLTAGS
 PYSMELLTAGS.*
