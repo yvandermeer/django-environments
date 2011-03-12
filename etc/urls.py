@@ -13,6 +13,8 @@ default_patterns = patterns('',
     (r'^admin/doc/', include('django.contrib.admindocs.urls')),
     (r'^admin/', include(admin.site.urls)),
     (r'^databrowse/(.*)', databrowse.site.root),
+    (r'^%s$' % settings.LOGIN_URL[1:], 'django.contrib.auth.views.login',
+         {'template_name': 'admin/login.html'})
 )
 
 if getattr(settings, 'ADMIN_SITE', False):
