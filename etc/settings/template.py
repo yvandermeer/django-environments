@@ -13,6 +13,10 @@ TEMPLATE_LOADERS_DEFAULT = (
 
 TEMPLATE_LOADERS = TEMPLATE_LOADERS_DEFAULT
 
+TEMPLATE_LOADERS_CACHED = (
+    ('django.template.loaders.cached.Loader', TEMPLATE_LOADERS_DEFAULT),
+)
+
 TEMPLATE_CONTEXT_PROCESSORS_DEFAULT = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
