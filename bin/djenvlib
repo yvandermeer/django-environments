@@ -331,9 +331,9 @@ function cdlib() {
     cd $PROJECT_ROOT/lib/$1
 }
 
-# Install dependencies for a python environment (first argument);
+# Install dependencies for a given environment (first argument);
 # the file with the dependencies should be in the requirements
-# directory and should have the format 'libs-<environment>.txt'
+# directory and its name should have the format 'libs-<environment>.txt'
 function pipup() {
     _verify_project_root || return 1
     [ -z "$1" ] && \
@@ -343,6 +343,49 @@ function pipup() {
     local requirements=$1
     shift
     pip install --requirement=$PROJECT_ROOT/requirements/libs-$requirements.txt $*
+}
+
+function _externals() {
+    while true; do
+        read source destination
+        if [ -z "$source" ]; then
+            return
+        fi
+        revision=`echo $source | cut -f2 -d@`
+        source=`echo $source | cut -f1 -d@`
+        if [ -z "$destination" ]; then
+            destination=`basename $source`
+        fi
+        if [ ! -d $destination ]; then
+            hg clone --noupdate $source $destination
+        else
+            hg pull --repository $destination
+        fi
+        hg up -R $destination $revision
+    done
+}
+
+# Install or update dependencies in the externals directory for a given
+# environment (first argument); the file with the dependencies should be
+# in the requirements directory and its name should have the format
+# 'externals-<environment>.txt', containing lines with the following format:
+# repo-location[@revision] [destination]
+# For instance:
+# ../../lib-core
+# ../../lib-tools@44 tools
+# Relative paths are evaluated from the externals directory. Only
+# Mercurial is supported.
+function externalsup() {
+    _verify_project_root || return 1
+    [ -z "$1" ] && \
+        echo "Usage: externalsup <requirements-identifier>" 1>&2 && \
+        return 1
+
+    (
+        cd $PROJECT_ROOT/externals
+        local requirements=$1
+        _externals < $PROJECT_ROOT/requirements/externals-$requirements.txt
+    )
 }
 
 # Use compileall to compile all .py files - handy for web server
@@ -496,7 +539,7 @@ function djvirtualbrowse() {
 # Export functions so they can be used in shell scripts
 export -f _verify_project_root _verify_django_project \
     _verify_project_root_and_django_project _verify_django_settings_module \
-    get_django_setting import_django_settings cdroot cdlib pipup \
+    get_django_setting import_django_settings cdroot cdlib pipup externalsup \
     pycompile removeorphanpycs cleanupdirs removeemptydirs \
     cdjango djadmin get_network_ip runserver testserver djbrowse
 
@@ -568,22 +611,28 @@ _cdjango_complete() {
     COMPREPLY=($(cdjango && compgen -d -- "${2}"))
 }
 
-function show_pip_environments() {
+function show_requirements_environments() {
     _verify_project_root || return 1
 
     (
         cd $PROJECT_ROOT/requirements
         shopt -s nullglob
-        for file in libs-*.txt; do
+        for file in $1-*.txt; do
              echo $file
         done
-    ) | sed 's#libs-##' | sed 's#.txt##' | sort
+    ) | sed "s#$1-##" | sed 's#.txt##' | sort
 }
 
 _pipup_complete() {
     _verify_project_root || return 1
 
-    COMPREPLY=($(compgen -W "`show_pip_environments`" -- "${2}" ))
+    COMPREPLY=($(compgen -W "`show_requirements_environments libs`" -- "${2}" ))
+}
+
+_externalsup_complete() {
+    _verify_project_root || return 1
+
+    COMPREPLY=($(compgen -W "`show_requirements_environments externals`" -- "${2}" ))
 }
 
 complete -o nospace -F _cdroot_complete -S/ cdroot
@@ -591,3 +640,4 @@ complete -o nospace -F _cdlib_complete -S/ cdlib
 complete -o nospace -F _cdjango_complete -S/ cdjango
 complete -F _django_projects_complete djenv
 complete -F _pipup_complete pipup
+complete -F _externalsup_complete externalsup
