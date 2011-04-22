@@ -361,7 +361,7 @@ function _externals() {
         else
             hg pull --repository $destination
         fi
-        hg up -R $destination $revision
+        hg up --repository $destination $revision
     done
 }
 

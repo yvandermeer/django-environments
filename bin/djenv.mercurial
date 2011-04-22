@@ -71,7 +71,7 @@ function hgexternals() {
             echo `basename $external`:
             _IFS=$IFS
             IFS= # magic
-            hg -R $external $*
+            hg --repository $external $*
             IFS=$_IFS
             echo
         fi
@@ -82,7 +82,7 @@ function hgexternals() {
 function hgfetchall() {
     _verify_project_root || return 1
 
-    hg -R $PROJECT_ROOT pull -u
+    hg --repository $PROJECT_ROOT pull -u
     echo
     hgexternals pull -u
 }
