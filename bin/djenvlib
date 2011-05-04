@@ -348,13 +348,18 @@ function pipup() {
 function _externals() {
     while true; do
         read source destination
+
         if [ -z "$source" ]; then
             return
         fi
-        revision=`echo $source | cut -f2 -d@`
+        revision=`echo $source | sed -E -n 's/([^@]*)@(.*)/\2/p'`
         source=`echo $source | cut -f1 -d@`
         if [ -z "$destination" ]; then
             destination=`basename $source`
+        fi
+        if [ -L "$destination" ]; then
+            echo Not updating symbolic link $destination
+            return
         fi
         if [ ! -d $destination ]; then
             hg clone --noupdate $source $destination
@@ -384,7 +389,8 @@ function externalsup() {
     (
         cd $PROJECT_ROOT/externals
         local requirements=$1
-        _externals < $PROJECT_ROOT/requirements/externals-$requirements.txt
+        grep -v '^#' $PROJECT_ROOT/requirements/externals-$requirements.txt | \
+            _externals
     )
 }
 
