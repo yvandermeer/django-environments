@@ -352,8 +352,8 @@ function _externals() {
         if [ -z "$source" ]; then
             return
         fi
-        revision=`echo $source | sed -E -n 's/([^@]*)@(.*)/\2/p'`
-        source=`echo $source | cut -f1 -d@`
+        revision=`echo $source | sed -E -n 's/([^#]*)#(.*)/\2/p'`
+        source=`echo $source | cut -f1 -d#`
         if [ -z "$destination" ]; then
             destination=`basename $source`
         fi
@@ -374,10 +374,12 @@ function _externals() {
 # environment (first argument); the file with the dependencies should be
 # in the requirements directory and its name should have the format
 # 'externals-<environment>.txt', containing lines with the following format:
-# repo-location[@revision] [destination]
+# repo-location[#revision] [destination]
 # For instance:
 # ../../lib-core
-# ../../lib-tools@44 tools
+# ../../lib-tools#44 tools
+# http://user@host/hg/lib-tools#44
+#
 # Relative paths are evaluated from the externals directory. Only
 # Mercurial is supported.
 function externalsup() {
