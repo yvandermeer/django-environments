@@ -79,14 +79,25 @@ function write_vhost() {
 
     cat << EOF
     RewriteEngine On
+    RewriteRule ^/favicon.ico [F]
+    RewriteRule ^/$4/(.*) $5/\$1 [L]
     RewriteRule ^/(.*) http://127.0.0.1:$3/\$1 [P]
 </VirtualHost>
+
 EOF
 }
 
-echo '# >>>' Generated django-environments virtual host config start
-echo NameVirtualHost *:*
-echo
+    cat << EOF
+# >>> Generated django-environments virtual host config start
+
+NameVirtualHost *:*
+
+<Directory "$PROJECT_ROOT">
+    Order deny,allow
+    Allow from all
+</Directory>
+
+EOF
 
 # Skip the etc directory, it only looks like a Django project
 for django_project_dir in `ls -d $PROJECT_ROOT/* | grep -v etc$`; do
@@ -97,8 +108,11 @@ for django_project_dir in `ls -d $PROJECT_ROOT/* | grep -v etc$`; do
         export DJANGO_PROJECT=`basename $django_project_dir`
 
         echo "#" $PROJECT $DJANGO_PROJECT \($django_project_dir\)
+
         port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.settings`
-        write_vhost $DJANGO_PROJECT $PROJECT $port
+        media_root=`get_django_setting MEDIA_ROOT MEDIA_ROOT $DJANGO_PROJECT.settings`
+        media_id=`get_django_setting MEDIA_ID static $DJANGO_PROJECT.settings`
+        write_vhost $DJANGO_PROJECT $PROJECT $port $media_id $media_root
 
         # Per-environment settings
         for settings in $django_project_dir/settings/env/*.py; do
@@ -114,11 +128,12 @@ for django_project_dir in `ls -d $PROJECT_ROOT/* | grep -v etc$`; do
 
             echo "#" $PROJECT $DJANGO_PROJECT $django_settings_id \($django_project_dir\)
             port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.$django_settings`
-            write_vhost $django_settings_id.$DJANGO_PROJECT $PROJECT $port
+            media_root=`get_django_setting MEDIA_ROOT MEDIA_ROOT $DJANGO_PROJECT.$django_settings`
+            media_id=`get_django_setting MEDIA_ID static $DJANGO_PROJECT.$django_settings`
+            write_vhost $django_settings_id.$DJANGO_PROJECT $PROJECT $port $media_id $media_root
         done
 
-        echo
     fi
 done
 
-echo "# <<<" Generated django-environments virtual host config end
+echo '# <<<' Generated django-environments virtual host config end
