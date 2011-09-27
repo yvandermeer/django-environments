@@ -389,6 +389,9 @@ function externalsup() {
         return 1
 
     (
+        if [ ! -d $PROJECT_ROOT/externals ]; then
+            mkdir $PROJECT_ROOT/externals
+        fi
         cd $PROJECT_ROOT/externals
         local requirements=$1
         grep -v '^#' $PROJECT_ROOT/requirements/externals-$requirements.txt | \
