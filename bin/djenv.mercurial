@@ -102,6 +102,7 @@ function hgremoveorig() {
 }
 
 # Find out who added those XXX / TODO / FIXME statements
+# Note: searches only through clean Mercurial-versioned files
 function hgtodos() {
     _verify_project_root || return 1
 
@@ -110,10 +111,10 @@ function hgtodos() {
         IFS="
 "
         cd $PROJECT_ROOT
-        # Find the versioned files with comments and feed them to hg blame
+        # Find clean files with comments and feed them to hg blame
         for file in `grep --extended-regexp $pattern --files-with-matches \
                             --binary-files=without-match \
-                                \`hg status --all --no-status\``; do
+                                \`hg status --clean --no-status\``; do
             hg blame --user --file --changeset --line-number $file | \
                 sed 's/^ *//' | grep --extended-regexp $pattern
         done
