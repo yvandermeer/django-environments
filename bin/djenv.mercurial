@@ -110,40 +110,10 @@ function hgtodos() {
         IFS="
 "
         cd $PROJECT_ROOT
-
-        # Filter out nested repositories
-        nestedrepos=`for repo in \`find . -name .hg -type d | \
-                grep -v ^\\./\\.hg\`; do dirname $repo; done`
-        for nestedrepo in $nestedrepos; do
-            if [ -z "$nestedreposfilter" ]; then
-                nestedreposfilter=^\\$nestedrepo
-            else
-                nestedreposfilter="$nestedreposfilter"\|^\\$nestedrepo
-            fi
-        done
-
-        # Filter out symbolic links
-        symlinks=`for symlink in \`find . -type l\`; do echo $symlink; done`
-        symlinksfilter=`echo $symlinks | sed 's/\./\\\\./g' | sed 's/ /\|/g'`
-
-        # Find the files with the comments and feed them to hg blame
+        # Find the versioned files with comments and feed them to hg blame
         for file in `grep --extended-regexp $pattern --files-with-matches \
                             --binary-files=without-match \
-                            --recursive . | \
-                                grep --invert-match ^\\./\\.hg | (
-                                    if [ ! -z "$nestedreposfilter" ]; then
-                                        grep --invert-match --extended-regexp $nestedreposfilter
-                                    else
-                                        cat
-                                    fi
-                                ) | (
-                                    if [ ! -z "$symlinksfilter" ]; then
-                                        grep --invert-match --extended-regexp $symlinksfilter
-                                    else
-                                        bar
-                                        cat
-                                    fi
-                                )`; do
+                                \`hg status --all --no-status\``; do
             hg blame --user --file --changeset --line-number $file | \
                 sed 's/^ *//' | grep --extended-regexp $pattern
         done
