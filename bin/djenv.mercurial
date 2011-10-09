@@ -102,24 +102,52 @@ function hgremoveorig() {
 }
 
 # Find out who added those XXX / TODO / FIXME statements
-# Experimental.
 function hgtodos() {
     _verify_project_root || return 1
 
-    TODO="TO.{0,1}DO"
-    XXX="XXX"
-    FIXME="FIXME"
-    pattern="#.*($TODO|$XXX|$FIXME)\b"
-
-    _IFS=$IFS
-    IFS="
+    pattern="(TO.?DO|XXX|FIXME)\b"
+    (
+        IFS="
 "
-    for file in `grep --extended-regexp $pattern --files-with-matches \
-                      --recursive $PROJECT_ROOT/*`; do
-        hg blame --user --file --changeset --line-number $file | \
-            sed 's/^ *//' | egrep $pattern
-    done
-    IFS=$_IFS
+        cd $PROJECT_ROOT
+
+        # Filter out nested repositories
+        nestedrepos=`for repo in \`find . -name .hg -type d | \
+                grep -v ^\\./\\.hg\`; do dirname $repo; done`
+        for nestedrepo in $nestedrepos; do
+            if [ -z "$nestedreposfilter" ]; then
+                nestedreposfilter=^\\$nestedrepo
+            else
+                nestedreposfilter="$nestedreposfilter"\|^\\$nestedrepo
+            fi
+        done
+
+        # Filter out symbolic links
+        symlinks=`for symlink in \`find . -type l\`; do echo $symlink; done`
+        symlinksfilter=`echo $symlinks | sed 's/\./\\\\./g' | sed 's/ /\|/g'`
+
+        # Find the files with the comments and feed them to hg blame
+        for file in `grep --extended-regexp $pattern --files-with-matches \
+                            --binary-files=without-match \
+                            --recursive . | \
+                                grep --invert-match ^\\./\\.hg | (
+                                    if [ ! -z "$nestedreposfilter" ]; then
+                                        grep --invert-match --extended-regexp $nestedreposfilter
+                                    else
+                                        cat
+                                    fi
+                                ) | (
+                                    if [ ! -z "$symlinksfilter" ]; then
+                                        grep --invert-match --extended-regexp $symlinksfilter
+                                    else
+                                        bar
+                                        cat
+                                    fi
+                                )`; do
+            hg blame --user --file --changeset --line-number $file | \
+                sed 's/^ *//' | grep --extended-regexp $pattern
+        done
+    )
 }
 
 # Clean up
