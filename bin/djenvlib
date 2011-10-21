@@ -547,15 +547,6 @@ function djvirtualbrowse() {
     open_url http://$django_settings_id.$DJANGO_PROJECT.$PROJECT.$domain/$1
 }
 
-# Export functions so they can be used in shell scripts
-export -f _djenv_init _djenv_register_cleanup _verify_project_root _verify_django_project \
-    _verify_project_root_and_django_project _verify_django_settings_module \
-    djexit djenv get_django_setting import_django_settings cdroot cdlib \
-    pipup _externals externalsup pycompile removeorphanpycs cleanupdirs removeemptydirs \
-    cdjango djadmin get_network_ip runserver testserver open_url djbrowse djvirtualbrowse \
-    _djenv_cleanup function show_django_projects function show_django_settings \
-    function show_requirements_environments
-
 # Clean up the environment
 function _djenv_cleanup () {
     unset DJANGO_PROJECT DJANGO_SETTINGS \
@@ -565,10 +556,6 @@ function _djenv_cleanup () {
 
 # Use _djenv_register_cleanup to register your own cleanup functions
 _djenv_register_cleanup _djenv_cleanup
-
-#
-# Tab completion
-#
 
 function show_django_projects() {
     _verify_project_root || return 1
@@ -594,6 +581,18 @@ function show_django_settings() {
     ) | grep -v '/__init__.py$' | sed 's#settings/env/#settings.env.#' | \
         sed 's#\.py$##' | sort
 }
+
+# Export functions so they can be used in shell scripts
+export -f _djenv_init _djenv_register_cleanup _verify_project_root _verify_django_project \
+    _verify_project_root_and_django_project _verify_django_settings_module \
+    djexit djenv get_django_setting import_django_settings cdroot cdlib \
+    pipup _externals externalsup pycompile removeorphanpycs cleanupdirs removeemptydirs \
+    cdjango djadmin get_network_ip runserver testserver open_url djbrowse djvirtualbrowse \
+    _djenv_cleanup show_django_projects show_django_settings
+
+#
+# Tab completion
+#
 
 _django_projects_complete() {
     local current="${COMP_WORDS[COMP_CWORD]}"
