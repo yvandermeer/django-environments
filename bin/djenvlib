@@ -548,11 +548,13 @@ function djvirtualbrowse() {
 }
 
 # Export functions so they can be used in shell scripts
-export -f _verify_project_root _verify_django_project \
+export -f _djenv_init _djenv_register_cleanup _verify_project_root _verify_django_project \
     _verify_project_root_and_django_project _verify_django_settings_module \
-    get_django_setting import_django_settings djenv djexit cdroot cdlib \
-    pipup externalsup pycompile removeorphanpycs cleanupdirs removeemptydirs \
-    cdjango djadmin get_network_ip runserver testserver djbrowse
+    djexit djenv get_django_setting import_django_settings cdroot cdlib \
+    pipup _externals externalsup pycompile removeorphanpycs cleanupdirs removeemptydirs \
+    cdjango djadmin get_network_ip runserver testserver open_url djbrowse djvirtualbrowse \
+    _djenv_cleanup function show_django_projects function show_django_settings \
+    function show_requirements_environments
 
 # Clean up the environment
 function _djenv_cleanup () {
