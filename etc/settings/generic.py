@@ -41,3 +41,5 @@ FIXTURE_DIRS = (
 )
 
 CACHE_BACKEND = 'dummy:///'
+
+SESSION_COOKIE_HTTPONLY = True
