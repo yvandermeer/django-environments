@@ -388,14 +388,18 @@ function externalsup() {
         echo "Usage: externalsup <requirements-identifier>" 1>&2 && \
         return 1
 
+    local requirements=$1
+    local requirements_file=$PROJECT_ROOT/requirements/externals-$requirements.txt
+    [ ! -f "$requirements_file" ] && \
+        echo "Requirements file $requirements_file not found" 1>&2 && \
+        return 1
+
     (
         if [ ! -d $PROJECT_ROOT/externals ]; then
             mkdir $PROJECT_ROOT/externals
         fi
         cd $PROJECT_ROOT/externals
-        local requirements=$1
-        grep -v '^#' $PROJECT_ROOT/requirements/externals-$requirements.txt | \
-            _externals
+        grep -v '^#' $requirements_file | _externals
     )
 }
 
