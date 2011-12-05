@@ -9,12 +9,12 @@ DJANGO_PROJECT_DIR = path.join(PROJECT_ROOT, DJANGO_PROJECT)
 LOCAL_SERVER_PORT = 8001
 
 ADMINS = (
-    ('g0j0admin', 'admin@g0j0.com'),
+    ('g0j0 admin', 'admin@g0j0.com'),
 )
 SERVER_EMAIL = ADMINS[0][1]
 MANAGERS = ADMINS
 
-DEFAULT_FROM_EMAIL = 'Goeie Jongens <%s>' % ADMINS[0][1]
+DEFAULT_FROM_EMAIL = 'g0j0 admin <%s>' % ADMINS[0][1]
 
 DEBUG = False
 TEMPLATE_DEBUG = DEBUG
@@ -40,6 +40,16 @@ ROOT_URLCONF = DJANGO_PROJECT + '.urls'
 FIXTURE_DIRS = (
 )
 
-CACHE_BACKEND = 'dummy:///'
+CACHES = {
+    'memcached': {
+        'BACKEND': 'django.core.cache.backends.memcached.MemcachedCache',
+        'LOCATION': '127.0.0.1:11211',
+    },
+    'database': {
+        'BACKEND': 'django.core.cache.backends.db.DatabaseCache',
+        'LOCATION': '_cache',
+    },
+}
+CACHES['default'] = CACHES['database']
 
 SESSION_COOKIE_HTTPONLY = True
