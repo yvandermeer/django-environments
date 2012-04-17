@@ -218,11 +218,14 @@ function djenv() {
 # Get a django setting from the current or specified settings module
 #
 # Example:
-# LC=`get_django_setting LANGUAGE_CODE` && echo $LC
+# get_django_setting LANGUAGE_CODE
 #
-# Returns the second argument if setting cannot be found. Be aware
-# that the settings file should not print anything to stdout for
-# this to work!
+# Returns the second argument if setting cannot be found. The third
+# argument is an alternative settings configuration, for example:
+# get_django_setting DEBUG 'False' www.settings.env.prd
+#
+# Be aware that the settings file should not print anything to
+# stdout for this to work!
 function get_django_setting() {
     _verify_project_root || return 1
     [ -z "$1" ] && \
@@ -237,15 +240,16 @@ function get_django_setting() {
         _verify_django_settings_module || return 1
         settings_module=$DJANGO_SETTINGS_MODULE
     fi
-    python << EOF
+
+    DJANGO_SETTINGS_MODULE=$settings_module python << EOF
 try:
-    import $settings_module as settings
+    from django.conf import settings
 except ImportError:
     print '$2'
     raise
 else:
     try:
-        print settings.__dict__['`echo $1 | tr 'a-z' 'A-Z'`']
+        print getattr(settings, '`echo $1 | tr 'a-z' 'A-Z'`')
     except KeyError:
         print '$2'
 EOF
