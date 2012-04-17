@@ -245,7 +245,7 @@ except ImportError:
     raise
 else:
     try:
-        print settings.__dict__['$1']
+        print settings.__dict__['`echo $1 | tr 'a-z' 'A-Z'`']
     except KeyError:
         print '$2'
 EOF
