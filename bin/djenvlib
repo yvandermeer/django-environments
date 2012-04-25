@@ -249,7 +249,7 @@ except ImportError:
     raise
 else:
     try:
-        print getattr(settings, '`echo $1 | tr 'a-z' 'A-Z'`')
+        print getattr(settings, '`echo $1 | tr 'a-z' 'A-Z'`', '')
     except KeyError:
         print '$2'
 EOF
