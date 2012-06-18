@@ -3,7 +3,7 @@ from os import path, environ
 from .generic import PROJECT_ROOT, PROJECT, DJANGO_PROJECT
 
 
-DATABASE_NAME = PROJECT + '_' + DJANGO_PROJECT
+DATABASE_NAME = PROJECT
 
 DATABASES_DEFAULT = {
     'default_sqlite': {
@@ -13,12 +13,12 @@ DATABASES_DEFAULT = {
     'default_mysql': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': DATABASE_NAME,
-        'USER': 'gjsb',
+        'USER': 'mysql',
     },
     'default_postgres': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': DATABASE_NAME,
-        'USER': 'gjsb',
+        'USER': 'postgres',
     }
 }
 

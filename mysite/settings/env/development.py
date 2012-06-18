@@ -3,8 +3,6 @@ from .. import *
 
 DEBUG = True
 
-SERVE_MEDIA = True
-
 INSTALLED_APPS += (
     'django.contrib.databrowse',
     #'debug_toolbar',

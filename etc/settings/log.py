@@ -1,10 +1,10 @@
 from os import path
 import logging
 
-from .generic import PROJECT_ROOT, DJANGO_PROJECT
+from .generic import PROJECT_ROOT, PROJECT
 
 
-LOGGING_FILENAME = path.join(PROJECT_ROOT, 'log/%s.log' % DJANGO_PROJECT)
+LOGGING_FILENAME = path.join(PROJECT_ROOT, 'log/%s.log' % PROJECT)
 
 logging.basicConfig(
     level=logging.DEBUG,

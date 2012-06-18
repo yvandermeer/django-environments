@@ -28,12 +28,12 @@ SITE_ID = 1
 USE_I18N = False
 USE_L10N = False
 
-SERVE_DOCS = False
-SERVE_MEDIA = False
-MEDIA_ID = 'static'
+STATIC_ID = 'static'
+STATIC_ROOT = path.join(DJANGO_PROJECT_DIR, STATIC_ID)
+STATIC_URL = '/%s/' % STATIC_ID
+MEDIA_ID = 'media'
 MEDIA_ROOT = path.join(DJANGO_PROJECT_DIR, MEDIA_ID)
 MEDIA_URL = '/%s/' % MEDIA_ID
-ADMIN_MEDIA_PREFIX = '/adminmedia/'
 
 ROOT_URLCONF = DJANGO_PROJECT + '.urls'
 
