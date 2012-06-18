@@ -81,6 +81,7 @@ function write_vhost() {
     RewriteEngine On
     RewriteRule ^/favicon.ico [F]
     RewriteRule ^/$4/(.*) $5/\$1 [L]
+    RewriteRule ^/$6/(.*) $7/\$1 [L]
     RewriteRule ^/(.*) http://127.0.0.1:$3/\$1 [P]
 </VirtualHost>
 
@@ -110,9 +111,11 @@ for django_project_dir in `ls -d $PROJECT_ROOT/* | grep -v etc$`; do
         echo "#" $PROJECT $DJANGO_PROJECT \($django_project_dir\)
 
         port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.settings`
-        media_root=`get_django_setting MEDIA_ROOT MEDIA_ROOT $DJANGO_PROJECT.settings`
+        static_root=`get_django_setting STATIC_ROOT static $DJANGO_PROJECT.settings`
+        static_id=`get_django_setting STATIC_ID static $DJANGO_PROJECT.settings`
+        media_root=`get_django_setting MEDIA_ROOT media $DJANGO_PROJECT.settings`
         media_id=`get_django_setting MEDIA_ID static $DJANGO_PROJECT.settings`
-        write_vhost $DJANGO_PROJECT $PROJECT $port $media_id $media_root
+        write_vhost $DJANGO_PROJECT $PROJECT $port $static_id $static_root $media_id $media_root
 
         # Per-environment settings
         for settings in $django_project_dir/settings/env/*.py; do
@@ -128,9 +131,11 @@ for django_project_dir in `ls -d $PROJECT_ROOT/* | grep -v etc$`; do
 
             echo "#" $PROJECT $DJANGO_PROJECT $django_settings_id \($django_project_dir\)
             port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.$django_settings`
-            media_root=`get_django_setting MEDIA_ROOT MEDIA_ROOT $DJANGO_PROJECT.$django_settings`
-            media_id=`get_django_setting MEDIA_ID static $DJANGO_PROJECT.$django_settings`
-            write_vhost $django_settings_id.$DJANGO_PROJECT $PROJECT $port $media_id $media_root
+            static_root=`get_django_setting STATIC_ROOT static $DJANGO_PROJECT.settings`
+            static_id=`get_django_setting STATIC_ID static $DJANGO_PROJECT.settings`
+            media_root=`get_django_setting MEDIA_ROOT media $DJANGO_PROJECT.settings`
+            media_id=`get_django_setting MEDIA_ID static $DJANGO_PROJECT.settings`
+            write_vhost $DJANGO_PROJECT $PROJECT $port $static_id $static_root $media_id $media_root
         done
 
     fi
