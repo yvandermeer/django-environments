@@ -22,7 +22,7 @@ TEMPLATE_CONTEXT_PROCESSORS_DEFAULT = (
     'django.core.context_processors.request',
     'django.core.context_processors.media',
     'django.core.context_processors.static',
-    'django.core.context_processors.tz'
+    'django.core.context_processors.tz',
     'django.contrib.messages.context_processors.messages',
     'g0j0.context_processors.settings_proxy',
 )
