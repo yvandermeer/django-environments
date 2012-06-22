@@ -35,6 +35,11 @@ MEDIA_ID = 'media'
 MEDIA_ROOT = path.join(PROJECT_ROOT, MEDIA_ID)
 MEDIA_URL = '/%s/' % MEDIA_ID
 
+STATICFILES_FINDERS = (
+    'django.contrib.staticfiles.finders.FileSystemFinder',
+    'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+)
+
 ROOT_URLCONF = DJANGO_PROJECT + '.urls'
 
 FIXTURE_DIRS = (
