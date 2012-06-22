@@ -135,7 +135,7 @@ for django_project_dir in `ls -d $PROJECT_ROOT/* | grep -v etc$`; do
             static_id=`get_django_setting STATIC_ID static $DJANGO_PROJECT.settings`
             media_root=`get_django_setting MEDIA_ROOT media $DJANGO_PROJECT.settings`
             media_id=`get_django_setting MEDIA_ID static $DJANGO_PROJECT.settings`
-            write_vhost $DJANGO_PROJECT $PROJECT $port $static_id $static_root $media_id $media_root
+            write_vhost $django_settings_id.$DJANGO_PROJECT $PROJECT $port $static_id $static_root $media_id $media_root
         done
 
     fi
