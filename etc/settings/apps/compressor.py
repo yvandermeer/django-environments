@@ -2,7 +2,7 @@
 # http://pypi.python.org/pypi/django_compressor
 # https://github.com/mintchaos/django_compressor
 
-COMPRESS = False
+COMPRESS_ENABLED = False
 #Default: the opposite of DEBUG
 """Boolean that decides if compression will happen."""
 
