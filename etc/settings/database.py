@@ -22,7 +22,5 @@ DATABASES = {
     }
 }
 
-DATABASES = {
-    'default': DATABASES['default_' + \
-                                 environ.get('DJANGO_DATABASE_TYPE', 'sqlite')]
-}
+DATABASES['default'] = \
+        DATABASES['default_' + environ.get('DJANGO_DATABASE_TYPE', 'sqlite')]
