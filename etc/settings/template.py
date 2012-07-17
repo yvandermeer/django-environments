@@ -9,13 +9,13 @@ TEMPLATE_LOADERS_DEFAULT = (
     'django.template.loaders.app_directories.Loader',
 )
 
-TEMPLATE_LOADERS = TEMPLATE_LOADERS_DEFAULT
-
 TEMPLATE_LOADERS_CACHED = (
     ('django.template.loaders.cached.Loader', TEMPLATE_LOADERS_DEFAULT),
 )
 
-TEMPLATE_CONTEXT_PROCESSORS_DEFAULT = (
+TEMPLATE_LOADERS = TEMPLATE_LOADERS_CACHED
+
+TEMPLATE_CONTEXT_PROCESSORS = (
     'django.contrib.auth.context_processors.auth',
     'django.core.context_processors.debug',
     'django.core.context_processors.i18n',
@@ -26,5 +26,3 @@ TEMPLATE_CONTEXT_PROCESSORS_DEFAULT = (
     'django.contrib.messages.context_processors.messages',
     'g0j0.context_processors.settings_proxy',
 )
-
-TEMPLATE_CONTEXT_PROCESSORS = TEMPLATE_CONTEXT_PROCESSORS_DEFAULT

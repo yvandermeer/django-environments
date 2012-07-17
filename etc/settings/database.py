@@ -5,10 +5,10 @@ from .generic import PROJECT_ROOT, PROJECT, DJANGO_PROJECT
 
 DATABASE_NAME = PROJECT
 
-DATABASES_DEFAULT = {
+DATABASES = {
     'default_sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': path.join(PROJECT_ROOT, 'db', '%s.sqlite3' % DJANGO_PROJECT),
+        'NAME': path.join(PROJECT_ROOT, 'db', '%s.sqlite3' % DATABASE_NAME),
     },
     'default_mysql': {
         'ENGINE': 'django.db.backends.mysql',
@@ -23,6 +23,6 @@ DATABASES_DEFAULT = {
 }
 
 DATABASES = {
-    'default': DATABASES_DEFAULT['default_' + \
+    'default': DATABASES['default_' + \
                                  environ.get('DJANGO_DATABASE_TYPE', 'sqlite')]
 }
