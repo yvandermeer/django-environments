@@ -1,3 +1,0 @@
-# Example requirements for production
-Django==1.2.1
-PyYAML==3.09

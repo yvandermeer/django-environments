@@ -1,0 +1,8 @@
+--requirement=libs-prd.txt
+PyYAML
+docutils
+Sphinx
+pyflakes
+Pygments
+pysmell
+django-debug-toolbar
