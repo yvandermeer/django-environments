@@ -76,7 +76,7 @@ function _djenv_init() {
 
     # Show environment info
     if [ "$SHOW_DJANGO_ENVIRONMENT" = "yes" ]; then
-        echo Welcome to `basename $PROJECT_ROOT`.$DJANGO_PROJECT. Environment info:
+        echo "Welcome to `basename $PROJECT_ROOT`.$DJANGO_PROJECT. Environment info:"
         djenv
     fi
 
@@ -180,10 +180,10 @@ function djexit() {
 function djenv() {
     # Environment info
     if [ -z "$1" ]; then
-        echo PROJECT_ROOT: \'$PROJECT_ROOT\'
-        echo DJANGO_PROJECT: \'$DJANGO_PROJECT\'
-        echo DJANGO_SETTINGS_MODULE: \'$DJANGO_SETTINGS_MODULE\'
-        echo PYTHONPATH: \'$PYTHONPATH\'
+        echo "PROJECT_ROOT: '$PROJECT_ROOT'"
+        echo "DJANGO_PROJECT: '$DJANGO_PROJECT'"
+        echo "DJANGO_SETTINGS_MODULE: '$DJANGO_SETTINGS_MODULE'"
+        echo "PYTHONPATH: '$PYTHONPATH'"
         return
     fi
 
@@ -360,7 +360,7 @@ function _externals() {
             destination=`basename $source`
         fi
         if [ -L "$destination" ]; then
-            echo Not updating symbolic link $destination
+            echo "Not updating symbolic link $destination"
             return
         fi
         if [ ! -d $destination ]; then
@@ -560,7 +560,9 @@ function clearcache() {
 
 # Gracefully restart Apache if configuration test is succesful
 function graceful() {
-    sudo apachectl configtest && sudo apachectl -k graceful && echo Apache restarted
+    sudo apachectl configtest && \
+    sudo apachectl -k graceful && \
+    echo "Apache restarted" 2>&1
 }
 
 # Make any Sphinx documentation. Provided arguments are passed to
@@ -569,7 +571,7 @@ function makedocs() {
     if [ -d "$PROJECT_ROOT/doc" ]; then
         for makefile in `ls $PROJECT_ROOT/doc/*/Makefile`; do
             dir=`dirname $makefile`
-            echo Making docs in $dir...
+            echo "Making docs in $dir..."
             if [ "$1" ]; then
                 args=$*
             else
@@ -602,35 +604,28 @@ function deploy() {
     _verify_project_root_and_django_project || return 1
     _verify_django_settings_module || return 1
 
-    echo '>>>' Updating virtualenv... && pipup prd > /dev/null && \
+    echo ">>> Updating virtualenv..." 2>&1 && pipup prd > /dev/null && \
         if [ -f "$PROJECT_ROOT/requirements/externals-prd.txt" ]; then
-            echo '>>>' Updating externals... && externalsup prd
+            echo ">>> Updating externals..." 2>&1 && externalsup prd
         else
-            echo '>>>' No production externals defined
+            echo ">>> No production externals defined" 2>&1
         fi && \
-        echo '>>>' Compiling Python code... && pycompile > /dev/null && \
-        echo '>>>' Removing orphan .pyc files... && removeorphanpycs > /dev/null && \
-        echo '>>>' Validating models... && djadmin validate || return 1
-
-        echo '>>>' Compiling messages...
-        get_django_setting INSTALLED_APPS | grep -q "'g0j0.i18n'"
-        if [ $? -eq 0 ]; then
-                # Use g0j0.i18n compilemessages if available
-                djadmin compilemessages `localized_django_projects`
-        else
-                for dir in `localized_django_projects`; do
-                    (cd $dir && djadmin compilemessages)
-                done
-        fi && \
-        echo '>>>' Making documentation... && makedocs && \
-        echo '>>>' Collecting static files... && djadmin collectstatic --noinput && \
-        echo '>>>' Setting permissions... && set_permissions.sh && \
-        echo '>>>' Clearing cache... && clearcache && \
-        echo '>>>' Restarting server... && graceful && \
+        echo 2>&1 && echo ">>> Compiling Python code..." 2>&1 && pycompile > /dev/null && \
+        echo ">>> Removing orphan .pyc files..." 2>&1 && removeorphanpycs > /dev/null && \
+        echo ">>> Validating models..." 2>&1 && djadmin validate && \
+        echo 2>&1 && echo ">>> Compiling messages..." 2>&1 && \
+            for dir in `localized_django_projects`; do
+                (cd $dir && djadmin compilemessages)
+            done && \
+        echo 2>&1 && echo ">>> Making documentation..." 2>&1 && makedocs && \
+        echo 2>&1 && echo ">>> Collecting static files..." 2>&1 && djadmin collectstatic --noinput && \
+        echo 2>&1 && echo ">>> Setting permissions..." 2>&1 && set_permissions.sh && \
+        echo 2>&1 && echo ">>> Clearing cache..." 2>&1 && clearcache && \
+        echo ">>> Restarting server..." 2>&1 && graceful && \
+        echo 2>&1 && echo "Ok." 2>&1 && \
         return 0
 
-    echo
-    echo Deploy aborted due to errors!
+    echo 2>&1 && echo "Errors encountered - deploy aborted." 2>&1
 }
 
 # XXX
@@ -650,7 +645,7 @@ function bootstrapproject() {
 
     # Django is a basic requirement
     local libs=$PROJECT_ROOT/requirements/libs-prd.txt
-    [ ! -e $libs ] && echo Django > $libs
+    [ ! -e $libs ] && echo "Django" > $libs
     pipup prd || return 1
 
     # Get django-environments as an external
