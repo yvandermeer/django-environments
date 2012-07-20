@@ -631,7 +631,7 @@ function bootstrapproject() {
     _verify_project_root || return 1
 
     # Standard directories
-    for dir in bin db externals log media requirements static tmp; do
+    for dir in bin db externals lib log media requirements static tmp; do
         if [ ! -e $PROJECT_ROOT/$dir ]; then
             mkdir $PROJECT_ROOT/$dir
         fi
