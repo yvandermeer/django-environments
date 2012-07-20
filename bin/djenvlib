@@ -434,7 +434,7 @@ function removeorphanpycs() {
         sed 's/$/c/' | xargs $extra_xargs_args rm -v" | bash
 }
 
-# Remove all directories in the project that contain the specified file
+# Remove all directories in the project that contain only the specified file.
 # Experimental.
 function cleanupdirs() {
     [ -z "$1" ] && echo "Usage: cleanupdirs <filename>" 1>&2 && return 1

@@ -5,7 +5,7 @@ from .generic import PROJECT_ROOT, PROJECT, DJANGO_PROJECT
 
 DATABASE_NAME = PROJECT
 
-DATABASES = {
+DATABASES_DEFAULT = {
     'default_sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
         'NAME': path.join(PROJECT_ROOT, 'db', '%s.sqlite3' % DATABASE_NAME),
@@ -23,4 +23,4 @@ DATABASES = {
 }
 
 DATABASES['default'] = \
-        DATABASES['default_' + environ.get('DJANGO_DATABASE_TYPE', 'sqlite')]
+        DATABASES_DEFAULT['default_' + environ.get('DJANGO_DATABASE_TYPE', 'sqlite')]
