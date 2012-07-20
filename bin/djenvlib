@@ -475,8 +475,6 @@ function cdjango () {
 
 # Forget manage.py, django-admin.py respects our settings!
 function djadmin() {
-    _verify_project_root || return 1
-
     django-admin.py $*
 }
 
