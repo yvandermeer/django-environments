@@ -22,5 +22,7 @@ DATABASES_DEFAULT = {
     }
 }
 
-DATABASES['default'] = \
+DATABASES = {
+    'default':
         DATABASES_DEFAULT['default_' + environ.get('DJANGO_DATABASE_TYPE', 'sqlite')]
+}
