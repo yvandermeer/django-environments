@@ -613,7 +613,7 @@ function deploy() {
         echo ">>> Validating models..." 2>&1 && djadmin validate && \
         echo 2>&1 && echo ">>> Compiling messages..." 2>&1 && \
             for dir in `localized_django_projects`; do
-                (cd $dir && djadmin compilemessages)
+                (cdroot $dir && djadmin compilemessages)
             done && \
         echo 2>&1 && echo ">>> Making documentation..." 2>&1 && makedocs && \
         echo 2>&1 && echo ">>> Collecting static files..." 2>&1 && djadmin collectstatic --noinput && \
