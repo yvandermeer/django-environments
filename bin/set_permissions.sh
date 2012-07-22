@@ -1,5 +1,8 @@
 #!/usr/bin/env bash
 
+[ `type -t djenv`'' != 'function' ] && echo "django-environments not loaded" 1>&2 && exit 1
+_verify_project_root || exit 1
+
 set -e
 
 directories=''

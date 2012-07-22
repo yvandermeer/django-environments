@@ -8,6 +8,10 @@
 # - DJANGO_SETTINGS
 # - VIRTUAL_ENV (optional)
 
+[ `type -t djenv`'' != 'function' ] && echo "django-environments not loaded" 1>&2 && exit 1
+_verify_project_root_and_django_project || exit 1
+_verify_django_settings_module || exit 1
+
 APP_HOME=$(cd `dirname $0`; pwd) # Make sure we can refer back to this location
 
 # Update PATH
