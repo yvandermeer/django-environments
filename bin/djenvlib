@@ -501,7 +501,7 @@ function runserver() {
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
 
     while true; do
-        django-admin.py runserver $ip$port $*
+        djadmin runserver $ip$port $*
         echo "Server exited - restarting" 1>&2
         sleep 1
     done
@@ -512,7 +512,7 @@ function testserver() {
     _verify_project_root_and_django_project || return 1
 
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
-    django-admin.py testserver --addrport=$port $*
+    djadmin testserver --addrport=$port $*
 }
 
 # Open an URL in the default browser

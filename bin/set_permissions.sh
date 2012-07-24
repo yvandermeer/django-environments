@@ -11,12 +11,6 @@ for directory in `localized_django_projects`; do
 done
 directories="$directories db log static/generated static/medialibrary */deploy"
 
-# The root of the project should exist, of course
-[ -z "$PROJECT_ROOT" ] && \
-    echo "Variable PROJECT_ROOT not set or empty" 1>&2 && exit 1
-[ ! -d "$PROJECT_ROOT" ] && \
-     echo "Variable PROJECT_ROOT does not point to a readable directory" 1>&2 && exit 1
-
 cd $PROJECT_ROOT
 
 user=$HTTP_USER
