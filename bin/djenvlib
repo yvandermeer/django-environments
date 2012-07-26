@@ -241,16 +241,8 @@ function get_django_setting() {
     fi
 
     DJANGO_SETTINGS_MODULE=$settings_module python << EOF
-try:
-    from django.conf import settings
-except ImportError:
-    print '$2'
-    raise
-else:
-    try:
-        print getattr(settings, '`echo $1 | tr 'a-z' 'A-Z'`', '')
-    except KeyError:
-        print '$2'
+from django.conf import settings
+print getattr(settings, '`echo $1 | tr 'a-z' 'A-Z'`', '$2')
 EOF
 }
 
