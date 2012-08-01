@@ -608,7 +608,8 @@ function deploy() {
                 (cdroot $dir && djadmin compilemessages)
             done && \
         echo 2>&1 && echo ">>> Making documentation..." 2>&1 && makedocs && \
-        echo 2>&1 && echo ">>> Collecting static files..." 2>&1 && djadmin collectstatic --noinput && \
+        echo 2>&1 && echo ">>> Collecting static files..." 2>&1 && \
+            djadmin collectstatic --link --noinput && \
         echo 2>&1 && echo ">>> Setting permissions..." 2>&1 && set_permissions.sh && \
         echo 2>&1 && echo ">>> Clearing cache..." 2>&1 && clearcache && \
         echo ">>> Restarting server..." 2>&1 && graceful && \
