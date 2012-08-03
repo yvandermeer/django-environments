@@ -9,7 +9,7 @@ directories=''
 for directory in `localized_django_projects`; do
     directories="$directories $directory/locale/*/LC_MESSAGES"
 done
-directories="$directories db log static/generated static/medialibrary */deploy"
+directories="$directories db log media/generated media/medialibrary static/z */deploy"
 
 cd $PROJECT_ROOT
 
