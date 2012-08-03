@@ -454,8 +454,8 @@ function removeemptydirs() {
     # Make directories as empty as possible
     removeorphanpycs
     cleanupdirs .DS_Store
-    # Then remove the totally empty ones
-    find $PROJECT_ROOT -type d -empty -delete
+    # Then remove the totally empty ones, depth first
+    find $PROJECT_ROOT -depth -type d -empty -delete
 }
 
 # Change directory to Django project
