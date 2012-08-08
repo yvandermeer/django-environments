@@ -746,7 +746,7 @@ function show_projects() {
         [ -z "$REPOS" ] && REPOS=$DEFAULT_REPOS
         cd $REPOS
         shopt -s nullglob
-        find * -type d -maxdepth 0
+        find * -maxdepth 0 -type d
     )
 }
 
