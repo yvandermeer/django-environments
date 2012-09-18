@@ -676,6 +676,9 @@ function djp() {
     [ -z "$1" ] && \
         echo "Usage: djp <project> [Django project]" 1>&2 && return 1
 
+    # Exit possible environment
+    djexit
+
     # Virtualenv
     [ -z "$PIP_VIRTUALENV_BASE" ] && PIP_VIRTUALENV_BASE=$DEFAULT_ROOT/virtualenvs
     if [ ! -d $PIP_VIRTUALENV_BASE/$1 ]; then
