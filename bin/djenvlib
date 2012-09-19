@@ -545,7 +545,12 @@ function djvirtualbrowse() {
 
 # Clear the cache via the Django cache API
 function clearcache() {
-    python -c "from django.core.cache import cache; cache.clear()"
+    python << EOF
+from django.core.cache import cache
+from django.db.transaction import commit_on_success
+
+commit_on_success(cache.clear)()
+EOF
 }
 
 # Gracefully restart Apache if configuration test is succesful
