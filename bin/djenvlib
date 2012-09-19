@@ -76,7 +76,7 @@ function _djenv_init() {
 
     # Show environment info
     if [ "$SHOW_DJANGO_ENVIRONMENT" = "yes" ]; then
-        echo "Welcome to `basename $PROJECT_ROOT`.$DJANGO_PROJECT. Environment info:"
+        echo "Welcome to `basename $PROJECT_ROOT`/$DJANGO_PROJECT. Environment info:"
         djenv
     fi
 
