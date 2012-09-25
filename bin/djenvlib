@@ -261,23 +261,23 @@ EOF
 # to newline to get to those:
 # IFS='
 # '
-# Note that all variables are prefixed with value of $prefix, 'DJANGO_'.
+# Note that all variables are prefixed with 'DJANGO_'.
 function import_django_settings() {
     _verify_project_root || return 1
     _verify_django_settings_module || return 1
 
     prefix=DJANGO_
     python << EOF
-import $DJANGO_SETTINGS_MODULE as settings
+from django.conf import settings
 from types import TupleType, ListType, DictType
 
 def escape(value):
     return str(value).replace('"', '\\\\"')
 
-settings = settings.__dict__.items()
-settings.sort()
-for name, value in settings:
-    if name.find('__') == -1 and name.find('$1') == 0:
+prefix = '$1'.upper()
+for name in sorted(dir(settings)):
+    if name.isupper() and name.find('__') == -1 and name.find(prefix) == 0:
+        value = getattr(settings, name)
         if type(value) in (TupleType, ListType):
             print '$prefix%s="' % name
             for item in value:
