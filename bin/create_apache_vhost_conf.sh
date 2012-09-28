@@ -58,31 +58,35 @@
 domains=local
 [ ! -z "$DOMAIN" ] && domains=$DOMAIN
 
-# The root of the project should exist, of course
-[ -z "$PROJECT_ROOT" ] && \
-    echo "Variable \$PROJECT_ROOT not set or empty" 1>&2 && exit 1
-[ ! -d "$PROJECT_ROOT" ] && \
-     echo "Variable \$PROJECT_ROOT does not point to a readable directory" 1>&2 && exit 1
+[ `type -t djenv`'' != 'function' ] && echo "django-environments not loaded" 1>&2 && exit 1
+_verify_project_root || exit 1
 
 PROJECT=`basename $PROJECT_ROOT`
 
-cd `dirname $0`
 
 function write_vhost() {
-    echo '<VirtualHost *:*>'
+    local host_prefix=$1
+    local settings=$2
+    local port=`get_django_setting LOCAL_SERVER_PORT 8000 $settings`
+    local static_root=`get_django_setting STATIC_ROOT static $settings`
+    local static_id=`get_django_setting STATIC_ID static $settings`
+    local media_root=`get_django_setting MEDIA_ROOT media $settings`
+    local media_id=`get_django_setting MEDIA_ID static $settings`
+
+    echo "<VirtualHost *:*>"
 
     local directive=ServerName # First domain is the server name
     for domain in $domains; do
-        echo "    $directive $1.$2.$domain"
+        echo "    $directive $host_prefix.$PROJECT.$domain"
         directive=ServerAlias # The other domains are aliases
     done
 
     cat << EOF
     RewriteEngine On
     RewriteRule ^/favicon.ico [F]
-    RewriteRule ^/$4/(.*) $5/\$1 [L]
-    RewriteRule ^/$6/(.*) $7/\$1 [L]
-    RewriteRule ^/(.*) http://127.0.0.1:$3/\$1 [P]
+    RewriteRule ^/$static_id/(.*) $static_root/\$1 [L]
+    RewriteRule ^/$media_id/(.*) $media_root/\$1 [L]
+    RewriteRule ^/(.*) http://127.0.0.1:$port/\$1 [P]
 </VirtualHost>
 
 EOF
@@ -108,14 +112,9 @@ for django_project_dir in `ls -d $PROJECT_ROOT/* | grep -v etc$`; do
          -d "$django_project_dir/settings" ]; then
         export DJANGO_PROJECT=`basename $django_project_dir`
 
-        echo "#" $PROJECT $DJANGO_PROJECT \($django_project_dir\)
+        echo "# $PROJECT $DJANGO_PROJECT ($django_project_dir)"
 
-        port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.settings`
-        static_root=`get_django_setting STATIC_ROOT static $DJANGO_PROJECT.settings`
-        static_id=`get_django_setting STATIC_ID static $DJANGO_PROJECT.settings`
-        media_root=`get_django_setting MEDIA_ROOT media $DJANGO_PROJECT.settings`
-        media_id=`get_django_setting MEDIA_ID static $DJANGO_PROJECT.settings`
-        write_vhost $DJANGO_PROJECT $PROJECT $port $static_id $static_root $media_id $media_root
+        write_vhost $DJANGO_PROJECT $DJANGO_PROJECT.settings
 
         # Per-environment settings
         for settings in $django_project_dir/settings/env/*.py; do
@@ -129,16 +128,11 @@ for django_project_dir in `ls -d $PROJECT_ROOT/* | grep -v etc$`; do
                              sed "s#[^/]*/settings/env/#settings.env.#" | sed 's#.py$##'`
             django_settings_id=`echo $django_settings | sed "s#.*\\.##"`
 
-            echo "#" $PROJECT $DJANGO_PROJECT $django_settings_id \($django_project_dir\)
-            port=`get_django_setting LOCAL_SERVER_PORT 8000 $DJANGO_PROJECT.$django_settings`
-            static_root=`get_django_setting STATIC_ROOT static $DJANGO_PROJECT.settings`
-            static_id=`get_django_setting STATIC_ID static $DJANGO_PROJECT.settings`
-            media_root=`get_django_setting MEDIA_ROOT media $DJANGO_PROJECT.settings`
-            media_id=`get_django_setting MEDIA_ID static $DJANGO_PROJECT.settings`
-            write_vhost $django_settings_id.$DJANGO_PROJECT $PROJECT $port $static_id $static_root $media_id $media_root
+            echo "# $PROJECT $DJANGO_PROJECT $django_settings_id ($django_project_dir)"
+            write_vhost $django_settings_id.$DJANGO_PROJECT $DJANGO_PROJECT.$django_settings
         done
 
     fi
 done
 
-echo '# <<<' Generated django-environments virtual host config end
+echo "# <<< Generated django-environments virtual host config end"

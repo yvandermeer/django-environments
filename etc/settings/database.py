@@ -6,16 +6,16 @@ from .generic import PROJECT_ROOT, PROJECT, DJANGO_PROJECT
 DATABASE_NAME = PROJECT
 
 DATABASES_DEFAULT = {
-    'default_sqlite': {
+    'sqlite': {
         'ENGINE': 'django.db.backends.sqlite3',
-        'NAME': path.join(PROJECT_ROOT, 'db', '%s.sqlite3' % DJANGO_PROJECT),
+        'NAME': path.join(PROJECT_ROOT, 'db', '%s.sqlite3' % DATABASE_NAME),
     },
-    'default_mysql': {
+    'mysql': {
         'ENGINE': 'django.db.backends.mysql',
         'NAME': DATABASE_NAME,
         'USER': 'mysql',
     },
-    'default_postgres': {
+    'postgres': {
         'ENGINE': 'django.db.backends.postgresql_psycopg2',
         'NAME': DATABASE_NAME,
         'USER': 'postgres',
@@ -23,6 +23,6 @@ DATABASES_DEFAULT = {
 }
 
 DATABASES = {
-    'default': DATABASES_DEFAULT['default_' + \
-                                 environ.get('DJANGO_DATABASE_TYPE', 'sqlite')]
+    'default':
+        DATABASES_DEFAULT[environ.get('DJANGO_DATABASE_TYPE', 'sqlite')]
 }

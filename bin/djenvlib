@@ -1,14 +1,13 @@
 #
 # django-environments initialization script
 #
-# Instead of editing the file, it's better to set the variable
-# $PROJECT_ROOT in your own initenv script or virtualenv bin/postactivate,
-# and then source this file.
+# Source this file, then use the "djp" command, or use "setproject"
+# and "djenv" manually.
 #
-# $PROJECT_ROOT is the path to the root of the *entire* project, i.e.
-# the directory containing one or more 'Django projects', for example:
-#
-# PROJECT_ROOT=/Users/spanky/projects/myproject
+
+DJENV_HOME=$(cd -P "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)
+DEFAULT_ROOT=/deploy
+DEFAULT_REPOS=$DEFAULT_ROOT/repos
 
 # Not to be called directly, see djenv below
 function _djenv_init() {
@@ -77,7 +76,7 @@ function _djenv_init() {
 
     # Show environment info
     if [ "$SHOW_DJANGO_ENVIRONMENT" = "yes" ]; then
-        echo Welcome to $DJANGO_PROJECT. Environment info:
+        echo "Welcome to `basename $PROJECT_ROOT`/$DJANGO_PROJECT. Environment info:"
         djenv
     fi
 
@@ -175,22 +174,22 @@ function djexit() {
 # Example:
 # djenv # Print current environment settings
 # or
-# djenv mysite # Use default settings
+# djenv www # Use default settings
 # or
-# djenv mysite settings.env.local # Use specific settins
+# djenv www settings.env.local # Use specific settins
 function djenv() {
     # Environment info
     if [ -z "$1" ]; then
-        echo PROJECT_ROOT: \'$PROJECT_ROOT\'
-        echo DJANGO_PROJECT: \'$DJANGO_PROJECT\'
-        echo DJANGO_SETTINGS_MODULE: \'$DJANGO_SETTINGS_MODULE\'
-        echo PYTHONPATH: \'$PYTHONPATH\'
+        echo "PROJECT_ROOT: '$PROJECT_ROOT'"
+        echo "DJANGO_PROJECT: '$DJANGO_PROJECT'"
+        echo "DJANGO_SETTINGS_MODULE: '$DJANGO_SETTINGS_MODULE'"
+        echo "PYTHONPATH: '$PYTHONPATH'"
         return
     fi
 
     # Help
     if [ "$1" = "-h" -o "$1" = "--help" ]; then
-        echo "Usage: djenv [DJANGO_PROJECT [DJANGO_SETTINGS]]"
+        echo "Usage: djenv [Django project [Django settings]]"
         return
     fi
 
@@ -242,21 +241,12 @@ function get_django_setting() {
     fi
 
     DJANGO_SETTINGS_MODULE=$settings_module python << EOF
-try:
-    from django.conf import settings
-except ImportError:
-    print '$2'
-    raise
-else:
-    try:
-        print getattr(settings, '`echo $1 | tr 'a-z' 'A-Z'`', '')
-    except KeyError:
-        print '$2'
+from django.conf import settings
+print getattr(settings, '`echo $1 | tr 'a-z' 'A-Z'`', '$2')
 EOF
 }
 
 # Import django settings into the shell environment
-# Experimental.
 #
 # When using, set $IFS to empty (this is needed because we eval
 # the output of the python-generated shell script code):
@@ -271,23 +261,23 @@ EOF
 # to newline to get to those:
 # IFS='
 # '
-# Note that all variables are prefixed with value of $prefix, 'DJANGO_'.
+# Note that all variables are prefixed with 'DJANGO_'.
 function import_django_settings() {
     _verify_project_root || return 1
     _verify_django_settings_module || return 1
 
     prefix=DJANGO_
     python << EOF
-import $DJANGO_SETTINGS_MODULE as settings
+from django.conf import settings
 from types import TupleType, ListType, DictType
 
 def escape(value):
     return str(value).replace('"', '\\\\"')
 
-settings = settings.__dict__.items()
-settings.sort()
-for name, value in settings:
-    if name.find('__') == -1 and name.find('$1') == 0:
+prefix = '$1'.upper()
+for name in sorted(dir(settings)):
+    if name.isupper() and name.find('__') == -1 and name.find(prefix) == 0:
+        value = getattr(settings, name)
         if type(value) in (TupleType, ListType):
             print '$prefix%s="' % name
             for item in value:
@@ -362,7 +352,7 @@ function _externals() {
             destination=`basename $source`
         fi
         if [ -L "$destination" ]; then
-            echo Not updating symbolic link $destination
+            echo "Not updating symbolic link $destination"
             return
         fi
         if [ ! -d $destination ]; then
@@ -436,7 +426,7 @@ function removeorphanpycs() {
         sed 's/$/c/' | xargs $extra_xargs_args rm -v" | bash
 }
 
-# Remove all directories in the project that contain the specified file
+# Remove all directories in the project that contain only the specified file.
 # Experimental.
 function cleanupdirs() {
     [ -z "$1" ] && echo "Usage: cleanupdirs <filename>" 1>&2 && return 1
@@ -464,8 +454,8 @@ function removeemptydirs() {
     # Make directories as empty as possible
     removeorphanpycs
     cleanupdirs .DS_Store
-    # Then remove the totally empty ones
-    find $PROJECT_ROOT -type d -empty -delete
+    # Then remove the totally empty ones, depth first
+    find $PROJECT_ROOT -depth -type d -empty -delete
 }
 
 # Change directory to Django project
@@ -477,8 +467,6 @@ function cdjango () {
 
 # Forget manage.py, django-admin.py respects our settings!
 function djadmin() {
-    _verify_project_root || return 1
-
     django-admin.py $*
 }
 
@@ -505,9 +493,9 @@ function runserver() {
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
 
     while true; do
-        django-admin.py runserver $ip$port $*
+        djadmin runserver $ip$port $*
         echo "Server exited - restarting" 1>&2
-        sleep 1
+        sleep 0.5
     done
 }
 
@@ -516,7 +504,7 @@ function testserver() {
     _verify_project_root_and_django_project || return 1
 
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
-    django-admin.py testserver --addrport=$port $*
+    djadmin testserver --addrport=$port $*
 }
 
 # Open an URL in the default browser
@@ -555,6 +543,202 @@ function djvirtualbrowse() {
     open_url http://$django_settings_id.$DJANGO_PROJECT.$PROJECT.$domain/$1
 }
 
+# Clear the cache via the Django cache API
+function clearcache() {
+    python << EOF
+from django.core.cache import cache
+from django.db.transaction import commit_on_success
+
+commit_on_success(cache.clear)()
+EOF
+}
+
+# Gracefully restart Apache if configuration test is succesful
+function graceful() {
+    sudo apachectl configtest && \
+    sudo apachectl -k graceful && \
+    echo "Apache restarted" 2>&1
+}
+
+# Make any Sphinx documentation. Provided arguments are passed to
+# the make command, default is "dirhtml".
+function makedocs() {
+    if [ -d "$PROJECT_ROOT/doc" ]; then
+        for makefile in `ls $PROJECT_ROOT/doc/*/Makefile`; do
+            dir=`dirname $makefile`
+            echo "Making docs in $dir..."
+            if [ "$1" ]; then
+                args=$*
+            else
+                args=dirhtml
+            fi
+            make --directory $dir $args
+            if [ $? -ne 0 ]; then
+                return 1
+            fi
+        done
+    fi
+}
+
+# Returns all Django projects that have a locale directory.
+function localized_django_projects() {
+    _verify_project_root || return 1
+
+    cdroot
+    for directory in `find * -type d -name locale`; do
+        directory=`dirname $directory`
+        if [ -f $directory/models.py -o -f $directory/models/__init__.py ];
+        then
+            echo $directory
+        fi
+    done
+}
+
+# Deploy the current Django application (and most of the project).
+function deploy() {
+    _verify_project_root_and_django_project || return 1
+    _verify_django_settings_module || return 1
+
+    echo ">>> Updating virtualenv..." 2>&1 && pipup prd > /dev/null && \
+        if [ -f "$PROJECT_ROOT/requirements/externals-prd.txt" ]; then
+            echo ">>> Updating externals..." 2>&1 && externalsup prd
+        else
+            echo ">>> No production externals defined" 2>&1
+        fi && \
+        echo 2>&1 && echo ">>> Compiling Python code..." 2>&1 && pycompile > /dev/null && \
+        echo ">>> Removing orphan .pyc files..." 2>&1 && removeorphanpycs > /dev/null && \
+        echo ">>> Validating models..." 2>&1 && djadmin validate && \
+        echo 2>&1 && echo ">>> Compiling messages..." 2>&1 && \
+            for dir in `localized_django_projects`; do
+                (cdroot $dir && djadmin compilemessages)
+            done && \
+        echo 2>&1 && echo ">>> Making documentation..." 2>&1 && makedocs && \
+        echo 2>&1 && echo ">>> Collecting static files..." 2>&1 && \
+            djadmin collectstatic --link --noinput && \
+        echo 2>&1 && echo ">>> Setting permissions..." 2>&1 && set_permissions.sh && \
+        echo 2>&1 && echo ">>> Clearing cache..." 2>&1 && clearcache && \
+        echo ">>> Restarting server..." 2>&1 && graceful && \
+        echo 2>&1 && echo "Ok." 2>&1 && \
+        return 0
+
+    echo 2>&1 && echo "Errors encountered - deploy aborted." 2>&1
+}
+
+# XXX
+function bootstrapproject() {
+    _verify_project_root || return 1
+
+    # Standard directories
+    for dir in bin db doc externals lib log media requirements static tmp; do
+        if [ ! -e $PROJECT_ROOT/$dir ]; then
+            mkdir $PROJECT_ROOT/$dir
+        fi
+    done
+
+    # Symlink to django-environments/etc
+    [ ! -L $PROJECT_ROOT/etc ] && \
+        ln -s externals/django-environments/etc $PROJECT_ROOT
+
+    # Django is a basic requirement
+    local libs=$PROJECT_ROOT/requirements/libs-prd.txt
+    [ ! -e $libs ] && echo "Django" > $libs
+    pipup prd || return 1
+
+    # Get django-environments as an external
+    local externals=$PROJECT_ROOT/requirements/externals-prd.txt
+    [ ! -e $externals ] && echo $DJENV_HOME > $externals
+    externalsup prd || return 1
+}
+
+# XXX
+function bootstrapdjangoproject() {
+    [ -z "$1" ] && \
+        echo "Usage: bootstrapdjangoproject <Django project>" 1>&2 && return 1
+    _verify_project_root || return 1
+
+    local path=$PROJECT_ROOT
+    for dir in $1 settings env; do
+        path=$path/$dir
+        if [ ! -d $path ]; then
+            mkdir $path
+            touch $path/__init__.py
+        fi
+    done
+    echo "from .generic import *" > \
+        $PROJECT_ROOT/$1/settings/__init__.py
+    echo "from etc.settings import *" > \
+        $PROJECT_ROOT/$1/settings/generic.py
+    echo "from .. import *" > \
+        $PROJECT_ROOT/$1/settings/env/local.py
+}
+
+# Start working on a project (first argument, optional second
+# argument is the Django project, default "www"), automatically
+# activating the virtualenv with the name of the project and selecting
+# "settings.env.local". Virtualenv and empty project are created if
+# they do not yet exist.
+function djp() {
+    [ -z "$1" ] && \
+        echo "Usage: djp <project> [Django project]" 1>&2 && return 1
+
+    # Exit possible environment
+    djexit
+
+    # Virtualenv
+    [ -z "$PIP_VIRTUALENV_BASE" ] && PIP_VIRTUALENV_BASE=$DEFAULT_ROOT/virtualenvs
+    if [ ! -d $PIP_VIRTUALENV_BASE/$1 ]; then
+        echo "Creating virtualenv $1 in $PIP_VIRTUALENV_BASE" 1>&2
+        virtualenv $PIP_VIRTUALENV_BASE/$1
+        if [ $? -ne 0 ]; then
+            echo "Error creating virtualenv $1" 1>&2
+            return 1
+        fi
+    fi
+    source $PIP_VIRTUALENV_BASE/$1/bin/activate
+    if [ $? -ne 0 ]; then
+        echo "Error activating virtualenv $1" 1>&2
+        return 1
+    fi
+
+    # Project
+    [ -z "$REPOS" ] && REPOS=$DEFAULT_REPOS
+    if [ ! -d $REPOS/$1 ]; then
+        mkdir $REPOS/$1
+        local project_created=true
+    fi
+    setproject $REPOS/$1 > /dev/null 2>&1
+    if [ $? -ne 0 ]; then
+        echo "Error changing project to $1" 1>&2
+        return 1
+    fi
+    if [ $project_created ]; then
+        bootstrapproject
+        if [ $? -ne 0 ]; then
+            echo "Error bootstrapping project" 1>&2
+            return 1
+        fi
+    fi
+
+    # Django project
+    local django_project=$2
+    [ -z "$django_project" ] && django_project=www
+    if [ ! -e $PROJECT_ROOT/$django_project/settings/env/local.py ]; then
+        bootstrapdjangoproject $django_project
+    fi
+    djenv $django_project settings.env.local
+    if [ $? -ne 0 ]; then
+        echo "Error setting Django project to $django_project" 1>&2
+        return 1
+    fi
+
+    # Shell search path (virtualenv manages PATH for us)
+    for bindir in $PROJECT_ROOT/*/*/bin $PROJECT_ROOT/*/bin $PROJECT_ROOT/bin; do
+        if [ -d $bindir ]; then
+            PATH=$bindir:$PATH
+        fi
+    done
+}
+
 # Clean up the environment
 function _djenv_cleanup () {
     unset DJANGO_PROJECT DJANGO_SETTINGS \
@@ -565,10 +749,20 @@ function _djenv_cleanup () {
 # Use _djenv_register_cleanup to register your own cleanup functions
 _djenv_register_cleanup _djenv_cleanup
 
+function show_projects() {
+    (
+        [ -z "$REPOS" ] && REPOS=$DEFAULT_REPOS
+        cd $REPOS
+        shopt -s nullglob
+        find * -maxdepth 0 -type d
+    )
+}
+
 function show_django_projects() {
-    _verify_project_root || return 1
+    [ ! -z "$1" ] || _verify_project_root || return 1
 
     (
+        [ ! -z "$1" ] && PROJECT_ROOT=$REPOS/$1
         cd $PROJECT_ROOT
         shopt -s nullglob
         for file in */settings/__init__.py; do
@@ -596,11 +790,23 @@ export -f _djenv_init _djenv_register_cleanup _verify_project_root _verify_djang
     djexit djenv get_django_setting import_django_settings cdroot cdlib \
     pipup _externals externalsup pycompile removeorphanpycs cleanupdirs removeemptydirs \
     cdjango djadmin get_network_ip runserver testserver open_url djbrowse djvirtualbrowse \
-    _djenv_cleanup show_django_projects show_django_settings
+    clearcache graceful localized_django_projects makedocs deploy \
+    _djenv_cleanup show_projects show_django_projects show_django_settings
 
 #
 # Tab completion
 #
+
+_projects_complete() {
+    local current="${COMP_WORDS[COMP_CWORD]}"
+    local previous="${COMP_WORDS[COMP_CWORD - 1]}"
+
+    if [ $COMP_CWORD -eq 1 ]; then
+        COMPREPLY=($(compgen -W "`show_projects`" -- ${current}))
+    elif [ $COMP_CWORD -eq 2 ]; then
+        COMPREPLY=( $(compgen -W "`show_django_projects $previous`" -- ${current}) )
+    fi
+}
 
 _django_projects_complete() {
     local current="${COMP_WORDS[COMP_CWORD]}"
@@ -658,6 +864,7 @@ _externalsup_complete() {
 complete -o nospace -F _cdroot_complete -S/ cdroot
 complete -o nospace -F _cdlib_complete -S/ cdlib
 complete -o nospace -F _cdjango_complete -S/ cdjango
+complete -F _projects_complete djp
 complete -F _django_projects_complete djenv
 complete -F _pipup_complete pipup
 complete -F _externalsup_complete externalsup
