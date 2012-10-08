@@ -566,7 +566,7 @@ function makedocs() {
     if [ -d "$PROJECT_ROOT/doc" ]; then
         makefiles=`ls $PROJECT_ROOT/doc/*/Makefile 2>/dev/null`
         if [ -z "$makefiles" ]; then
-            echo No makefiles found 1>&2
+            echo No documentation makefiles found 1>&2
             return 0
         fi
         for makefile in $makefiles; do
