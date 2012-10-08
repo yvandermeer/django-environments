@@ -686,12 +686,18 @@ function djp() {
     [ -z "$1" ] && \
         echo "Usage: djp <project> [Django project]" 1>&2 && return 1
 
-    # Exit possible environment
+    # Exit a possible django environment
     djexit
 
     # Virtualenv
     [ -z "$PIP_VIRTUALENV_BASE" ] && PIP_VIRTUALENV_BASE=$DEFAULT_ROOT/virtualenvs
     if [ ! -d $PIP_VIRTUALENV_BASE/$1 ]; then
+        echo "Virtual env $1 not found - create it? (y/n)" 1>&2
+        read answer
+        if [ "$answer" != "Y" -a "$answer" != "y" ]; then
+            return 1
+        fi
+
         echo "Creating virtualenv $1 in $PIP_VIRTUALENV_BASE" 1>&2
         virtualenv $PIP_VIRTUALENV_BASE/$1
         if [ $? -ne 0 ]; then
