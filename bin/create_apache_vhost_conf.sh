@@ -95,8 +95,6 @@ EOF
     cat << EOF
 # >>> Generated django-environments virtual host config start
 
-NameVirtualHost *:*
-
 <Directory "$PROJECT_ROOT">
     Order deny,allow
     Allow from all
