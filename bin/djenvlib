@@ -619,7 +619,7 @@ function deploy() {
             done && \
         echo 2>&1 && echo ">>> Making documentation..." 2>&1 && makedocs && \
         echo 2>&1 && echo ">>> Collecting static files..." 2>&1 && \
-            djadmin collectstatic --link --noinput && \
+            deploy_static && \
         echo 2>&1 && echo ">>> Setting permissions..." 2>&1 && set_permissions.sh && \
         echo 2>&1 && echo ">>> Clearing cache..." 2>&1 && clearcache && \
         echo ">>> Restarting server..." 2>&1 && graceful && \
@@ -627,6 +627,18 @@ function deploy() {
         return 0
 
     echo 2>&1 && echo "Errors encountered - deploy aborted." 2>&1
+}
+
+# Perform collectstatic --link based on a clean static directory
+# to prevent conflicts. Revert's content of static directory if
+# $PROJECT_ROOT is a Mercurial repos.
+function deploy_static() {
+    local static_root=`get_django_setting STATIC_ROOT`
+    rm -rf $static_root/* && \
+        if [ -d $PROJECT_ROOT/.hg ]; then
+             hg revert $static_root
+        fi && \
+        djadmin collectstatic --link --noinput --verbosity=0
 }
 
 # XXX
