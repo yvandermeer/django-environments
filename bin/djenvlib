@@ -494,7 +494,10 @@ function runserver() {
 
     while true; do
         djadmin runserver $ip$port $*
-        echo "Server exited - restarting" 1>&2
+        if [ $? -ne 0 ]; then
+            echo "Server exited with errors" 1>&2
+            return 1
+        fi
         sleep 0.5
     done
 }
