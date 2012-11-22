@@ -522,12 +522,21 @@ function open_url() {
 
 # Points the browser to the server running the current settings:
 # http://localhost:<settings.LOCAL_SERVER_PORT>/$1
+# With -p as first argument, use the public network IP address
+# instead of localhost (for access a server running with
+# runserver -p).
 function djbrowse() {
     _verify_project_root_and_django_project || return 1
     _verify_django_settings_module || return 1
 
+    if [ "$1" = -p ]; then
+        local ip=`get_network_ip`
+        shift
+    else
+        local ip=localhost
+    fi
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
-    open_url http://localhost:$port/$1
+    open_url http://$ip:$port/$1
 }
 
 # Points the browser to the named virtual host for the current
