@@ -824,7 +824,7 @@ export -f _djenv_init _djenv_register_cleanup _verify_project_root _verify_djang
     djexit djenv get_django_setting import_django_settings cdroot cdlib \
     pipup _externals externalsup pycompile removeorphanpycs cleanupdirs removeemptydirs \
     cdjango djadmin get_network_ip runserver testserver open_url djbrowse djvirtualbrowse \
-    clearcache graceful localized_django_projects makedocs deploy \
+    clearcache graceful localized_django_projects makedocs deploy deploy_static \
     _djenv_cleanup show_projects show_django_projects show_django_settings
 
 #
