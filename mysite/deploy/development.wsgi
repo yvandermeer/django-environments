@@ -41,4 +41,3 @@ import django.core.handlers.wsgi
 environ['DJANGO_SETTINGS_MODULE'] = path.basename(DJANGO_PROJECT_DIR) + \
     '.settings.env.' + path.basename(__file__).split('.')[0]
 application = django.core.handlers.wsgi.WSGIHandler()
-
