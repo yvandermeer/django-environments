@@ -568,7 +568,7 @@ EOF
 function graceful() {
     sudo apachectl configtest && \
     sudo apachectl -k graceful && \
-    echo "Apache restarted" 2>&1
+    echo "Apache restarted" 1>&2
 }
 
 # Make any Sphinx documentation. Provided arguments are passed to
@@ -615,27 +615,35 @@ function deploy() {
     _verify_project_root_and_django_project || return 1
     _verify_django_settings_module || return 1
 
-    echo ">>> Updating virtualenv..." 2>&1 && pipup prd > /dev/null && \
+    echo ">>> Updating virtualenv..." 1>&2 && pipup prd > /dev/null && \
         if [ -f "$PROJECT_ROOT/requirements/externals-prd.txt" ]; then
-            echo ">>> Updating externals..." 2>&1 && externalsup prd
+            echo ">>> Updating externals..." 1>&2 && externalsup prd
         else
-            echo ">>> No production externals defined" 2>&1
+            echo ">>> No production externals defined" 1>&2
         fi && \
-        echo 2>&1 && echo ">>> Compiling Python code..." 2>&1 && pycompile > /dev/null && \
-        echo ">>> Removing orphan .pyc files..." 2>&1 && removeorphanpycs > /dev/null && \
-        echo ">>> Validating models..." 2>&1 && djadmin validate && \
-        echo 2>&1 && echo ">>> Compiling messages..." 2>&1 && \
-            djadmin compilemessages `localized_django_projects` && \
-        echo 2>&1 && echo ">>> Making documentation..." 2>&1 && makedocs && \
-        echo 2>&1 && echo ">>> Collecting static files..." 2>&1 && \
+        echo 1>&2 && echo ">>> Compiling Python code..." 1>&2 && pycompile > /dev/null && \
+        echo ">>> Removing orphan .pyc files..." 1>&2 && removeorphanpycs > /dev/null && \
+        echo ">>> Validating models..." 1>&2 && djadmin validate && \
+        (echo 1>&2 && echo ">>> Compiling messages..." 1>&2
+        get_django_setting INSTALLED_APPS | grep -q "'g0j0.i18n'"
+        if [ $? -eq 0 ]; then
+            # Use g0j0.i18n compilemessages if available
+            djadmin compilemessages `localized_django_projects`
+        else
+            for dir in `localized_django_projects`; do
+                (cdroot $dir && djadmin compilemessages)
+            done
+        fi) && \
+        echo 1>&2 && echo ">>> Making documentation..." 1>&2 && makedocs && \
+        echo 1>&2 && echo ">>> Collecting static files..." 1>&2 && \
             deploy_static && \
-        echo 2>&1 && echo ">>> Setting permissions..." 2>&1 && set_permissions.sh && \
-        echo 2>&1 && echo ">>> Clearing cache..." 2>&1 && clearcache && \
-        echo ">>> Restarting server..." 2>&1 && graceful && \
-        echo 2>&1 && echo "Ok." 2>&1 && \
+        echo 1>&2 && echo ">>> Setting permissions..." 1>&2 && set_permissions.sh && \
+        echo 1>&2 && echo ">>> Clearing cache..." 1>&2 && clearcache && \
+        echo ">>> Restarting server..." 1>&2 && graceful && \
+        echo 1>&2 && echo "Ok." 1>&2 && \
         return 0
 
-    echo 2>&1 && echo "Errors encountered - deploy aborted." 2>&1
+    echo 1>&2 && echo "Errors encountered - deploy aborted." 1>&2
 }
 
 # Perform collectstatic --link based on a clean static directory
@@ -650,7 +658,7 @@ function deploy_static() {
         djadmin collectstatic --link --noinput --verbosity=0
 }
 
-# XXX
+# TODO: document
 function bootstrapproject() {
     _verify_project_root || return 1
 
@@ -676,7 +684,7 @@ function bootstrapproject() {
     externalsup prd || return 1
 }
 
-# XXX
+# TODO: document
 function bootstrapdjangoproject() {
     [ -z "$1" ] && \
         echo "Usage: bootstrapdjangoproject <Django project>" 1>&2 && return 1
