@@ -482,12 +482,12 @@ EOF
 
 # Run development server on settings.LOCAL_SERVER_PORT, and restart
 # automatically. With -p as first argument, the server listens to
-# the network IP address instead of localhost.
+# the network IP address as well as localhost.
 function runserver() {
     _verify_project_root_and_django_project || return 1
 
     if [ "$1" = -p ]; then
-        local ip=`get_network_ip`:
+        local ip=0.0.0.0:
         shift
     fi
     local port=`get_django_setting LOCAL_SERVER_PORT 8000`
