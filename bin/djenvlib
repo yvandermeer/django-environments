@@ -651,6 +651,7 @@ function deploy() {
 # $PROJECT_ROOT is a Mercurial repos.
 function deploy_static() {
     local static_root=`get_django_setting STATIC_ROOT`
+    [ -z "$static_root" ] && echo "Warning: STATIC_ROOT not set" 1>&2 && return
     rm -rf $static_root/* && \
         if [ -d $PROJECT_ROOT/.hg ]; then
              hg revert $static_root
