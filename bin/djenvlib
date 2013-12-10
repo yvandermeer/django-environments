@@ -94,7 +94,7 @@ function _djenv_init() {
     return 0
 }
 
-# Register cleanup hook
+# Register cleanup hook.
 function _djenv_register_cleanup() {
     local func
     for func in $*; do
@@ -108,26 +108,26 @@ function _djenv_register_cleanup() {
 
 # Verification functions
 
-# Check if $PROJECT_ROOT is set
+# Check if $PROJECT_ROOT is set.
 function _verify_project_root() {
     [ -z "$PROJECT_ROOT" ] && echo "No \$PROJECT_ROOT" 1>&2 && return 1
     return 0
 }
 
-# Check if $DJANGO_PROJECT is set
+# Check if $DJANGO_PROJECT is set.
 function _verify_django_project() {
     [ -z "$DJANGO_PROJECT" ] && echo "No \$DJANGO_PROJECT" 1>&2 && return 1
     return 0
 }
 
-# Check if both $PROJECT_ROOT and $DJANGO_PROJECT are set
+# Check if both $PROJECT_ROOT and $DJANGO_PROJECT are set.
 function _verify_project_root_and_django_project() {
     _verify_project_root || return 1
     _verify_django_project || return 1
     return 0
 }
 
-# Check if $DJANGO_SETTINGS_MODULE is set
+# Check if $DJANGO_SETTINGS_MODULE is set.
 function _verify_django_settings_module() {
     [ -z "$DJANGO_SETTINGS_MODULE" ] && \
         echo "No \$DJANGO_SETTINGS_MODULE" 1>&2 && return 1
@@ -136,7 +136,7 @@ function _verify_django_settings_module() {
 
 # Some useful functions
 
-# Exit current project
+# Exit current project.
 function djexit() {
     [ -z "$DJANGO_PROJECT" ] && return 1
 
@@ -170,7 +170,7 @@ function djexit() {
     IFS=$_IFS
 }
 
-# Change django project
+# Change django project.
 # Example:
 # djenv # Print current environment settings
 # or
@@ -214,7 +214,7 @@ function djenv() {
     return 0
 }
 
-# Get a django setting from the current or specified settings module
+# Get a django setting from the current or specified settings module.
 #
 # Example:
 # get_django_setting LANGUAGE_CODE
@@ -246,7 +246,7 @@ print getattr(settings, '`echo $1 | tr 'a-z' 'A-Z'`', '$2')
 EOF
 }
 
-# Import django settings into the shell environment
+# Import django settings into the shell environment.
 #
 # When using, set $IFS to empty (this is needed because we eval
 # the output of the python-generated shell script code):
@@ -293,7 +293,7 @@ for name in sorted(dir(settings)):
 EOF
 }
 
-# Set the project root to either current or specified directory
+# Set the project root to either current or specified directory.
 setproject() {
     if [ ! -z "$1" ]; then
         cd $1
@@ -311,14 +311,14 @@ setproject() {
     fi
 }
 
-# Change directory to project root
+# Change directory to project root.
 function cdroot() {
     _verify_project_root || return 1
 
     cd $PROJECT_ROOT/$1
 }
 
-# Change directory to project lib directory
+# Change directory to project lib directory.
 function cdlib() {
     _verify_project_root || return 1
 
@@ -399,7 +399,7 @@ function externalsup() {
 
 # Use compileall to compile all .py files - handy for web server
 # environments where the server user often has no write access to the
-# .pyc files / directories
+# .pyc files / directories.
 function pycompile() {
     _verify_project_root || return 1
 
@@ -407,7 +407,7 @@ function pycompile() {
     removeorphanpycs
 }
 
-# Remove .pyc files without a corresponding .py the fast way
+# Remove .pyc files without a corresponding .py the fast way.
 function removeorphanpycs() {
     _verify_project_root || return 1
 
@@ -447,7 +447,7 @@ function cleanupdirs() {
     done
 }
 
-# Remove all empty directories in the project
+# Remove all empty directories in the project.
 function removeemptydirs() {
     _verify_project_root || return 1
 
@@ -458,7 +458,7 @@ function removeemptydirs() {
     find $PROJECT_ROOT -depth -type d -empty -delete
 }
 
-# Change directory to Django project
+# Change directory to Django project.
 function cdjango () {
     _verify_project_root_and_django_project || return 1
 
@@ -470,7 +470,7 @@ function djadmin() {
     django-admin.py $*
 }
 
-# Get network IP address
+# Get network IP address.
 function get_network_ip() {
     python << EOF
 import socket
@@ -501,7 +501,7 @@ function runserver() {
     done
 }
 
-# Run test server on settings.LOCAL_SERVER_PORT, and restart automatically
+# Run test server on settings.LOCAL_SERVER_PORT, and restart automatically.
 function testserver() {
     _verify_project_root_and_django_project || return 1
 
@@ -509,7 +509,7 @@ function testserver() {
     djadmin testserver --addrport=$port $*
 }
 
-# Open an URL in the default browser
+# Open an URL in the default browser.
 function open_url() {
     if which xdg-open > /dev/null; then
         # Linux
@@ -554,7 +554,7 @@ function djvirtualbrowse() {
     open_url http://$django_settings_id.$DJANGO_PROJECT.$PROJECT.$domain/$1
 }
 
-# Clear the cache via the Django cache API
+# Clear the cache via the Django cache API.
 function clearcache() {
     python << EOF
 from django.core.cache import cache
@@ -564,7 +564,7 @@ commit_on_success(cache.clear)()
 EOF
 }
 
-# Gracefully restart Apache if configuration test is succesful
+# Gracefully restart Apache if configuration test is succesful.
 function graceful() {
     sudo apachectl configtest && \
     sudo apachectl -k graceful && \
@@ -596,7 +596,7 @@ function makedocs() {
     fi
 }
 
-# Returns all Django projects that have a locale directory.
+# Find all Django apps that have a locale directory.
 function localized_django_projects() {
     _verify_project_root || return 1
 
@@ -647,14 +647,14 @@ function deploy() {
 }
 
 # Perform collectstatic --link based on a clean static directory
-# to prevent conflicts. Revert's content of static directory if
-# $PROJECT_ROOT is a Mercurial repos.
+# to prevent conflicts. If $PROJECT_ROOT is a Mercurial repo,
+# "hg revert" is issued on settings.STATIC_ROOT.
 function deploy_static() {
     local static_root=`get_django_setting STATIC_ROOT`
     [ -z "$static_root" ] && echo "Warning: STATIC_ROOT not set" 1>&2 && return
     rm -rf $static_root/* && \
         if [ -d $PROJECT_ROOT/.hg ]; then
-             hg revert $static_root
+             hg revert --repository $PROJECT_ROOT $static_root
         fi && \
         djadmin collectstatic --link --noinput --verbosity=0
 }
@@ -780,7 +780,7 @@ function djp() {
     done
 }
 
-# Clean up the environment
+# Clean up the environment.
 function _djenv_cleanup () {
     unset DJANGO_PROJECT DJANGO_SETTINGS \
         _OLD_DJANGO_SETTINGS_MODULE _OLD_PYTHONPATH \
