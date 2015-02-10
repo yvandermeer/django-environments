@@ -637,7 +637,7 @@ function deploy() {
         echo 1>&2 && echo ">>> Making documentation..." 1>&2 && makedocs && \
         echo 1>&2 && echo ">>> Collecting static files..." 1>&2 && \
             deploy_static && \
-        echo 1>&2 && echo ">>> Setting permissions..." 1>&2 && set_permissions.sh && \
+        echo 1>&2 && echo ">>> Setting permissions..." 1>&2 && set_permissions && \
         echo 1>&2 && echo ">>> Clearing cache..." 1>&2 && clearcache && \
         echo ">>> Restarting server..." 1>&2 && graceful && \
         echo 1>&2 && echo "Ok." 1>&2 && \
