@@ -38,7 +38,7 @@ To set up the project for local development::
 Building the documentation
 --------------------------
 
-Documention is provided in Sphinx format in the `docs` subdirectory. To
+Documention is provided in Sphinx format in the ``docs`` subdirectory. To
 build the HTML version of the documentation yourself::
 
     $ cd docs
@@ -46,7 +46,7 @@ build the HTML version of the documentation yourself::
 
 Alternatively, you can browse the documentation on `Read the Docs <rtd_>`_.
 
-.. _bitbucket: http://bitbucket.org/goeiejongens/django-environments>
+.. _bitbucket: http://bitbucket.org/goeiejongens/django-environments
 .. _github_fork: https://github.com/yvandermeer/django-environments/fork
 .. _git_remote_hg: https://github.com/fingolfin/git-remote-hg/
 .. _github: https://github.com/yvandermeer/django-environments/
