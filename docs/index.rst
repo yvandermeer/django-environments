@@ -8,11 +8,4 @@ Contents:
 
    readme
    changes
-
-
-Indices and tables
-==================
-
-* :ref:`genindex`
-* :ref:`modindex`
-* :ref:`search`
+   contributing
