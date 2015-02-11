@@ -51,3 +51,5 @@ MIDDLEWARE_CLASSES = (
 )
 
 SESSION_COOKIE_HTTPONLY = True
+
+TEST_RUNNER = 'django.test.runner.DiscoverRunner'
