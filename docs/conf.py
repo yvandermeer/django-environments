@@ -48,7 +48,8 @@ master_doc = 'index'
 
 # General information about the project.
 project = u'django-environments'
-copyright = u'2010-{}, Goeie Jongens'.format(datetime.today().year)
+authors = 'Goeie Jongens (Vincent Hillenbrink, Yuri van der Meer)'
+copyright = u'2010-{}, {}'.format(datetime.today().year, authors)
 
 # The version info for the project you're documenting, acts as replacement for
 # |version| and |release|, also used in various other places throughout the
