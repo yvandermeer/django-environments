@@ -1,5 +1,5 @@
-django-environments
-===================
+|project|
+=========
 
 Contents:
 

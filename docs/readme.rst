@@ -1,10 +1,10 @@
-About django-environments 
-=========================
+About |project|
+===============
 
 Manage different Django settings within a Django project, and easily
 select settings from the command line or from WSGI. Different
 settings can be helpful either on a single computer, but
-django-environments is also intended for use on different system
+|project| is also intended for use on different system
 environments, such as development, test, staging/acceptance and
 production, all with "maximum DRY™".
 
@@ -15,7 +15,7 @@ which settings to use based on the name of the WSGI file. All this
 helps to minimize the number of code changes and other file updates
 when working across different environments.
 
-Django-environments moves the ``settings.py`` to a settings package,
+|project| moves the ``settings.py`` to a settings package,
 and suggests a settings inheritance model, which you can adhere to
 as much as you like. Simply "inherit" from more generic settings
 using ``from .. import *``, and overrule - see the provided examples.
@@ -33,13 +33,13 @@ the example environment working, do the following:
 
 1. Copy bin/initenv_example to bin/initenv.
 2. Edit bin/initenv, set ``PROJECT_ROOT`` and save the file.
-3. Use ``source bin/initenv`` to load django-environments into
+3. Use ``source bin/initenv`` to load |project| into
    your shell. If you left in the djenv command, you will see the
    environment settings immediately.
 4. For fun, you could do a ``cp -rpv mysite foo`` from the top
    directory, followed by ``djenv foo``. Be sure to try out the tab
    completion.
-5. For automatic initialization of django-environments when using
+5. For automatic initialization of |project| when using
    virtualenv with virtualenvwrapper, you can either
    ``source <path-to-project>/bin/initenv`` from ``bin/postactivate``,
    or simply use your initenv's contents inside postactivate.
@@ -93,10 +93,10 @@ See ``bin/djenvlib`` for the more information.
 Compatibility with virtualenv
 -----------------------------
 
-Please note django-environments does not in any way depend on
+Please note |project| does not in any way depend on
 virtualenv, although it can be used together with virtualenv quite well.
 
-When using django-environments within a single virtualenv environment,
+When using |project| within a single virtualenv environment,
 you can switch between Django projects as often as you like. If
 you use virtualenvwrapper, use ``bin/postactivate`` and
 ``bin/predeactivate`` for calling djenv and djexit respectively.
@@ -108,7 +108,7 @@ In the example settings files, ``from .. import *`` is used. You will
 need to change this to ``from <project>.settings import *`` for older
 versions of Python. The downside is that you will have to include
 the project name in your settings, which is a violation of the DRY
-principle that django-environments tries to live by.
+principle that |project| tries to live by.
 
 Using Apache mod_wsgi
 ---------------------
