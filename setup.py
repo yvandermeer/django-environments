@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 here = path.dirname(path.abspath(__file__))
 scripts = [path.relpath(p, here) for p in glob.glob(path.join(here, 'bin/*'))]
-packages = find_packages()
+packages = find_packages(exclude=['mysite', 'mysite.*'])
 
 versioneer.VCS = 'git'
 versioneer.versionfile_source = '{0}/_version.py'.format(packages[0])
@@ -20,8 +20,8 @@ setup(
     description='Manage different settings within a Django project',
     author='Goeie Jongens',
     author_email='jullie@goeiejongens.nl',
-    # url='http://django-http-proxy.readthedocs.org/',
-    packages=find_packages(),
+    url='http://django-environments.readthedocs.org/',
+    packages=packages,
     install_requires=[
         'Django>=1.1',
     ],
