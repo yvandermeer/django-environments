@@ -15,4 +15,4 @@ This installs two things:
 2. A set of Bash scripts for easily switching between Django settings and 
    projects.
 
-For more information on using |project|, see :doc:`usage`.
+For more information on using |project|, see :doc:`usage/index`.

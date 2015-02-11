@@ -4,12 +4,11 @@
 Contents:
 
 .. toctree::
-   :maxdepth: 2
+   :maxdepth: 3
 
    readme
    requirements
    installation
-   usage
+   usage/index
    changes
    contributing
-   exampleproject

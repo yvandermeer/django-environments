@@ -52,7 +52,7 @@ itself using "easy_install develop".
 
 From here, you can do two things:
 
-#. Run the :doc:`example project <exampleproject>`
+#. Run the :doc:`example project <usage/exampleproject>`
 #. Use your checkout of |project| in other local projects under development
 
 

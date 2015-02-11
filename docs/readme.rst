@@ -46,85 +46,8 @@ the example environment working, do the following:
    Alternatively, you may also symlink ``bin/postactivate`` to your
    initenv script.
 
-If everything works okay, the following shell functions are created:
 
-* ``djenv`` (tab completion)
-                switch to different settings or another Django project.
-* ``cdroot`` (tab completion)
-                go to current project root.
-* ``cdlib`` (tab completion)
-                go to subdirectory 'lib' of the current project root.
-* ``cdjango`` (tab completion)
-                go to Django project root (one lower than project root).
-* ``djadmin`` (install `tab completion <http://docs.djangoproject.com/en/dev/ref/django-admin/#bash-completion>`_ yourself)
-                shorthand for django-admin.py, which you should use
-                instead of manage.py (unless you want to tweak things).
-* ``runserver``
-                perform ``django-admin.py runserver <port>``, using
-                settings.LOCAL_SERVER_PORT if defined. Use option
-                ``-p`` to  bind to your network IP address.
-* ``djbrowse``
-                points the browser to the server listening on
-                settings.LOCAL_SERVER_PORT in the current settings.
-* ``djvirtualbrowse``
-                Points the browser to the named virtual host for the current
-                settings. Assumes Apache is running as reverse proxy; see
-                ``bin/create_apache_vhoste_conf.sh`` for more information.
-* ``pipup`` (tab completion)
-                call ``pip install`` with the appropriate file listing
-                the project's requirements.
-* ``removeorphanpycs``
-                remove .pyc files without a corresponding .py.
-* ``removeemptydirs``
-                remove all empty directories in the project (calls
-                removeorphanpycs first).
-* ``pycompile``
-                compile all .py files - handy for web server
-                environments, calls ``removeorphanpycs`` afterwards.
-* ``get_django_setting``
-                get a value from the current settings
-                module, useful for your own scripts (also
-                see the experimental ``import_django_settings``).
-* ``djexit``
-                leave the current Django project.
 
-See ``bin/djenvlib`` for the more information.
-
-Using Apache mod_wsgi
----------------------
-
-Should you wish to use the settings in for instance
-``settings/env/staging.py``, simply copy the example
-``mysite/deploy/development.wsgi`` to ``mysite/deploy/staging.wsgi``,
-or make ``staging.wsgi`` a symlink (if your Apache configuration allows
-it, which is normally the case). Next, add something like this to
-your ``httpd.conf``::
-
-    WSGIScriptAlias / /Users/spanky/repos/django-environments/mysite/deploy/staging.wsgi
-
-And restart Apache. The identifier 'staging' in ``staging.wsgi`` will
-automatically make sure ``settings.env.staging`` is used. Create other
-.wsgi files for other environment settings.
-
-Refer to the source of the provided WSGI script to see how specific
-directories, like a virtualenv site-packages directory, can be
-prepended to ``sys.path``, overruling standard Python environment settings.
-
-Automatic generation of local WSGI links and settings file
-----------------------------------------------------------
-
-If you want your WSGI setup done as quickly as possible, activate an
-environment - either directly via your ``bin/initenv`` or through
-virtualenv - and execute ``bin/setup_local_wsgi.sh <environment>``, e.g.::
-
-    $ bin/setup_local_wsgi.sh staging
-
-This will create a ``deploy/local.wsgi`` symbolic link to staging.wsgi and
-will create a ``settings/env/local.py`` with default contents for a given
-environment. Now, you only need to update ``settings.env.local`` with those
-settings you want to keep absolutely local, like those containing
-user ids and passwords. Keep in mind the script will overwrite existing
-``local.py`` settings files!
 
 Directories
 -----------
@@ -142,15 +65,3 @@ Directories
 * The bin directory contains the shell scripts intended to be
   sourced with the ``source`` command, unless they have a '.sh'
   extension.
-
-Remarks
--------
-
-* ``urls.py`` is just there to demonstrate the ``SERVE_MEDIA``
-   setting, which is not essential anyway.
-* ``manage.py`` is removed as the generated default ignores
-  ``$DJANGO_SETTINGS_MODULE``, simply importing 'settings' instead.
-* the Django ``startapp`` command will create new apps in
-  ``$DJANGO_PROJECT/settings/env``. Apparently, Django uses the
-  basename of the settings ``__file__`` as a reference point for
-  the new app.
