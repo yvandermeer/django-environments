@@ -4,10 +4,7 @@ from .. import *
 DEBUG = True
 
 INSTALLED_APPS += (
-    'django.contrib.databrowse',
-    #'debug_toolbar',
-    #'devserver',
-    #'django_extensions',
+    # ...
 )
 
 COMPRESS = False

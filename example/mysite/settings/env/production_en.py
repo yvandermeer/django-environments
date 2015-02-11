@@ -1,4 +1,4 @@
-from production_generic import *
+from .production_generic import *
 
 
 # Just set the language

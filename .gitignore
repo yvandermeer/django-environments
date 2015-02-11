@@ -5,4 +5,5 @@
 docs/_build/
 build/
 dist/
+example/static/
 MANIFEST

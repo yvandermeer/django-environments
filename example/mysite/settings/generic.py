@@ -1,4 +1,4 @@
-from etc.settings import *
+from djenv.settings import *
 
 
 LOCAL_SERVER_PORT = 7000
@@ -11,6 +11,6 @@ INSTALLED_APPS = (
     'django.contrib.sessions',
     'django.contrib.sites',
     'django.contrib.messages',
+    'django.contrib.staticfiles',
     'django.contrib.admin',
-    'django.contrib.admindocs',
 )
