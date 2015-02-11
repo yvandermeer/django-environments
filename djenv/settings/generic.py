@@ -1,10 +1,7 @@
-from os import environ, path
+from os import path
 
+from .core import *
 
-PROJECT_ROOT = environ['PROJECT_ROOT']
-PROJECT = path.basename(PROJECT_ROOT)
-DJANGO_PROJECT = environ['DJANGO_PROJECT']
-DJANGO_PROJECT_DIR = path.join(PROJECT_ROOT, DJANGO_PROJECT)
 
 LOCAL_SERVER_PORT = 8001
 
