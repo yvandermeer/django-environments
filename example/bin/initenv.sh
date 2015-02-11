@@ -1,7 +1,7 @@
 #
 # Initialize the settings environment
 #
-# Should be sourced with the 'source' command, e.g. 'source initenv'
+# Should be sourced with the 'source' command, e.g. 'source initenv.sh'
 #
 # The source command can be performed within virtualenvwrapper's
 # bin/postdeactivate, or you could just copy the following lines
@@ -10,7 +10,7 @@
 
 # The root of the project, i.e. the directory containing your Django projects
 # PROJECT_ROOT=/Users/joe/projects/myproject
-PROJECT_ROOT=`dirname $(dirname "${BASH_SOURCE[0]}")`
+PROJECT_ROOT=$(cd -P "$(dirname "${BASH_SOURCE[0]}")"/.. && pwd)
 
 # Show primary settings after chaning project and settings using djenv
 SHOW_DJANGO_ENVIRONMENT=yes

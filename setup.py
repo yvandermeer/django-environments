@@ -6,7 +6,7 @@ from setuptools import setup, find_packages
 
 here = path.dirname(path.abspath(__file__))
 scripts = [path.relpath(p, here) for p in glob.glob(path.join(here, 'bin/*'))]
-packages = find_packages(exclude=['mysite', 'mysite.*'])
+packages = find_packages()
 
 versioneer.VCS = 'git'
 versioneer.versionfile_source = '{0}/_version.py'.format(packages[0])
@@ -23,7 +23,7 @@ setup(
     url='http://django-environments.readthedocs.org/',
     packages=packages,
     install_requires=[
-        'Django>=1.1',
+        'Django>=1.7',
     ],
     scripts=scripts,
     classifiers=[
