@@ -32,7 +32,7 @@ organize your settings in a Python *package*, for example::
 
 Additionally, it suggests (but does not dictate) you use an 
 inheritance/generalization model, simply by "inheriting" from more generic
-settings using ``from <package> import *``, and overrule the settings as needed::
+settings using ``from <package> import *``, and overruling the settings as needed::
     
     # mysite/settings/base.py
     from djenv.settings import *
@@ -55,6 +55,8 @@ settings using ``from <package> import *``, and overrule the settings as needed:
         'debug_toolbar',
     )
 
+
+.. _available-settings:
 
 Available settings modules
 --------------------------

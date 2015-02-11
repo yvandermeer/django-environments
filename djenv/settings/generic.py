@@ -1,3 +1,10 @@
+"""
+Sets some basic "sane defaults" for various Django settings.
+
+Settings defined here include the ``ROOT_URLCONF``, ``STATIC_ROOT``,
+``STATIC_URL`` and basic ``MIDDLEWARE_CLASSES``.
+"""
+
 from os import path
 
 from .core import *

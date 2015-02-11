@@ -1,5 +1,13 @@
 """
-The only required settings from django environments
+The only *required* settings to include in order to use django environments.
+
+This module defines four basic settings which are specific to |project|:
+
+* ``PROJECT_ROOT``
+* ``PROJECT``
+* ``DJANGO_PROJECT``
+* ``DJANGO_PROJECT_DIR``
+
 """
 
 from os import environ, path

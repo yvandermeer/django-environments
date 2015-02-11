@@ -68,6 +68,7 @@ rst_epilog = """
 .. |project| replace:: {project}
 
 .. _github: https://github.com/yvandermeer/django-environments/
+.. _pypi: https://pypi.python.org/pypi/django-environments
 .. _rtd: http://django-environments.readthedocs.org/
 """.format(**locals())
 
