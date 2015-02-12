@@ -20,7 +20,7 @@ setup(
     name='django-environments',
     version=versioneer.get_version(),
     cmdclass=versioneer.get_cmdclass(),
-    description='Manage different settings within a Django project',
+    description='Manage different settings within a Django project with maximum DRY',
     long_description=long_description,
     author='Goeie Jongens',
     author_email='jullie@goeiejongens.nl',
