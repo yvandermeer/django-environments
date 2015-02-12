@@ -10,7 +10,7 @@ located in the top-level ``example`` directory in the source code.
 
     When :doc:`installing <installation>` |project| from PyPI, only the bare 
     essentials are installed. To run you the example project, follow the 
-    instructions for a :ref:`local development setup <dev-setup>`.
+    instructions for a :doc:`local development setup </installation/develop>`.
 
     Everything below assumes you already have a local checkout from the Github_
     repository.

@@ -16,7 +16,7 @@ file updates when working across different environments.
    :maxdepth: 4
 
    requirements
-   installation
+   installation/index
    usage/index
    changes
    contributing

@@ -1,5 +1,5 @@
-Changes
-=======
+Release notes
+=============
 
 1.0alpha1
 ---------

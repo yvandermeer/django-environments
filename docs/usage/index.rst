@@ -8,4 +8,3 @@ Usage
    settings
    wsgi
    exampleproject
-   otherprojects

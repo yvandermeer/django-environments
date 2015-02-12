@@ -10,7 +10,7 @@ easily using ``pip install -e`` (a.k.a. ``easy_install develop``).
 .. note::
 
     The following example assumes you have succesfully completed a 
-    :ref:`development install <dev-setup>` of |project| into 
+    :doc:`development install </installation/develop>` of |project| into 
     :file:`~/dev/django-environments`.
 
 First, activate the *virtualenv* for your other project::
@@ -31,7 +31,7 @@ You should now be able to source the file containing the |project| shell functio
 Also, the ``djenv`` package should now be available on the Python path::
 
     $ python -c "import djenv; print djenv.__version__"
-    1.0
+    1.0 # or current version
 
 .. note::
 
