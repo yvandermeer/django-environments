@@ -61,10 +61,7 @@ copyright = u'2010-{}, {}'.format(datetime.today().year, authors)
 # |version| and |release|, also used in various other places throughout the
 # built documents.
 #
-# The short X.Y version.
-version = '0.1'
-# The full version, including alpha/beta/rc tags.
-release = '0.1'
+version = release = __import__('djenv').__version__
 
 rst_epilog = """
 .. |project| replace:: {project}
