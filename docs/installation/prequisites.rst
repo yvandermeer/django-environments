@@ -1,5 +1,5 @@
-Prerequisites
-=============
+Requirements
+============
 
 |project| should run on any modern version of Python (v2.6 and up) and Django. 
 It was tested to be compatible with Django 1.7, but should run on older 
