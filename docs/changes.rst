@@ -1,7 +1,7 @@
 Release notes
 =============
 
-1.0a1
+1.0a2
 -----
 
 * First release to PyPI

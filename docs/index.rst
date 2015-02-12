@@ -1,9 +1,9 @@
 |project|
 =========
 
-django-environments helps you manage different settings within a Django
-project, and easily select those settings from the command line or from WSGI, all
-with “maximum DRY™”.
+|project| helps you manage different settings within a Django project, and
+easily select those settings from the command line or from WSGI, all with
+“maximum DRY™”.
 
 On the command line, you specify your project and settings using environment
 variables and (mostly) :doc:`shell functions <usage/commands>`. When you
