@@ -13,9 +13,8 @@ the WSGI file. All this helps to minimize the number of code changes and other
 file updates when working across different environments.
 
 .. toctree::
-   :maxdepth: 4
+   :maxdepth: 2
 
-   requirements
    installation/index
    usage/index
    changes

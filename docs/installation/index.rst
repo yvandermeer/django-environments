@@ -1,13 +1,12 @@
 Installation
 ============
 
-.. seealso::
-    :doc:`/requirements`
-
 |project| is available as both a PyPI_ package and as "source" on Github_.
 
 .. toctree::
+   :maxdepth: 1
 
+   requirements
    standard
    develop
    docs

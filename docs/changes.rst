@@ -4,7 +4,7 @@ Release notes
 1.0a2
 -----
 
-* First release to PyPI
+* First release to PyPI_. See :doc:`/usage/bitbucketmigration`
 * Renamed top-level ``etc`` package to ``djenv``
 * Reversed use of ``.sh`` for shell scripts: executable scripts no longer have 
   the ``.sh`` extension, whereas shell scripts meant to be ``source``'d now *do* 
