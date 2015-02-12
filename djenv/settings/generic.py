@@ -11,6 +11,10 @@ from .core import *
 
 
 LOCAL_SERVER_PORT = 8001
+"""
+The HTTP port used when running the Django development server using the
+:ref:`runserver <cmd_runserver>` command.
+"""
 
 ADMINS = (
     ('g0j0 admin', 'admin@g0j0.com'),

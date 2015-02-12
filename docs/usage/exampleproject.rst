@@ -8,7 +8,7 @@ located in the top-level ``example`` directory in the source code.
 
 .. note:: 
 
-    When :doc:`installing <installation>` |project| from PyPI, only the bare 
+    When :doc:`installing </installation/standard>` |project| from PyPI, only the bare 
     essentials are installed. To run you the example project, follow the 
     instructions for a :doc:`local development setup </installation/develop>`.
 

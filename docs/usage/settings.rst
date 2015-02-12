@@ -64,23 +64,29 @@ Available settings modules
 :mod:`djenv.settings.core`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: djenv.settings.core
+   :members:
 
 :mod:`djenv.settings.generic`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: djenv.settings.generic
+   :members:
 
 :mod:`djenv.settings.database`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: djenv.settings.database
+   :members:
 
 :mod:`djenv.settings.log`
 ~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: djenv.settings.log
+   :members:
 
 :mod:`djenv.settings.template`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: djenv.settings.template
+   :members:
 
 :mod:`djenv.settings.cache`
 ~~~~~~~~~~~~~~~~~~~~~~~~~~~
 .. automodule:: djenv.settings.cache
+   :members:

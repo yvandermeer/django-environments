@@ -38,6 +38,8 @@ extensions = [
     'sphinx.ext.viewcode',
 ]
 
+autodoc_member_order = 'bysource'
+
 # Add any paths that contain templates here, relative to this directory.
 templates_path = ['_templates']
 
@@ -119,6 +121,11 @@ todo_include_todos = True
 # The theme to use for HTML and HTML Help pages.  See the documentation for
 # a list of builtin themes.
 # html_theme = 'default'
+
+os.environ.update({
+    'PROJECT_ROOT': '/path/to/your/project',
+    'DJANGO_PROJECT': 'mysite',
+})
 
 if not on_rtd: # only import and set the theme if we're building docs locally
     import sphinx_rtd_theme
