@@ -1,7 +1,7 @@
 Release notes
 =============
 
-1.0a3
+1.0a4
 -----
 
 * First release to PyPI_. See :doc:`/usage/bitbucketmigration`
