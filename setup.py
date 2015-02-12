@@ -28,7 +28,7 @@ setup(
     url='http://github.com/yvandermeer/django-environments',
     packages=packages,
     install_requires=[
-        'Django>=1.7',
+        'Django>=1.1',
     ],
     scripts=scripts,
     classifiers=[
