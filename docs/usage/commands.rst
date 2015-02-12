@@ -3,6 +3,17 @@ Available commands
 
 If everything works okay, the following shell functions are created:
 
+.. _cmd_djp:
+
+* ``djp`` (tab completion)
+                Start working on a project (first argument, optional second
+                argument is the Django project, default "www"), automatically 
+                activating the virtualenv with the name of the project and 
+                selecting ``settings.env.local`` using :ref:`djenv <cmd_djenv>`. 
+                Virtualenv and empty project are created if they do not yet exist.
+
+.. _cmd_djenv:
+
 * ``djenv`` (tab completion)
                 switch to different :doc:`settings </usage/settings>` or another Django project.
 

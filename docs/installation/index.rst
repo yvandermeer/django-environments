@@ -11,3 +11,7 @@ Installation
    develop
    docs
    otherprojects
+
+.. seealso::
+
+    :doc:`/usage/bitbucketmigration`

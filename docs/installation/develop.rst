@@ -1,9 +1,11 @@
 Development install from Github
 ===============================
 
+.. highlight:: sh
+
 If you plan to make any changes to |project| or want to be able to run the
-:doc:`example project </usage/exampleproject>`, you probably want to install and
-set up the project for local development::
+:doc:`example project </usage/exampleproject>`, you probably want to install 
+|project| directly from Github_ and set it up for local development::
 
     $ cd ~/dev # or wherever
     $ git clone https://github.com/yvandermeer/django-environments.git
