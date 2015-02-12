@@ -2,7 +2,7 @@ Regular install from PyPI
 =========================
 
 .. seealso::
-    :doc:`/installation/requirements`
+    :doc:`/installation/prerequisites`
 
 Installing |project| into your existing Django project as a regular Python 
 package is easy::
