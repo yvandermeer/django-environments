@@ -1,8 +1,8 @@
 Release notes
 =============
 
-1.0alpha1
----------
+1.0a1
+-----
 
 * First release to PyPI
 * Renamed top-level ``etc`` package to ``djenv``
