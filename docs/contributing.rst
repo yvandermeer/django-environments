@@ -27,7 +27,6 @@ If you want to contribute to |project|, feel free to
 `fork the project on Github <github_fork_>`_.
 
 
-.. _bitbucket: http://bitbucket.org/goeiejongens/django-environments
 .. _github_fork: https://github.com/yvandermeer/django-environments/fork
 .. _git_remote_hg: https://github.com/fingolfin/git-remote-hg/
 .. _gj: http://goeiejongens.nl/

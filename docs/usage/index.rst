@@ -8,3 +8,4 @@ Usage
    settings
    wsgi
    exampleproject
+   bitbucketmigration

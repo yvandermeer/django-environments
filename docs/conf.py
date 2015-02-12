@@ -66,6 +66,7 @@ version = release = __import__('djenv').__version__
 rst_epilog = """
 .. |project| replace:: {project}
 
+.. _bitbucket: http://bitbucket.org/goeiejongens/django-environments
 .. _github: https://github.com/yvandermeer/django-environments/
 .. _pypi: https://pypi.python.org/pypi/django-environments
 .. _rtd: http://django-environments.readthedocs.org/
