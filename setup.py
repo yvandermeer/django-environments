@@ -25,7 +25,7 @@ setup(
     long_description=long_description,
     author='Goeie Jongens',
     author_email='jullie@goeiejongens.nl',
-    url='http://django-environments.readthedocs.org/',
+    url='http://github.com/yvandermeer/django-environments',
     packages=packages,
     install_requires=[
         'Django>=1.7',
