@@ -8,9 +8,8 @@ here = path.dirname(path.abspath(__file__))
 scripts = [path.relpath(p, here) for p in glob.glob(path.join(here, 'bin/*'))]
 packages = find_packages()
 
-f = open(path.join(here, 'README.rst'))
-long_description = f.read().strip()
-f.close()
+with open(path.join(here, 'README.rst')) as f:
+    long_description = f.read().strip()
 
 versioneer.VCS = 'git'
 versioneer.versionfile_source = '{0}/_version.py'.format(packages[0])
