@@ -1,8 +1,6 @@
---requirement=libs-prd.txt
-PyYAML
-docutils
-Sphinx
-pyflakes
-Pygments
-pysmell
-django-debug-toolbar
+Sphinx~=1.2.3
+sphinx-rtd-theme==0.1.6
+versioneer2~=0.1.10
+
+# Install django-environments as editable package
+--editable .
