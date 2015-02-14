@@ -12,7 +12,7 @@ its release to PyPI_.
 .. note::
 
     |project| was originally created as a private Mercurial repository and later
-    on it started being pushed to Bitbucket_ periodically. This version is meant 
+    on it started being pushed to Bitbucket_ periodically. That version is meant 
     to be included into your project as an "external" Mercurial repository -- it 
     does not use Setuptools/distutils.
 
