@@ -1,8 +1,8 @@
 Release notes
 =============
 
-1.0a6
------
+dev
+---
 * Added :doc:`/usage/gettingstarted` section to documentation.
 
 1.0a5
