@@ -12,6 +12,11 @@ If everything works okay, the following shell functions are created:
                 selecting ``settings.env.local`` using :ref:`djenv <cmd_djenv>`. 
                 Virtualenv and empty project are created if they do not yet exist.
 
+.. _cmd_setproject:
+
+* ``setproject`` 
+                Set the :attr:`~djenv.settings.core.PROJECT_ROOT` to either current or specified directory.
+
 .. _cmd_djenv:
 
 * ``djenv`` (tab completion)
@@ -20,10 +25,13 @@ If everything works okay, the following shell functions are created:
 .. _cmd_cdroot:
 
 * ``cdroot`` (tab completion)
-                go to current :attr:`project root <djenv.settings.core.PROJECT_ROOT>`.
+                go to current :attr:`~djenv.settings.core.PROJECT_ROOT`.
 * ``cdlib`` (tab completion)
                 go to subdirectory 'lib' of the current 
-                :attr:`project root <djenv.settings.core.PROJECT_ROOT>`.
+                :attr:`~djenv.settings.core.PROJECT_ROOT`.
+
+.. _cmd_cdjango:
+
 * ``cdjango`` (tab completion)
                 go to Django project root (one lower than project root).
 * ``djadmin`` (install `tab completion <http://docs.djangoproject.com/en/dev/ref/django-admin/#bash-completion>`_ yourself)

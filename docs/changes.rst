@@ -1,6 +1,10 @@
 Release notes
 =============
 
+1.0a6
+-----
+* Added :doc:`/usage/gettingstarted` section to documentation.
+
 1.0a5
 -----
 * Fixed critical error where non-wheel installation from the PyPI package would 

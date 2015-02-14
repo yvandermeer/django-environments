@@ -15,6 +15,9 @@ DRY™".
 
 .. contents::
 
+
+.. _settings-organization:
+
 Definining your settings
 ------------------------
 
