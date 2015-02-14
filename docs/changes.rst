@@ -1,6 +1,11 @@
 Release notes
 =============
 
+1.0a5
+-----
+* Fixed critical error where non-wheel installation from the PyPI package would 
+  fail due to the "README.rst" not being included in the distribution package.
+
 1.0a4
 -----
 
