@@ -51,7 +51,7 @@ If everything works okay, the following shell functions are created:
 * ``djvirtualbrowse``
                 Points the browser to the named virtual host for the current
                 settings. Assumes Apache is running as reverse proxy; see
-                ``bin/create_apache_vhoste_conf`` for more information.
+                ``bin/create_apache_vhost_conf`` for more information.
 * ``pipup`` (tab completion)
                 call ``pip install`` with the appropriate file listing
                 the project's requirements.
