@@ -123,7 +123,7 @@ or back to the project root using :ref:`cdroot <cmd_cdroot>`::
 
 If you quickly want know what the value of a Django setting is given the 
 currently active django settings module, use the 
-:ref:`getdjangosetting <cmd_getdjangosetting>` command::
+:ref:`get_django_setting <cmd_getdjangosetting>` command::
 
     $ get_django_setting ROOT_URLCONF
     example.urls
