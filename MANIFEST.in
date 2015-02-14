@@ -1,2 +1,3 @@
 include versioneer.py
 include djenv/_version.py
+include README.rst
