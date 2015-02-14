@@ -67,6 +67,9 @@ If everything works okay, the following shell functions are created:
                 compile all .py files - handy for web server
                 environments, calls 
                 :ref:`removeorphanpycs <cmd_removeorphanpycs>` afterwards.
+
+.. _cmd_getdjangosetting:
+
 * ``get_django_setting``
                 get a value from the current settings
                 module, useful for your own scripts (also
