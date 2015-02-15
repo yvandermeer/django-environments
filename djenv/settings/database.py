@@ -1,6 +1,6 @@
 from os import path, environ
 
-from .generic import PROJECT_ROOT, PROJECT, DJANGO_PROJECT
+from .generic import PROJECT_ROOT, PROJECT
 
 
 DATABASE_NAME = PROJECT

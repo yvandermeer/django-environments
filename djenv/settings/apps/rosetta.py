@@ -1,3 +1,4 @@
+# flake8: noqa
 # Default settings for django-compressor
 
 # ROSETTA_MESSAGES_PER_PAGE: Number of messages to display per page. Defaults to 10.

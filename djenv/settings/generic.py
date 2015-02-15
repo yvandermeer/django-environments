@@ -7,7 +7,7 @@ Settings defined here include the ``ROOT_URLCONF``, ``STATIC_ROOT``,
 
 from os import path
 
-from .core import *
+from .core import *  # noqa
 
 
 LOCAL_SERVER_PORT = 8001

@@ -1,8 +1,4 @@
-from .generic import DJANGO_PROJECT_DIR
-
-
-TEMPLATE_DIRS = (
-)
+TEMPLATE_DIRS = ()
 
 TEMPLATE_LOADERS_DEFAULT = (
     'django.template.loaders.filesystem.Loader',

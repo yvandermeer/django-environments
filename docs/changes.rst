@@ -4,6 +4,7 @@ Release notes
 dev
 ---
 * Added :doc:`/usage/gettingstarted` section to documentation.
+* Fixed some flake8_ errors/warnings
 
 1.0a5
 -----
@@ -22,3 +23,6 @@ dev
 * Moved "mysite" example project (and related files/directories) to top-level 
   "example" directory
 * Expanded documentation, now implemented as Sphinx docs and published on `Read the Docs <rtd_>`_.
+
+
+.. _flake8: http://flake8.readthedocs.org/
