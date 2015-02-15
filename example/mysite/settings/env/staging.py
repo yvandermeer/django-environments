@@ -1,4 +1,6 @@
-from .. import *
+from .. import *  # noqa
+
+from os import path
 
 
 DEBUG = False
@@ -9,7 +11,6 @@ SEND_BROKEN_LINK_EMAILS = False
 
 ROSETTA_WSGI_AUTO_RELOAD = True
 
-from os import path
 
 try:
     CACHE_MIDDLEWARE_KEY_PREFIX += '.' + path.basename(__file__).split('.')[0]
@@ -21,8 +22,8 @@ except NameError:
     django_project = split_path[-4]
     project = split_path[-5]
 
-    CACHE_MIDDLEWARE_KEY_PREFIX = project + '.' +  django_project + '.' + \
-                                  split_path[-1].split('.')[0]
+    CACHE_MIDDLEWARE_KEY_PREFIX = project + '.' + django_project + '.' + \
+        split_path[-1].split('.')[0]
 
     # Clean up (we're in the settings)
     del split_path, django_project, project

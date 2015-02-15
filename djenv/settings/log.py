@@ -1,5 +1,4 @@
 from os import path
-import logging
 
 from .generic import PROJECT_ROOT, PROJECT
 

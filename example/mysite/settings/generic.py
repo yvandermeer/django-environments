@@ -1,4 +1,4 @@
-from djenv.settings import *
+from djenv.settings import *  # noqa
 
 
 LOCAL_SERVER_PORT = 7000
